@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.title }} — DravTech{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'assets/css/product.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Breadcrumb ── -->
+<div class="breadcrumb-bar">
+  <nav class="breadcrumb-inner" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span class="sep">/</span>
+    <a href="{% url 'marketplace:products' %}">Products</a>
+    <span class="sep">/</span>
+    <a href="{% url 'marketplace:products' %}?type={{ product.product_type }}">{{ product.get_product_type_display }}</a>
+    <span class="sep">/</span>
+    <span class="crumb-current">{{ product.title }}</span>
+  </nav>
+</div>
+
+<div class="pw">
+
+  <!-- ══════════════════════════════════
+       HERO
+  ══════════════════════════════════ -->
+  <div class="detail-hero">
+
+    <!-- Product Image -->
+    <div class="detail-image">
+      {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.title }}">
+      {% else %}
+        <div class="no-img">
+          {% if product.product_type == 'digital' %}<i class="bi bi-cpu-fill"></i>
+          {% elif product.product_type == 'merch' %}<i class="bi bi-bag-fill"></i>
+          {% else %}<i class="bi bi-palette-fill"></i>{% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Info Panel -->
+    <div class="detail-info">
+
+      <span class="type-badge badge-{{ product.product_type }}">
+        <i class="bi {% if product.product_type == 'digital' %}bi-cpu{% elif product.product_type == 'merch' %}bi-bag{% else %}bi-palette{% endif %}"></i>
+        {{ product.get_product_type_display }}
+      </span>
+
+      <h1 class="detail-title">{{ product.title }}</h1>
+
+      {% if product.tagline %}
+        <p class="detail-tagline">{{ product.tagline }}</p>
+      {% endif %}
+
+      <!-- DIGITAL -->
+      {% if product.product_type == 'digital' %}
+        {% if pricing_plans %}
+          <div class="detail-price-block">
+            <span class="price-main">KES {{ pricing_plans.0.price|floatformat:0 }}</span>
+            <span class="price-note">/ {{ pricing_plans.0.get_billing_type_display|lower }} &mdash; {{ pricing_plans.0.name }} plan</span>
+          </div>
+        {% endif %}
+        <div class="cta-group">
+          <a href="{% url 'marketplace:request-demo' product.slug %}" class="btn-primary">
+            <i class="bi bi-calendar-check"></i> Request a Demo
+          </a>
+          <a href="#pricing" class="btn-secondary">
+            <i class="bi bi-list-ul"></i> See All Plans
+          </a>
+        </div>
+
+      <!-- MERCH -->
+      {% elif product.product_type == 'merch' %}
+        <div class="detail-price-block">
+          <span class="price-main">KES {{ product.price|floatformat:0 }}</span>
+          <span class="price-note">+ shipping</span>
+        </div>
+        <div class="delivery-notice notice-ship">
+          <i class="bi bi-truck"></i>
+          <span>Ships to Kenya &amp; East Africa. Delivery calculated at checkout.</span>
+        </div>
+        <div class="cta-group">
+          <button class="btn-primary btn-add-to-cart"
+                  data-product-id="{{ product.id }}"
+                  data-product-name="{{ product.title }}">
+            <i class="bi bi-bag-plus"></i> Add to Cart
+          </button>
+          <a href="{% url 'marketplace:cart' %}" class="btn-secondary">
+            <i class="bi bi-bag"></i> View Cart
+          </a>
+        </div>
+
+      <!-- ARTWORK -->
+      {% elif product.product_type == 'artwork' %}
+        <div class="detail-price-block">
+          <span class="price-main">KES {{ product.price|floatformat:0 }}</span>
+          {% if product.is_downloadable %}
+            <span class="price-note">Digital download</span>
+          {% else %}
+            <span class="price-note">+ shipping &amp; handling</span>
+          {% endif %}
+        </div>
+
+        {% if product.is_downloadable %}
+          <div class="delivery-notice notice-download">
+            <i class="bi bi-download"></i>
+            <span>Instant digital download after payment. Up to 5 downloads included.</span>
+          </div>
+          <div class="cta-group">
+            {% if user_has_access %}
+              <a href="{% url 'marketplace:download-artwork' product.id %}" class="btn-primary btn-accent">
+                <i class="bi bi-download"></i> Download Now
+              </a>
+            {% else %}
+              <button class="btn-primary btn-add-to-cart"
+                      data-product-id="{{ product.id }}"
+                      data-product-name="{{ product.title }}">
+                <i class="bi bi-bag-plus"></i> Buy &amp; Download
+              </button>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if product.is_physical %}
+          <div class="delivery-notice notice-ship">
+            <i class="bi bi-truck"></i>
+            <span>Physical artwork. Carefully packaged and shipped to your door.</span>
+          </div>
+          {% if not product.is_downloadable %}
+          <div class="cta-group">
+            <button class="btn-primary btn-add-to-cart"
+                    data-product-id="{{ product.id }}"
+                    data-product-name="{{ product.title }}">
+              <i class="bi bi-bag-plus"></i> Add to Cart
+            </button>
+          </div>
+          {% endif %}
+        {% endif %}
+
+        {% if product.dimensions or product.medium %}
+        <div class="artwork-meta">
+          {% if product.medium %}
+          <div class="meta-item">
+            <div class="label">Medium</div>
+            <div class="value">{{ product.medium }}</div>
+          </div>
+          {% endif %}
+          {% if product.dimensions %}
+          <div class="meta-item">
+            <div class="label">Dimensions</div>
+            <div class="value">{{ product.dimensions }}</div>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+      {% endif %}
+
+    </div><!-- /detail-info -->
+  </div><!-- /detail-hero -->
+
+
+  <!-- ══════════════════════════════════
+       BODY
+  ══════════════════════════════════ -->
+  <div class="detail-body">
+
+    {% if product.description %}
+    <p class="section-label">About this product</p>
+    <div class="product-description">{{ product.description|linebreaks }}</div>
+    <hr class="section-divider">
+    {% endif %}
+
+    {% if product.product_type == 'artwork' and product.artist_note %}
+    <p class="section-label">Artist's Note</p>
+    <blockquote class="artist-blockquote"><p>{{ product.artist_note }}</p></blockquote>
+    <hr class="section-divider">
+    {% endif %}
+
+    {% if product.features %}
+    <p class="section-label">What's included</p>
+    <h2 class="section-heading">Features</h2>
+    <div class="features-grid">
+      {% for feature in product.features %}
+      <div class="feature-item">
+        <div class="fi-icon fi-blue"><i class="bi bi-check2-circle"></i></div>
+        <span>{{ feature }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    <hr class="section-divider">
+    {% endif %}
+
+    {% if product.product_type == 'digital' and product.use_cases %}
+    <p class="section-label">Ideal for</p>
+    <h2 class="section-heading">Use Cases</h2>
+    <div class="features-grid">
+      {% for uc in product.use_cases %}
+      <div class="feature-item">
+        <div class="fi-icon fi-orange"><i class="bi bi-arrow-right-circle"></i></div>
+        <span>{{ uc }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    <hr class="section-divider">
+    {% endif %}
+
+    {% if product.product_type == 'digital' and pricing_plans %}
+    <span id="pricing"></span>
+    <p class="section-label">Pricing</p>
+    <h2 class="section-heading">Choose a Plan</h2>
+    <div class="pricing-grid">
+      {% for plan in pricing_plans %}
+      <div class="pricing-card {% if plan.is_popular %}popular{% endif %}">
+        {% if plan.is_popular %}<span class="popular-tag">Most Popular</span>{% endif %}
+        <div class="plan-name">{{ plan.name }}</div>
+        <div class="plan-price">
+          KES {{ plan.price|floatformat:0 }}
+          <span class="cycle">/ {{ plan.get_billing_type_display|lower }}</span>
+        </div>
+        {% if plan.features %}
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          {% for feat in plan.features %}<li><i class="bi bi-check2"></i> {{ feat }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+        <a href="{% url 'marketplace:request-demo' product.slug %}?plan={{ plan.id }}"
+           class="btn-primary" style="margin-top:auto;">
+          Get Started <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    <hr class="section-divider">
+    {% endif %}
+
+    {% if related_products %}
+    <p class="section-label">More like this</p>
+    <h2 class="section-heading">Related Products</h2>
+    <div class="related-grid">
+      {% for rel in related_products %}
+      <a href="{{ rel.get_absolute_url }}" class="related-card">
+        {% if rel.image %}<div class="related-card-img"><img src="{{ rel.image.url }}" alt="{{ rel.title }}"></div>{% endif %}
+        <div class="related-card-body">
+          <h4>{{ rel.title }}</h4>
+          <span>{% if rel.price %}KES {{ rel.price|floatformat:0 }}{% else %}View details{% endif %}</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+  </div><!-- /detail-body -->
+</div><!-- /pw -->
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.btn-add-to-cart').forEach(btn => {
+  btn.addEventListener('click', async function () {
+    const productId = this.dataset.productId;
+    const originalHTML = this.innerHTML;
+    this.disabled = true;
+    this.innerHTML = '<i class="bi bi-hourglass-split"></i> Adding…';
+    try {
+      const resp = await fetch(`/marketplace/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '',
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await resp.json();
+      if (data.success) {
+        this.innerHTML = '<i class="bi bi-check2"></i> Added to Cart!';
+        this.classList.add('cart-ok');
+        const badge = document.querySelector('.cart-count-badge');
+        if (badge) badge.textContent = data.cart_count;
+        setTimeout(() => {
+          this.disabled = false;
+          this.classList.remove('cart-ok');
+          this.innerHTML = originalHTML;
+        }, 2400);
+      } else {
+        this.disabled = false;
+        this.innerHTML = originalHTML;
+        alert(data.error || 'Could not add to cart.');
+      }
+    } catch (e) {
+      this.disabled = false;
+      this.innerHTML = originalHTML;
+    }
+  });
+});
+</script>
+{% endblock %}

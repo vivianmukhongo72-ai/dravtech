@@ -1,0 +1,133 @@
+
+/* Video Footer Styles */
+.video-footer {
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+  background-color: transparent; /* Fallback color while video loads */
+}
+
+/* Background Video */
+.footer-video-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: -1;
+  object-fit: cover;
+  opacity: 1.2; /* Increased opacity for better visibility */
+}
+
+/* Video overlay with minimal shading */
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2); /* Minimal shading for clear video visibility */
+  z-index: 1;
+}
+
+/* Footer content above video */
+.footer-content {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  padding: 60px 0 30px;
+}
+
+/* Ensure all text is white and readable */
+.video-footer h4,
+.video-footer p,
+.video-footer a,
+.video-footer .sitename {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Minimal text shadow for readability */
+}
+
+.video-footer a:hover {
+  color: #87CEEB; /* Sky blue hover color */
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+/* Footer links styling */
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links ul li {
+  padding: 8px 0;
+}
+
+.footer-links ul li a {
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.footer-links ul li a:hover {
+  transform: translateX(5px);
+}
+
+/* Contact list styling */
+.contact-list {
+  list-style: none;
+  padding: 0;
+}
+
+.contact-list li {
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contact-list i {
+  color: #bb6f06;
+  font-size: 1.2rem;
+}
+
+/* Copyright section */
+.footer-bottom {
+  border-top: 1px solid rgba(105, 103, 103, 0.414)1);
+  padding-top: 20px;
+  margin-top: 40px;
+}
+
+/* Logo styling */
+.footer-info .logo .sitename {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .video-footer {
+    min-height: 500px;
+  }
+  
+  .footer-content {
+    padding: 40px 0 20px;
+  }
+  
+  .footer-video-bg {
+    opacity: 1.2 /* Increased opacity on mobile for better visibility */
+  }
+}
+
+/* Fix for video not playing on some browsers */
+.footer-video-bg::-webkit-media-controls {
+  display: none !important;
+}
+
+.footer-video-bg::-webkit-media-controls-enclosure {
+  display: none !important;
+}

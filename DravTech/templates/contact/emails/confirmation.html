@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; color: #333; background: #f5f5f5; margin: 0; padding: 0; }
+    .wrapper { max-width: 600px; margin: 30px auto; background: #fff; border-radius: 8px; overflow: hidden; }
+    .header { background: #0d6efd; padding: 30px; text-align: center; color: #fff; }
+    .header h1 { margin: 0; font-size: 22px; }
+    .body { padding: 30px; }
+    .body p { line-height: 1.6; }
+    .detail-row { display: flex; margin-bottom: 10px; }
+    .detail-label { font-weight: bold; width: 130px; color: #555; flex-shrink: 0; }
+    .detail-value { color: #333; }
+    .message-box { background: #f8f9fa; border-left: 4px solid #0d6efd; padding: 15px; border-radius: 4px; margin: 20px 0; }
+    .footer { background: #f5f5f5; padding: 20px; text-align: center; font-size: 13px; color: #888; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <h1>✅ Message Received!</h1>
+    </div>
+    <div class="body">
+      <p>Hi <strong>{{ contact.name }}</strong>,</p>
+      <p>Thanks for reaching out to us. We've received your message and will respond within <strong>24 hours</strong>.</p>
+
+      <h3 style="border-bottom: 1px solid #eee; padding-bottom: 10px;">Your Submission Summary</h3>
+
+      <div class="detail-row">
+        <span class="detail-label">Subject:</span>
+        <span class="detail-value">{{ contact.subject }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Inquiry Type:</span>
+        <span class="detail-value">{{ contact.get_contact_type_display }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Priority:</span>
+        <span class="detail-value">{{ contact.get_priority_display }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Submitted:</span>
+        <span class="detail-value">{{ contact.submitted_at|date:"N j, Y — g:i A" }}</span>
+      </div>
+
+      <div class="message-box">
+        <strong>Your message:</strong>
+        <p style="margin: 8px 0 0;">{{ contact.message }}</p>
+      </div>
+
+      <p>If you have anything to add, simply reply to this email.</p>
+      <p>Best regards,<br><strong>The DravTech Team</strong></p>
+    </div>
+    <div class="footer">
+      DravTech — Nairobi, Kenya<br>
+      <a href="mailto:dravislotum@gmail.com">dravislotum@gmail.com</a>
+    </div>
+  </div>
+</body>
+</html>

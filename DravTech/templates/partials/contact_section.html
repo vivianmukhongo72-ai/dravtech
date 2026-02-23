@@ -1,0 +1,304 @@
+<section id="contact" class="contact section">
+
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Contact</h2>
+    <p>Start a conversation about your next project — we're ready to help.</p>
+  </div>
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row gy-5 align-items-stretch">
+
+      <!-- INFO PANEL (unchanged structurally, just compacted) -->
+      <div class="col-lg-5" data-aos="fade-right" data-aos-delay="200">
+        <div class="info-panel">
+          <div class="panel-header">
+            <span class="section-badge">
+              <i class="bi bi-chat-dots-fill"></i> Get In Touch
+            </span>
+            <h3>Let's Bring Your Vision to Life</h3>
+            <p>Tell us about your goals and constraints — we'll propose a practical plan, timeline, and next steps.</p>
+          </div>
+
+          <div class="contact-methods">
+
+            <div class="method-item">
+              <div class="method-icon"><i class="bi bi-envelope-paper-fill"></i></div>
+              <div class="method-details">
+                <span class="method-label">Email Us</span>
+                <a href="mailto:dravislotum@gmail.com">dravislotum@gmail.com</a><br>
+                <a href="mailto:samuelkibunja55@gmail.com">samuelkibunja55@gmail.com</a>
+              </div>
+            </div>
+
+            <div class="method-item">
+              <div class="method-icon"><i class="bi bi-headset"></i></div>
+              <div class="method-details">
+                <span class="method-label">Call Us</span>
+                <a href="tel:+254758067458">+254 758 067 458</a><br>
+                <a href="tel:+254720357085">+254 720 357 085</a>
+              </div>
+            </div>
+
+            <div class="method-item">
+              <div class="method-icon"><i class="bi bi-pin-map-fill"></i></div>
+              <div class="method-details">
+                <span class="method-label">Visit Us</span>
+                <span>Nairobi, Kenya</span>
+              </div>
+            </div>
+
+            <div class="method-item">
+              <div class="method-icon"><i class="bi bi-clock"></i></div>
+              <div class="method-details">
+                <span class="method-label">Working Hours</span>
+                <span>Mon - Fri: 8:00 AM - 6:00 PM</span><br>
+                <span>Sat: 9:00 AM - 2:00 PM</span>
+              </div>
+            </div>
+
+          </div>
+
+          {% if contact_stats %}
+          <div class="stats-strip">
+            {% for stat in contact_stats %}
+              <div class="stat-item">
+                <span class="stat-number">{{ stat.value }}</span>
+                <span class="stat-text">{{ stat.label }}</span>
+              </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <div class="col-lg-7" data-aos="fade-left" data-aos-delay="300">
+        <div class="form-card">
+
+          <div class="form-card-header">
+            <h4>Send Us a Message</h4>
+            <p>Fill out the form and our team will respond within 24 hours.</p>
+          </div>
+
+          <form id="contact-form" method="post" action="{% url 'contact' %}">
+            {% csrf_token %}
+
+            <!-- Django Messages -->
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <div class="row g-4">
+
+              <div class="col-md-6">
+                <label>Your Name *</label>
+                {{ form.name }}
+                {{ form.name.errors }}
+              </div>
+
+              <div class="col-md-6">
+                <label>Email Address *</label>
+                {{ form.email }}
+                {{ form.email.errors }}
+              </div>
+
+              <div class="col-md-6">
+                <label>Phone Number</label>
+                {{ form.phone }}
+                {{ form.phone.errors }}
+              </div>
+
+              <div class="col-md-6">
+                <label>Company</label>
+                {{ form.company }}
+                {{ form.company.errors }}
+              </div>
+
+              <div class="col-md-6">
+                <label>Inquiry Type</label>
+                {{ form.contact_type }}
+              </div>
+
+              <div class="col-md-6">
+                <label>Priority</label>
+                {{ form.priority }}
+              </div>
+
+              <div class="col-12">
+                <label>Subject *</label>
+                {{ form.subject }}
+                {{ form.subject.errors }}
+              </div>
+
+              <div class="col-12">
+                <label>Your Message *</label>
+                {{ form.message }}
+                {{ form.message.errors }}
+              </div>
+
+            </div>
+
+            <div class="form-actions mt-4">
+              <button type="submit" class="btn-submit">
+                Send Message
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<style>
+/* Contact Form Styling */
+.form-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.form-card-header {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.form-card-header h4 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.form-card-header p {
+  opacity: 0.9;
+  margin: 0;
+}
+
+.form-card form {
+  padding: 2.5rem;
+}
+
+.form-card label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.form-card input,
+.form-card select,
+.form-card textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #ffffff;
+}
+
+.form-card input:focus,
+.form-card select:focus,
+.form-card textarea:focus {
+  outline: none;
+  border-color: #87CEEB; /* Sky blue color */
+  box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.2);
+}
+
+.form-card textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-card .error-list {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  padding: 1rem 3rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.alert-success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.alert-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.alert-info {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .form-card form {
+    padding: 1.5rem;
+  }
+  
+  .form-card-header {
+    padding: 1.5rem;
+  }
+  
+  .form-card-header h4 {
+    font-size: 1.25rem;
+  }
+  
+  .btn-submit {
+    width: 100%;
+    padding: 0.875rem 2rem;
+  }
+}
+</style>

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Demo Request Confirmed{% endblock %}
+
+{% block extra_css %}
+<style>
+.confirmation-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+}
+.confirmation-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.success-header {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  padding: 3rem 2rem;
+  text-align: center;
+  color: white;
+}
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+.confirmation-body {
+  padding: 2.5rem;
+}
+.btn-primary-custom {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  padding: 0.875rem 2rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 1rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="confirmation-container">
+  <div class="container">
+    <div class="confirmation-card">
+      <div class="success-header">
+        <div class="success-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3">
+            <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h1>Demo Request Confirmed!</h1>
+        <p>Thank you for your interest. We'll be in touch soon.</p>
+      </div>
+      
+      <div class="confirmation-body">
+        <div class="text-center mb-4">
+          <p>We've received your demo request and will contact you within 24 hours to schedule a personalized walkthrough.</p>
+        </div>
+        
+        <div class="text-center">
+          <a href="{% url 'marketplace:products' %}" class="btn-primary-custom">
+            <i class="bi bi-grid"></i> Browse More Products
+          </a>
+          <a href="/" class="btn btn-outline-primary">
+            <i class="bi bi-house"></i> Back to Home
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

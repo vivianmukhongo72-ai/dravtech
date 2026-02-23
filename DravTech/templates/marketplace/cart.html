@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Your Cart — DravTech{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="cart-wrap">
+
+  {% if cart %}
+
+  <h1 class="cart-heading">Your Cart</h1>
+  <p class="cart-subtext">{{ item_count }} item{{ item_count|pluralize }} waiting for you</p>
+
+  <div class="cart-layout">
+
+    <!-- ── Items ── -->
+    <div class="panel">
+      {% for pid, item in cart.items %}
+      <div class="cart-item" id="cart-item-{{ pid }}">
+
+        <!-- Thumbnail -->
+        <div class="item-thumb">
+          {% if item.image %}
+            <img src="{{ item.image }}" alt="{{ item.name }}">
+          {% elif item.product_type == 'digital' %}
+            &#128190;
+          {% elif item.product_type == 'merch' %}
+            &#128717;
+          {% else %}
+            &#127912;
+          {% endif %}
+        </div>
+
+        <!-- Info -->
+        <div class="item-info">
+          <p class="item-name">{{ item.name }}</p>
+          <p class="item-type">{{ item.product_type }}</p>
+          <p class="item-price">KES {{ item.price|floatformat:2 }}</p>
+        </div>
+
+        <!-- Controls -->
+        <div class="item-controls">
+          <div class="qty-wrap">
+            <button class="qty-btn btn-qty-dec" data-pid="{{ pid }}" aria-label="Decrease quantity">&#8722;</button>
+            <input type="number" class="qty-val" value="{{ item.quantity }}" min="1" id="qty-{{ pid }}" readonly aria-label="Quantity">
+            <button class="qty-btn btn-qty-inc" data-pid="{{ pid }}" aria-label="Increase quantity">+</button>
+          </div>
+          <button class="btn-remove btn-remove-item" data-pid="{{ pid }}" aria-label="Remove {{ item.name }}">
+            &#128465; Remove
+          </button>
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- ── Summary ── -->
+    <div class="summary-panel">
+      <div class="panel">
+        <div class="summary-inner">
+          <h2 class="summary-title">Order Summary</h2>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <strong>KES {{ total|floatformat:2 }}</strong>
+          </div>
+
+          {% if has_physical %}
+          <div class="shipping-notice">
+            &#8505; Shipping calculated at checkout
+          </div>
+          {% else %}
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span class="free">Free</span>
+          </div>
+          {% endif %}
+
+          <hr class="summary-divider">
+
+          <div class="summary-total">
+            <span>Total</span>
+            <strong>KES {{ total|floatformat:2 }}</strong>
+          </div>
+
+          <a href="{% url 'marketplace:checkout' %}" class="btn-checkout">
+            &#128274; Proceed to Checkout
+          </a>
+          <a href="{% url 'marketplace:products' %}" class="btn-continue">
+            &#8592; Continue Shopping
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {% else %}
+
+  <div class="empty-state">
+    <span class="empty-icon">&#128707;</span>
+    <h3>Your cart is empty</h3>
+    <p>Browse our products and add something you love.</p>
+    <a href="{% url 'marketplace:products' %}" class="btn-browse">
+      &#9783; Browse Products
+    </a>
+  </div>
+
+  {% endif %}
+
+</div>
+
+<!-- Toast feedback -->
+<div class="toast-bar" id="toast" role="status" aria-live="polite"></div>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+  /* ── CSRF helper (works with Django's standard cookie) ── */
+  function getCsrf() {
+    const match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : '';
+  }
+
+  /* ── Fetch wrapper ── */
+  async function post(url, body) {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCsrf(),
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams(body),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  }
+
+  /* ── Toast ── */
+  function showToast(msg, isError = false) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast-bar show' + (isError ? ' error' : '');
+    clearTimeout(el._timer);
+    el._timer = setTimeout(() => { el.className = 'toast-bar'; }, 2600);
+  }
+
+  /* ── Quantity change ── */
+  async function updateQty(pid, delta) {
+    const input = document.getElementById(`qty-${pid}`);
+    const current = parseInt(input.value, 10);
+    const newQty = Math.max(1, current + delta);
+
+    /* If already at 1 and decrementing, do nothing (remove is explicit) */
+    if (newQty === current) return;
+
+    try {
+      const data = await post('/marketplace/cart/update/', { product_id: pid, quantity: newQty });
+      if (data.success) {
+        input.value = data.quantity ?? newQty;
+        showToast('Cart updated');
+        /* Small delay so the toast is readable before reload */
+        setTimeout(() => location.reload(), 600);
+      } else {
+        showToast(data.message || 'Could not update cart.', true);
+      }
+    } catch {
+      showToast('Network error — please try again.', true);
+    }
+  }
+
+  /* ── Remove item ── */
+  async function removeItem(pid) {
+    const item = document.getElementById(`cart-item-${pid}`);
+    if (item) {
+      item.style.transition = 'opacity 0.25s, transform 0.25s';
+      item.style.opacity = '0';
+      item.style.transform = 'translateX(12px)';
+    }
+    try {
+      const data = await post('/marketplace/cart/remove/', { product_id: pid });
+      if (data.success) {
+        setTimeout(() => location.reload(), 280);
+      } else {
+        if (item) { item.style.opacity = '1'; item.style.transform = ''; }
+        showToast(data.message || 'Could not remove item.', true);
+      }
+    } catch {
+      if (item) { item.style.opacity = '1'; item.style.transform = ''; }
+      showToast('Network error — please try again.', true);
+    }
+  }
+
+  /* ── Bind events ── */
+  document.querySelectorAll('.btn-qty-inc').forEach(btn =>
+    btn.addEventListener('click', () => updateQty(btn.dataset.pid, +1))
+  );
+
+  document.querySelectorAll('.btn-qty-dec').forEach(btn =>
+    btn.addEventListener('click', () => updateQty(btn.dataset.pid, -1))
+  );
+
+  document.querySelectorAll('.btn-remove-item').forEach(btn =>
+    btn.addEventListener('click', () => removeItem(btn.dataset.pid))
+  );
+</script>
+{% endblock extra_js %}

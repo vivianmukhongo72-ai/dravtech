@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+.services-hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 120px 0 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.services-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 1;
+}
+
+.services-hero .container {
+  position: relative;
+  z-index: 2;
+}
+
+.services-hero h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  animation: fadeInUp 1s ease-out;
+}
+
+.services-hero p {
+  font-size: 1.3rem;
+  max-width: 600px;
+  margin: 0 auto 40px;
+  opacity: 0.9;
+  animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+.services-listing {
+  padding: 80px 0;
+  background: #f8f9fa;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 40px;
+  margin-top: 60px;
+}
+
+.service-item {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.service-item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.service-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+.service-icon i {
+  font-size: 36px;
+  color: white;
+}
+
+.service-item:hover .service-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.service-item h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.service-item p {
+  font-size: 1.1rem;
+  color: #6c757d;
+  line-height: 1.7;
+  margin-bottom: 30px;
+  min-height: 80px;
+}
+
+.service-features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.service-features li {
+  padding: 8px 0;
+  color: #495057;
+  font-size: 1rem;
+  position: relative;
+  padding-left: 25px;
+}
+
+.service-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-weight: bold;
+}
+
+.service-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.service-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+  color: white;
+}
+
+.service-action i {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.service-action:hover i {
+  transform: translateX(3px);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .services-hero h1 {
+    font-size: 2.5rem;
+  }
+  
+  .services-hero p {
+    font-size: 1.1rem;
+  }
+  
+  .service-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .service-item {
+    padding: 30px;
+  }
+  
+  .service-item h3 {
+    font-size: 1.5rem;
+  }
+}
+</style>
+
+<main class="main">
+  <!-- Services Hero Section -->
+  <section class="services-hero">
+    <div class="container">
+      <h1>Our Services</h1>
+      <p>Transform your business with our comprehensive suite of professional services designed to drive growth and innovation.</p>
+    </div>
+  </section>
+
+<!-- Services Listing Section -->
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="isotope-layout" data-default-filter="*" data-layout="fitRows" data-sort="original-order">
+
+          <div class="filters-wrapper" data-aos="fade-up" data-aos-delay="100">
+            <ul class="portfolio-filters isotope-filters">
+              <li data-filter="*" class="filter-active">All Services</li>
+              {% if categories %}
+                {% for cat in categories %}
+                  <li data-filter=".filter-{{ cat.slug|escape }}">{{ cat.title }}</li>
+                {% endfor %}
+              {% endif %}
+            </ul>
+          </div>
+
+<section class="services-listing">
+  <div class="container">
+    <div class="service-grid">
+
+      {% if services %}
+        {% for service in services %}
+          <div class="service-item isotope-item filter-{{ service.category.slug|escape }}"
+               data-aos="fade-up"
+               data-aos-delay="{{ forloop.counter0|add:1 }}00">
+
+            <!-- Service Media -->
+            <div class="service-icon">
+              {% if service.image %}
+                <img src="{{ service.image.url }}"
+                     alt="{{ service.title }}"
+                     loading="lazy"
+                     style="width: 60px; height: 60px; border-radius: 12px; object-fit: cover;">
+              {% else %}
+                <div class="service-placeholder">
+                  <span>{{ service.tagline|default:"Service" }}</span>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Title -->
+            <h3>{{ service.title }}</h3>
+
+            <!-- Overview -->
+            <p>
+              {{ service.overview|truncatewords:25 }}
+            </p>
+
+            <!-- Highlights Preview (Replaces old features list) -->
+            {% if service.highlights.all %}
+              <ul class="service-features">
+                {% for highlight in service.highlights.all|slice:":3" %}
+                  <li>{{ highlight.title }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            <!-- Optional Case Study Indicator -->
+            {% if service.case_studies.exists %}
+              <div class="service-meta">
+                <small>
+                  <i class="bi bi-briefcase"></i>
+                  {{ service.case_studies.count }} Case Stud{{ service.case_studies.count|pluralize:"y,ies" }}
+                </small>
+              </div>
+            {% endif %}
+
+            <!-- CTA -->
+            <a href="{% url 'service_detail' slug=service.slug %}"
+               class="service-action">
+              <span>Explore Service</span>
+              <i class="bi bi-arrow-right"></i>
+            </a>
+
+          </div>
+        {% endfor %}
+
+      {% else %}
+        <div class="col-12 text-center">
+          <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <h3>No Services Available</h3>
+            <p>We're currently refining our offerings. Please check back soon.</p>
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.portfolio-filters li');
+    const serviceItems = document.querySelectorAll('.service-item');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('filter-active'));
+            // Add active class to clicked button
+            this.classList.add('filter-active');
+            
+            const filterValue = this.getAttribute('data-filter');
+            
+            serviceItems.forEach(item => {
+                if (filterValue === '*' || item.classList.contains(filterValue.substring(1))) {
+                    item.style.display = 'block';
+                    // Add animation
+                    item.style.animation = 'fadeInUp 0.5s ease-out';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+
+{% endblock %}

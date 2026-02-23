@@ -1,0 +1,410 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Order Confirmed — DravTech{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    --ink:    #0d0d0d;
+    --paper:  #f5f2ec;
+    --accent: #c8a96e;
+    --accent2:#2d6a4f;
+    --muted:  #6b6b6b;
+    --border: #e2ddd6;
+    --card:   #ffffff;
+    --font-display:'DM Serif Display', Georgia, serif;
+    --font-body:'DM Sans', system-ui, sans-serif;
+  }
+  body { background: var(--paper); font-family: var(--font-body); color: var(--ink); }
+
+  /* Steps */
+  .steps-bar {
+    display:flex; align-items:center; justify-content:center; gap:0;
+    padding:32px 0;
+    border-bottom:1px solid var(--border);
+    background:var(--card);
+  }
+  .step { display:flex; align-items:center; gap:10px; font-size:.85rem; font-weight:600; color:var(--muted); }
+  .step.done { color:var(--accent2); }
+  .step-num { width:28px; height:28px; border-radius:50%; border:2px solid currentColor;
+    display:flex; align-items:center; justify-content:center; font-size:.8rem; }
+  .step.done .step-num { background:var(--accent2); color:#fff; border-color:var(--accent2); }
+  .step-line { width:48px; height:1.5px; background:var(--border); margin:0 6px; }
+
+  /* Hero tick */
+  .confirm-hero {
+    text-align:center;
+    padding:64px 20px 48px;
+  }
+  .tick-ring {
+    width:88px; height:88px;
+    border-radius:50%;
+    background:linear-gradient(135deg, #d1fae5, #a7f3d0);
+    display:flex; align-items:center; justify-content:center;
+    font-size:2.4rem; color:#065f46;
+    margin:0 auto 24px;
+    box-shadow:0 0 0 12px #d1fae540;
+    animation:pop .4s ease;
+  }
+  @keyframes pop {
+    0%   { transform:scale(.6); opacity:0; }
+    70%  { transform:scale(1.1); }
+    100% { transform:scale(1); opacity:1; }
+  }
+  .confirm-hero h1 {
+    font-family:var(--font-display);
+    font-size:clamp(2rem,4vw,2.8rem);
+    font-weight:400;
+    margin:0 0 10px;
+  }
+  .confirm-hero p { color:var(--muted); font-size:1rem; max-width:480px; margin:0 auto; }
+  .order-ref {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:8px 18px;
+    background:var(--paper);
+    border:1.5px solid var(--border);
+    border-radius:100px;
+    font-size:.85rem; font-weight:600;
+    margin-top:18px;
+  }
+
+  /* Layout */
+  .confirm-layout {
+    display:grid;
+    grid-template-columns:1fr 340px;
+    gap:32px;
+    padding:0 0 80px;
+  }
+  @media(max-width:860px) { .confirm-layout { grid-template-columns:1fr; } }
+
+  /* Cards */
+  .conf-card {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    overflow:hidden;
+    margin-bottom:24px;
+  }
+  .conf-card-header {
+    padding:18px 24px;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:10px;
+    font-weight:600; font-size:.95rem;
+  }
+  .conf-card-header i { color:var(--accent2); }
+  .conf-card-body { padding:20px 24px; }
+
+  /* Items list */
+  .conf-item {
+    display:flex; align-items:center; gap:14px;
+    padding:14px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .conf-item:last-child { border-bottom:none; }
+  .ci-img {
+    width:56px; height:56px; border-radius:10px; flex-shrink:0;
+    background:var(--paper); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.4rem; color:var(--border); overflow:hidden;
+  }
+  .ci-img img { width:100%; height:100%; object-fit:cover; }
+  .ci-name { font-weight:600; font-size:.9rem; margin-bottom:3px; }
+  .ci-meta { font-size:.78rem; color:var(--muted); display:flex; gap:8px; }
+  .ci-price { font-weight:700; font-size:.95rem; margin-left:auto; white-space:nowrap; }
+
+  /* Download button */
+  .btn-download {
+    display:inline-flex; align-items:center; gap:7px;
+    padding:7px 16px;
+    background:#eff6ff; color:#1e40af;
+    border:1px solid #bfdbfe;
+    border-radius:8px;
+    font-size:.8rem; font-weight:600;
+    text-decoration:none;
+    margin-top:6px;
+    transition:background .13s;
+  }
+  .btn-download:hover { background:#dbeafe; color:#1e40af; }
+
+  /* Shipping info */
+  .addr-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media(max-width:500px) { .addr-grid { grid-template-columns:1fr; } }
+  .addr-item { font-size:.88rem; }
+  .addr-item .lbl { font-size:.72rem; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--muted); font-weight:600; margin-bottom:3px; }
+
+  /* Summary panel */
+  .sum-panel {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    overflow:hidden;
+    position:sticky; top:90px;
+  }
+  .sp-header { padding:18px 22px; border-bottom:1px solid var(--border);
+    font-family:var(--font-display); font-size:1.15rem; font-weight:400; }
+  .sp-row { display:flex; justify-content:space-between; padding:10px 22px;
+    font-size:.88rem; border-bottom:1px solid var(--border); }
+  .sp-row .lbl { color:var(--muted); }
+  .sp-total { display:flex; justify-content:space-between; padding:14px 22px;
+    font-weight:700; font-size:1.05rem; }
+  .status-pill {
+    display:inline-flex; align-items:center; gap:6px;
+    padding:4px 12px; border-radius:100px;
+    font-size:.75rem; font-weight:600;
+  }
+  .status-pending { background:#fef9c3; color:#854d0e; }
+  .status-paid    { background:#d1fae5; color:#065f46; }
+
+  /* Next steps */
+  .next-steps { display:flex; flex-direction:column; gap:12px; }
+  .next-step {
+    display:flex; align-items:flex-start; gap:14px;
+    padding:16px;
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:12px;
+  }
+  .ns-icon {
+    width:36px; height:36px; border-radius:10px;
+    background:var(--ink); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:.95rem; flex-shrink:0;
+  }
+  .ns-title { font-weight:600; font-size:.88rem; margin-bottom:3px; }
+  .ns-desc  { font-size:.8rem; color:var(--muted); line-height:1.5; }
+
+  /* Buttons */
+  .btn-primary-sm {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 22px;
+    background:var(--ink); color:#fff;
+    border-radius:10px; font-size:.9rem; font-weight:600;
+    text-decoration:none; transition:background .13s;
+  }
+  .btn-primary-sm:hover { background:#2a2a2a; color:#fff; }
+  .btn-outline-sm {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:11px 22px;
+    border:1.5px solid var(--border); color:var(--ink);
+    border-radius:10px; font-size:.9rem; font-weight:600;
+    text-decoration:none; transition:border-color .13s;
+  }
+  .btn-outline-sm:hover { border-color:var(--ink); }
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Steps -->
+<div class="steps-bar">
+  <div class="step done"><span class="step-num"><i class="bi bi-check2"></i></span><span class="d-none d-sm-inline">Cart</span></div>
+  <div class="step-line"></div>
+  <div class="step done"><span class="step-num"><i class="bi bi-check2"></i></span><span class="d-none d-sm-inline">Checkout</span></div>
+  <div class="step-line"></div>
+  <div class="step done"><span class="step-num"><i class="bi bi-check2"></i></span><span class="d-none d-sm-inline">Confirmation</span></div>
+</div>
+
+<!-- Hero -->
+<div class="confirm-hero">
+  <div class="tick-ring"><i class="bi bi-check2-all"></i></div>
+  <h1>Order Placed Successfully!</h1>
+  <p>
+    {% if order.has_physical_items %}
+      We've received your order and will begin preparing your items for delivery.
+    {% else %}
+      Your digital items are ready. Check below for download links.
+    {% endif %}
+  </p>
+  <div class="order-ref">
+    <i class="bi bi-hash"></i> Order #{{ order.id }}
+    <span class="status-pill status-{{ order.payment_status }}">{{ order.get_payment_status_display }}</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="confirm-layout">
+
+    <!-- Left column -->
+    <div>
+
+      <!-- Items -->
+      <div class="conf-card">
+        <div class="conf-card-header">
+          <i class="bi bi-bag-check"></i> Items Ordered
+        </div>
+        <div class="conf-card-body" style="padding-top:8px; padding-bottom:8px;">
+          {% for item in order.items.all %}
+          <div class="conf-item">
+            <div class="ci-img">
+              {% if item.product and item.product.image %}
+                <img src="{{ item.product.image.url }}" alt="{{ item.product_title }}">
+              {% else %}
+                {% if item.product_type == 'digital' %}<i class="bi bi-cpu"></i>
+                {% elif item.product_type == 'merch' %}<i class="bi bi-bag"></i>
+                {% else %}<i class="bi bi-palette"></i>{% endif %}
+              {% endif %}
+            </div>
+            <div style="flex:1;">
+              <div class="ci-name">{{ item.product_title }}</div>
+              <div class="ci-meta">
+                <span>{{ item.get_product_type_display|default:item.product_type }}</span>
+                <span>Qty: {{ item.quantity }}</span>
+              </div>
+              <!-- Download button for downloadable items -->
+              {% if item.product and item.product.is_downloadable %}
+                {% if order.payment_status == 'paid' %}
+                  <a href="{% url 'marketplace:download-artwork' item.product.id %}" class="btn-download">
+                    <i class="bi bi-download"></i> Download
+                  </a>
+                {% else %}
+                  <span style="font-size:.78rem; color:var(--muted); display:block; margin-top:6px;">
+                    <i class="bi bi-clock"></i> Download available after payment confirmation
+                  </span>
+                {% endif %}
+              {% endif %}
+            </div>
+            <div class="ci-price">KES {{ item.unit_price|floatformat:0 }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Shipping address (only for physical orders) -->
+      {% if order.has_physical_items and order.shipping_address %}
+      <div class="conf-card">
+        <div class="conf-card-header">
+          <i class="bi bi-truck"></i> Delivery Address
+        </div>
+        <div class="conf-card-body">
+          <div class="addr-grid">
+            <div class="addr-item">
+              <div class="lbl">Recipient</div>
+              {{ order.shipping_address.full_name }}
+            </div>
+            <div class="addr-item">
+              <div class="lbl">Phone</div>
+              {{ order.shipping_address.phone }}
+            </div>
+            <div class="addr-item">
+              <div class="lbl">Address</div>
+              {{ order.shipping_address.address_1 }}
+              {% if order.shipping_address.address_2 %}, {{ order.shipping_address.address_2 }}{% endif %}
+            </div>
+            <div class="addr-item">
+              <div class="lbl">City</div>
+              {{ order.shipping_address.city }}{% if order.shipping_address.county %}, {{ order.shipping_address.county }}{% endif %}
+            </div>
+            <div class="addr-item">
+              <div class="lbl">Country</div>
+              {{ order.shipping_address.country }}
+            </div>
+            {% if order.shipping_address.postal_code %}
+            <div class="addr-item">
+              <div class="lbl">Postal Code</div>
+              {{ order.shipping_address.postal_code }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- What's next -->
+      <div class="conf-card">
+        <div class="conf-card-header"><i class="bi bi-arrow-right-circle"></i> What Happens Next</div>
+        <div class="conf-card-body">
+          <div class="next-steps">
+            {% if order.payment_status != 'paid' %}
+            <div class="next-step">
+              <div class="ns-icon"><i class="bi bi-phone"></i></div>
+              <div>
+                <div class="ns-title">Complete Payment</div>
+                <div class="ns-desc">Check your phone for the M-Pesa STK push notification and enter your PIN to complete the payment.</div>
+              </div>
+            </div>
+            {% endif %}
+            {% if order.has_physical_items %}
+            <div class="next-step">
+              <div class="ns-icon"><i class="bi bi-box-seam"></i></div>
+              <div>
+                <div class="ns-title">Packaging & Dispatch</div>
+                <div class="ns-desc">Your items will be carefully packaged and dispatched within 1–2 business days after payment confirmation.</div>
+              </div>
+            </div>
+            <div class="next-step">
+              <div class="ns-icon"><i class="bi bi-truck"></i></div>
+              <div>
+                <div class="ns-title">Delivery</div>
+                <div class="ns-desc">Estimated delivery: 2–5 business days to Nairobi, 3–7 for upcountry. You'll receive a tracking update via email.</div>
+              </div>
+            </div>
+            {% else %}
+            <div class="next-step">
+              <div class="ns-icon"><i class="bi bi-download"></i></div>
+              <div>
+                <div class="ns-title">Download Your Files</div>
+                <div class="ns-desc">Once payment is confirmed, download links become active above. You have up to 5 downloads per file.</div>
+              </div>
+            </div>
+            {% endif %}
+            <div class="next-step">
+              <div class="ns-icon"><i class="bi bi-envelope"></i></div>
+              <div>
+                <div class="ns-title">Confirmation Email</div>
+                <div class="ns-desc">A confirmation email will be sent to {{ order.email|default:"your registered email" }} with full order details.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div style="display:flex; gap:14px; flex-wrap:wrap;">
+        <a href="{% url 'marketplace:products' %}" class="btn-primary-sm">
+          <i class="bi bi-grid"></i> Continue Shopping
+        </a>
+        {% if request.user.is_authenticated %}
+        <a href="/account/orders/" class="btn-outline-sm">
+          <i class="bi bi-receipt"></i> View My Orders
+        </a>
+        {% endif %}
+      </div>
+
+    </div><!-- /left -->
+
+    <!-- Right: Summary -->
+    <div class="sum-panel">
+      <div class="sp-header">Order Summary</div>
+      <div class="sp-row"><span class="lbl">Order #</span><span>{{ order.id }}</span></div>
+      <div class="sp-row"><span class="lbl">Date</span><span>{{ order.created_at|date:"d M Y" }}</span></div>
+      <div class="sp-row"><span class="lbl">Status</span>
+        <span class="status-pill status-{{ order.status }}">{{ order.get_status_display }}</span>
+      </div>
+      <div class="sp-row"><span class="lbl">Subtotal</span><span>KES {{ order.subtotal|floatformat:2 }}</span></div>
+      <div class="sp-row">
+        <span class="lbl">Shipping</span>
+        <span>{% if order.shipping_cost > 0 %}KES {{ order.shipping_cost|floatformat:2 }}{% else %}Free{% endif %}</span>
+      </div>
+      <div class="sp-total">
+        <span>Total</span><span>KES {{ order.total|floatformat:2 }}</span>
+      </div>
+
+      {% if order.payment_status != 'paid' %}
+      <div style="padding:16px 22px; background:#fef9c3; border-top:1px solid var(--border);">
+        <div style="display:flex; align-items:center; gap:8px; font-size:.82rem; color:#854d0e;">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <strong>Awaiting Payment</strong>
+        </div>
+        <p style="margin:6px 0 0; font-size:.78rem; color:#92400e;">
+          Please complete your M-Pesa payment to confirm this order.
+        </p>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

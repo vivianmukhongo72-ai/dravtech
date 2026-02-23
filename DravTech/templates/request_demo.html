@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="main">
+
+  <section id="request-demo" class="contact section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Request a Demo</h2>
+      <p>
+        Share a bit about your organisation and what you’d like to achieve.
+        We’ll follow up with a tailored walkthrough — no pressure, no checkout.
+      </p>
+    </div>
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row gy-5 align-items-start">
+
+        <div class="col-lg-5" data-aos="fade-right" data-aos-delay="150">
+          <div class="info-panel">
+            {% if product %}
+              <span class="section-badge">
+                <i class="bi bi-boxes"></i>
+                Selected Product
+              </span>
+              <h3>{{ product.title }}</h3>
+              {% if product.tagline %}
+                <p>{{ product.tagline }}</p>
+              {% endif %}
+              <p class="product-price-highlight">
+                {{ product.formatted_pricing }}
+              </p>
+            {% else %}
+              <span class="section-badge">
+                <i class="bi bi-chat-dots-fill"></i>
+                Tell us what you need
+              </span>
+              <h3>Not sure which product?</h3>
+              <p>
+                That’s fine — describe your challenge and we’ll recommend a
+                product or a custom engagement.
+              </p>
+            {% endif %}
+
+            <ul class="contact-list mt-4">
+              <li><i class="bi bi-envelope"></i> <a href="mailto:dravislotum@gmail.com">dravislotum@gmail.com</a></li>
+              <li><i class="bi bi-telephone"></i> <a href="tel:+254758067458">+254 758 067 458</a></li>
+              <li><i class="bi bi-geo-alt"></i> Nairobi, Kenya</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-lg-7" data-aos="fade-left" data-aos-delay="200">
+          <div class="form-card">
+            <div class="form-card-header">
+              <div class="header-icon">
+                <i class="bi bi-send-fill"></i>
+              </div>
+              <div class="header-text">
+                <h4>Demo Request Form</h4>
+                <p>
+                  We’ll review your message and respond within one business day.
+                </p>
+              </div>
+            </div>
+
+            {% if submitted %}
+              <div class="alert alert-success" role="alert">
+                Thank you — your request has been received. Our team will get in
+                touch soon.
+              </div>
+            {% endif %}
+
+            <form method="post" novalidate>
+              {% csrf_token %}
+              {% if product %}
+                <input type="hidden" name="product_slug" value="{{ product.slug }}">
+              {% endif %}
+
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div class="input-group-custom">
+                    <label for="{{ form.name.id_for_label }}">Your Name</label>
+                    <div class="input-wrapper">
+                      <i class="bi bi-person"></i>
+                      {{ form.name }}
+                    </div>
+                    {{ form.name.errors }}
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="input-group-custom">
+                    <label for="{{ form.email.id_for_label }}">Email Address</label>
+                    <div class="input-wrapper">
+                      <i class="bi bi-envelope"></i>
+                      {{ form.email }}
+                    </div>
+                    {{ form.email.errors }}
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="input-group-custom">
+                    <label for="{{ form.company.id_for_label }}">Company / Organisation</label>
+                    <div class="input-wrapper">
+                      <i class="bi bi-building"></i>
+                      {{ form.company }}
+                    </div>
+                    {{ form.company.errors }}
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="input-group-custom">
+                    <label for="{{ form.phone.id_for_label }}">Phone / WhatsApp</label>
+                    <div class="input-wrapper">
+                      <i class="bi bi-telephone"></i>
+                      {{ form.phone }}
+                    </div>
+                    {{ form.phone.errors }}
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="input-group-custom">
+                    <label for="{{ form.message.id_for_label }}">What would you like to see in the demo?</label>
+                    <div class="input-wrapper textarea-wrapper">
+                      <i class="bi bi-pencil-square"></i>
+                      {{ form.message }}
+                    </div>
+                    {{ form.message.errors }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                  <span>Submit Request</span>
+                  <i class="bi bi-arrow-right-circle-fill"></i>
+                </button>
+                <div class="secure-note">
+                  <i class="bi bi-lock-fill"></i>
+                  <span>Your data is used only to respond to this inquiry.</span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<style>
+  .product-price-highlight {
+    font-weight: 600;
+    color: #0f766e;
+    margin-top: 0.4rem;
+  }
+  .form-card {
+    border-radius: 18px;
+    padding: 1.75rem 1.5rem;
+    background: #ffffff;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+  }
+  .btn-submit {
+    border-radius: 999px;
+  }
+</style>
+
+{% endblock %}
+

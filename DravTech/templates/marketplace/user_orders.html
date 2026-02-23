@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Orders — DravTech{% endblock %}
+
+{% block extra_css %}
+<style>
+.orders-container {
+  padding: 80px 0;
+}
+
+.orders-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.orders-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--heading-color);
+  margin-bottom: 1rem;
+}
+
+.orders-header p {
+  font-size: 1.1rem;
+  color: var(--default-color);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.orders-grid {
+  display: grid;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.order-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.order-number {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--heading-color);
+}
+
+.order-date {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.order-status {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-processing {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.order-items {
+  margin-bottom: 1.5rem;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.item-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #e2e8f0;
+}
+
+.item-details {
+  flex: 1;
+}
+
+.item-title {
+  font-weight: 600;
+  color: var(--heading-color);
+  margin-bottom: 0.25rem;
+}
+
+.item-meta {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.item-price {
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+.order-totals {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 2px solid #f1f5f9;
+}
+
+.total-label {
+  font-weight: 600;
+  color: var(--heading-color);
+}
+
+.total-amount {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
+.order-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-order {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.btn-secondary {
+  background: #f8fafc;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-order:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #64748b;
+}
+
+.empty-state i {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  color: #cbd5e1;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--heading-color);
+}
+
+.empty-state p {
+  margin-bottom: 2rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .order-item {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: center;
+  }
+  
+  .order-totals {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .order-actions {
+    flex-direction: column;
+  }
+  
+  .btn-order {
+    width: 100%;
+    text-align: center;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<main class="main">
+  <section class="orders-container section">
+    <div class="container">
+      <div class="orders-header" data-aos="fade-up">
+        <h1>My Orders</h1>
+        <p>Track and manage all your DravTech orders in one place.</p>
+      </div>
+
+      {% if orders %}
+        <div class="orders-grid" data-aos="fade-up" data-aos-delay="100">
+          {% for order in orders %}
+            <div class="order-card">
+              <div class="order-header">
+                <div>
+                  <div class="order-number">Order #{{ order.id }}</div>
+                  <div class="order-date">{{ order.created_at|date:"F j, Y g:i A" }}</div>
+                </div>
+                <div class="order-status status-{{ order.get_status_display|lower }}">
+                  {{ order.get_status_display }}
+                </div>
+              </div>
+
+              <div class="order-items">
+                {% for item in order.items.all %}
+                  <div class="order-item">
+                    {% if item.product.image %}
+                      <img src="{{ item.product.image.url }}" alt="{{ item.product.title }}" class="item-image">
+                    {% else %}
+                      <div class="item-image"></div>
+                    {% endif %}
+                    
+                    <div class="item-details">
+                      <div class="item-title">{{ item.product_title }}</div>
+                      <div class="item-meta">
+                        {{ item.get_product_type_display }} • Quantity: {{ item.quantity }}
+                      </div>
+                    </div>
+                    
+                    <div class="item-price">
+                      ${{ item.unit_price|floatformat:2 }}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+
+              <div class="order-totals">
+                <div class="total-label">Total Amount</div>
+                <div class="total-amount">${{ order.total|floatformat:2 }}</div>
+              </div>
+
+              <div class="order-actions">
+                <a href="{% url 'marketplace:order-confirmation' order.id %}" class="btn-order btn-primary">
+                  <i class="bi bi-eye"></i>
+                  View Details
+                </a>
+                {% if order.status == 'completed' %}
+                  {% for item in order.items.all %}
+                    {% if item.product_type == 'digital' %}
+                      <a href="{% url 'marketplace:download-artwork' item.product.id %}" class="btn-order btn-secondary">
+                        <i class="bi bi-download"></i>
+                        Download
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state" data-aos="fade-up">
+          <i class="bi bi-box-seam"></i>
+          <h3>No Orders Yet</h3>
+          <p>You haven't placed any orders yet. Start shopping to see your order history here.</p>
+          <a href="{% url 'marketplace:products' %}" class="btn-order btn-primary">
+            <i class="bi bi-bag"></i>
+            Start Shopping
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+</main>
+
+{% endblock %}

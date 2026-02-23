@@ -1,0 +1,599 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Admin - Contact Submissions{% endblock %}
+
+{% block content %}
+<style>
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.admin-header {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.admin-header h1 {
+  color: var(--color-secondary);
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.admin-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.admin-tab {
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: #6c757d;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.admin-tab.active {
+  background: white;
+  color: var(--color-primary);
+  border-bottom: 3px solid var(--color-primary);
+}
+
+.admin-content {
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  min-height: 600px;
+}
+
+.submissions-section {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.submissions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.submission-card {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.submission-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.submission-header {
+  border-bottom: 1px solid #f8f9fa;
+  padding-bottom: 15px;
+  margin-bottom: 10px;
+}
+
+.submission-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.submission-name {
+  font-weight: 600;
+  color: var(--color-secondary);
+  font-size: 1.1rem;
+}
+
+.submission-email {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.submission-date {
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+
+.submission-subject {
+  color: var(--color-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.submission-message {
+  color: #495057;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-pending {
+  background: #ffc107;
+  color: #856404;
+}
+
+.status-responded {
+  background: #d4edda;
+  color: white;
+}
+
+.status-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.action-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+}
+
+.action-btn.respond {
+  background: #28a745;
+  color: white;
+}
+
+.action-btn.delete {
+  background: #dc3545;
+  color: white;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 10px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .submissions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .submission-card {
+    padding: 15px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Admin Panel</h1>
+    <p>Manage contact submissions and inquiries</p>
+  </div>
+  
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="showTab('submissions')">
+      <i class="bi bi-envelope"></i>
+      Contact Submissions ({{ total_contacts }})
+    </button>
+    <button class="admin-tab" onclick="showTab('inquiries')">
+      <i class="bi bi-box"></i>
+      Product Inquiries ({{ total_inquiries }})
+    </button>
+  </div>
+  
+  <div class="admin-content">
+    <!-- Contact Submissions Tab -->
+    <div id="submissions-tab" class="submissions-section">
+      <div class="section-title">
+        <h2>Contact Submissions</h2>
+        <div class="tab-actions">
+          <button class="action-btn" onclick="markAllResponded()">
+            <i class="bi bi-check-all"></i>
+            Mark All as Responded
+          </button>
+          <button class="action-btn" onclick="refreshSubmissions()">
+            <i class="bi bi-arrow-clockwise"></i>
+            Refresh
+          </button>
+        </div>
+      </div>
+      
+      <div class="submissions-grid">
+        {% if contact_submissions %}
+          {% for submission in contact_submissions %}
+            <div class="submission-card">
+              <div class="submission-header">
+                <div class="submission-meta">
+                  <div class="submission-name">{{ submission.name }}</div>
+                  <div class="submission-email">{{ submission.email }}</div>
+                  <div class="submission-date">{{ submission.created_at|date:"M d, Y" }}</div>
+                </div>
+                <div class="submission-subject">{{ submission.subject }}</div>
+              </div>
+              </div>
+              
+              <div class="submission-message">{{ submission.message|truncatewords:30 }}</div>
+              
+              <div class="status-actions">
+                <span class="status-badge {% if submission.responded %}status-responded{% else %}status-pending{% endif %}">
+                  {{ submission.responded|yesno:"Yes" if submission.responded else "No" }}
+                </span>
+                <button class="action-btn {% if submission.responded %}action-btn respond{% else %}action-btn delete" onclick="deleteSubmission({{ submission.id }})">
+                  {% if submission.responded %}
+                    <i class="bi bi-check"></i>
+                    Mark as Responded
+                  {% else %}
+                    <i class="bi bi-trash"></i>
+                    Delete
+                  {% endif %}
+                </button>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <h3>No contact submissions yet</h3>
+            <p>When users submit the contact form, their submissions will appear here for you to manage.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Product Inquiries Tab -->
+    <div id="inquiries-tab" class="submissions-section" style="display: none;">
+      <div class="section-title">
+        <h2>Product Inquiries</h2>
+        <div class="tab-actions">
+          <button class="action-btn" onclick="markAllInquiriesResponded()">
+            <i class="bi bi-check-all"></i>
+            Mark All as Responded
+          </button>
+          <button class="action-btn" onclick="refreshInquiries()">
+            <i class="bi bi-arrow-clockwise"></i>
+            Refresh
+          </button>
+        </div>
+      </div>
+      
+      <div class="inquiries-grid">
+        {% if product_inquiries %}
+          {% for inquiry in product_inquiries %}
+            <div class="submission-card">
+              <div class="submission-header">
+                <div class="submission-meta">
+                  <div class="submission-name">{{ inquiry.name }}</div>
+                  <div class="submission-email">{{ inquiry.email }}</div>
+                  <div class="submission-date">{{ inquiry.created_at|date:"M d, Y" }}</div>
+                  <div class="submission-subject">{{ inquiry.subject }}</div>
+                </div>
+                <div class="submission-message">{{ inquiry.message|truncatewords:30 }}</div>
+                
+                <div class="submission-meta">
+                  <div class="submission-name">{{ inquiry.product.title }}</div>
+                  <div class="submission-email">{{ inquiry.email }}</div>
+                  <div class="submission-date">{{ inquiry.created_at|date:"M d, Y" }}</div>
+                </div>
+                
+                <div class="status-actions">
+                  <span class="status-badge {% if inquiry.responded %}status-responded{% else %}status-pending{% endif %}">
+                    {{ inquiry.responded|yesno:"Yes" if inquiry.responded else "No" }}
+                  </span>
+                  <button class="action-btn {% if inquiry.responded %}action-btn respond{% else %}action-btn delete" onclick="deleteInquiry({{ inquiry.id }})">
+                    {% if inquiry.responded %}
+                      <i class="bi bi-check"></i>
+                      Mark as Responded
+                    {% else %}
+                      <i class="bi bi-trash"></i>
+                      Delete
+                    {% endif %}
+                  </button>
+                </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <h3>No product inquiries yet</h3>
+            <p>When users request demos for specific products, their inquiries will appear here for you to manage.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  
+  <!-- Stats Section -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number">{{ total_contacts }}</div>
+      <div class="stat-label">Total Contacts</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ total_inquiries }}</div>
+      <div class="stat-label">Product Inquiries</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ contact_submissions|length|add:contact_submissions|length:product_inquiries }}</div>
+      <div class="stat-label">Pending Responses</div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<script>
+function showTab(tabName) {
+  // Hide all tabs
+  document.querySelectorAll('.admin-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  
+  // Show selected tab
+  document.getElementById(tabName + '-tab').style.display = 'block';
+}
+
+function deleteSubmission(submissionId) {
+  if (confirm('Are you sure you want to delete this contact submission?')) {
+    fetch(`/admin/delete-contact/${submissionId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Remove the submission from DOM
+        const submissionElement = document.querySelector(`submission-card-${submissionId}`);
+        if (submissionElement) {
+          submissionElement.style.opacity = '0';
+          setTimeout(() => submissionElement.remove(), 300);
+        }
+        
+        // Update the count
+        const totalElement = document.querySelector('.stat-number');
+        if (totalElement) {
+          const currentCount = parseInt(totalElement.textContent);
+          totalElement.textContent = currentCount - 1;
+        }
+        
+        // Show success message
+        showNotification('Contact submission deleted successfully', 'success');
+      } else {
+        showNotification('Error deleting contact submission', 'error');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showNotification('Error deleting contact submission', 'error');
+    });
+  }
+}
+
+function deleteInquiry(inquiryId) {
+  if (confirm('Are you sure you want to delete this product inquiry?')) {
+    fetch(`/admin/delete-inquiry/${inquiryId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Remove the inquiry from DOM
+        const inquiryElement = document.querySelector(`submission-card-${inquiryId}`);
+        if (inquiryElement) {
+          inquiryElement.style.opacity = '0';
+          setTimeout(() => inquiryElement.remove(), 300);
+        }
+        
+        // Update the count
+        const totalElement = document.querySelector('.stat-number');
+        if (totalElement) {
+          const currentCount = parseInt(totalElement.textContent);
+          totalElement.textContent = currentCount - 1;
+        }
+        
+        // Show success message
+        showNotification('Product inquiry deleted successfully', 'success');
+      } else {
+        showNotification('Error deleting product inquiry', 'error');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showNotification('Error deleting product inquiry', 'error');
+    });
+  }
+}
+
+function markAllResponded() {
+  if (confirm('Are you sure you want to mark all contact submissions as responded?')) {
+    fetch('/admin/mark-all-responded/', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Update all submission cards
+        document.querySelectorAll('.status-badge').forEach(badge => {
+          badge.classList.remove('status-pending');
+          badge.classList.add('status-responded');
+        });
+        
+        // Update pending count
+        const pendingElement = document.querySelector('.stat-label:last-child');
+        if (pendingElement && pendingElement.textContent.includes('Pending Responses')) {
+          const currentCount = parseInt(pendingElement.textContent);
+          pendingElement.textContent = currentCount - 1;
+        }
+        
+        showNotification('All contact submissions marked as responded', 'success');
+      } else {
+        showNotification('Error marking submissions as responded', 'error');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showNotification('Error marking submissions as responded', 'error');
+    });
+  }
+}
+
+function markAllInquiriesResponded() {
+  if (confirm('Are you sure you want to mark all product inquiries as responded?')) {
+    fetch('/admin/mark-all-inquiries-responded/', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Update all inquiry cards
+        document.querySelectorAll('.status-badge').forEach(badge => {
+          badge.classList.remove('status-pending');
+          badge.classList.add('status-responded');
+        });
+        
+        // Update pending count
+        const pendingElement = document.querySelector('.stat-label:last-child');
+        if (pendingElement && pendingElement.textContent.includes('Pending Responses')) {
+          const currentCount = parseInt(pendingElement.textContent);
+          pendingElement.textContent = currentCount - 1;
+        }
+        
+        showNotification('All product inquiries marked as responded', 'success');
+      } else {
+        showNotification('Error marking inquiries as responded', 'error');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showNotification('Error marking inquiries as responded', 'error');
+      });
+  }
+}
+
+function refreshSubmissions() {
+  location.reload();
+}
+
+function refreshInquiries() {
+  location.reload();
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+function showNotification(message, type = 'info') {
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `admin-notification ${type}`;
+  notification.innerHTML = `
+    <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+    ${message}
+  `;
+  document.body.appendChild(notification);
+  
+  // Remove notification after 3 seconds
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,101 @@
+[
+  {
+    "model": "marketplace.product",
+    "pk": 1,
+    "fields": {
+      "name": "Golden Muse — Canvas Art",
+      "description": "A premium canvas artwork featuring abstract feminine form with gold accents. Ideal for modern interiors and statement walls.",
+      "product_type": "merch",
+      "price": "8500.00",
+      "image": "products/golden_muse.jpg",
+      "is_active": true,
+      "display_order": 1,
+      "created_at": "2026-01-10T08:00:00Z"      
+    }
+  },
+  {
+    "model": "marketplace.product",
+    "pk": 2,
+    "fields": {
+      "name": "Monochrome Elegance — Wall Art",
+      "description": "Minimalist black-and-white artwork exploring contrast, form, and expression. Printed on high-quality canvas.",
+      "product_type": "merch",
+      "price": "7200.00",
+      "image": "products/monochrome_elegance.jpg",
+      "is_active": true,
+      "display_order": 2,
+      "created_at": "2026-01-12T08:00:00Z"
+    }
+  },
+  {
+    "model": "marketplace.product",
+    "pk": 3,
+    "fields": {
+      "name": "Blue Harmony — Abstract Set",
+      "description": "A three-piece abstract wall art set combining blue, gold, and geometric elements. Perfect for office or living spaces.",
+      "product_type": "merch",
+      "price": "12000.00",
+      "image": "products/blue_harmony_set.jpg",
+      "is_active": true,
+      "display_order": 3,   
+        "created_at": "2026-01-14T08:00:00Z"
+    }
+  },
+  {
+    "model": "marketplace.product",
+    "pk": 4,
+    "fields": {
+      "name": "DravTech Signature Hoodie",
+      "description": "Premium heavyweight hoodie featuring the DravTech logo. Comfortable, durable, and designed for everyday wear.",
+      "product_type": "merch",
+      "price": "4800.00",
+      "image": "products/dravtech_hoodie.jpg",
+      "is_active": true,
+      "display_order": 4,
+      "created_at": "2026-01-16T08:00:00Z"
+    }
+  },
+  {
+    "model": "marketplace.product",
+    "pk": 5,
+    "fields": {
+      "name": "DravTech Branded Tote Bag",
+      "description": "Eco-friendly canvas tote bag with the DravTech logo. Ideal for work, shopping, or daily carry.",
+      "product_type": "merch",
+      "price": "1800.00",
+      "image": "products/dravtech_tote.jpg",
+      "is_active": true,
+      "display_order": 5,
+      "created_at": "2026-01-18T08:00:00Z"
+    }
+  },
+  {
+    "model": "marketplace.product",
+    "pk": 6,
+    "fields": {
+      "name": "DravTech Cap — Classic Edition",
+      "description": "Adjustable baseball cap featuring embroidered DravTech branding. Clean, modern, and versatile.",
+      "product_type": "merch",
+      "price": "2200.00",
+      "image": "products/dravtech_cap.jpg",
+      "is_active": true,
+      "display_order": 6,
+         "created_at": "2026-01-15T08:00:00Z"
+    }
+  },
+  {
+    "model": "marketplace.product",
+    "pk": 7,
+    "fields": {
+      "name": "Digital Art Pack — Feminine Forms",
+      "description": "A downloadable collection of high-resolution digital artwork exploring modern feminine aesthetics. Includes 5 pieces.",
+      "product_type": "digital",
+      "price": "3500.00",
+      "image": "products/digital_art_pack.jpg",
+      "is_active": true,
+      "display_order": 7,
+      "created_at": "2026-02-10T08:00:00Z"
+
+    }
+  }
+]

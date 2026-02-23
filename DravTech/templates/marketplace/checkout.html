@@ -1,0 +1,505 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Checkout — DravTech{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    --ink:    #0d0d0d;
+    --paper:  #f5f2ec;
+    --accent: #c8a96e;
+    --accent2:#2d6a4f;
+    --muted:  #6b6b6b;
+    --border: #e2ddd6;
+    --card:   #ffffff;
+    --red:    #dc2626;
+    --font-display:'DM Serif Display', Georgia, serif;
+    --font-body:'DM Sans', system-ui, sans-serif;
+  }
+  body { background: var(--paper); font-family: var(--font-body); color: var(--ink); }
+
+  /* ── Steps indicator ── */
+  .steps-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+  }
+  .step {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.85rem; font-weight: 600;
+    color: var(--muted);
+  }
+  .step.active { color: var(--ink); }
+  .step.done   { color: var(--accent2); }
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+  }
+  .step.active .step-num { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .step.done   .step-num { background: var(--accent2); color: #fff; border-color: var(--accent2); }
+  .step-line { width: 48px; height: 1.5px; background: var(--border); margin: 0 6px; }
+
+  /* ── Layout ── */
+  .checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 40px;
+    padding: 48px 0 80px;
+    align-items: start;
+  }
+  @media(max-width:900px) {
+    .checkout-layout { grid-template-columns: 1fr; }
+  }
+
+  /* ── Form card ── */
+  .form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+  }
+  .form-card-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin: 0 0 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── Input groups ── */
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .field-row.single { grid-template-columns: 1fr; }
+  @media(max-width:600px) { .field-row { grid-template-columns: 1fr; } }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .field-group label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink);
+    display: flex; align-items: center; gap: 4px;
+  }
+  .field-group label .req { color: var(--red); }
+
+  .input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .input-wrap i {
+    position: absolute;
+    left: 14px;
+    color: var(--muted);
+    font-size: 0.95rem;
+    pointer-events: none;
+  }
+  .input-wrap input,
+  .input-wrap select {
+    width: 100%;
+    padding: 11px 14px 11px 38px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.93rem;
+    font-family: var(--font-body);
+    background: var(--paper);
+    color: var(--ink);
+    transition: border-color .15s;
+    outline: none;
+  }
+  .input-wrap input:focus,
+  .input-wrap select:focus { border-color: var(--ink); background: #fff; }
+  .input-wrap.error input,
+  .input-wrap.error select { border-color: var(--red); }
+  .field-error { font-size: 0.78rem; color: var(--red); }
+
+  /* ── Section label ── */
+  .section-sep {
+    display: flex; align-items: center; gap: 12px;
+    margin: 28px 0 20px;
+  }
+  .section-sep span {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .section-sep::before, .section-sep::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── Shipping notice ── */
+  .shipping-section {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .shipping-section .title {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 600; font-size: 0.95rem;
+    color: #166534; margin-bottom: 16px;
+  }
+
+  /* ── Submit ── */
+  .btn-place-order {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%;
+    padding: 16px;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 24px;
+    transition: background .15s, transform .1s;
+  }
+  .btn-place-order:hover { background: #2a2a2a; transform: translateY(-1px); }
+
+  /* ── Order summary panel ── */
+  .summary-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    position: sticky;
+    top: 90px;
+  }
+  .summary-header {
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 400;
+  }
+
+  .summary-items { padding: 8px 0; }
+  .summary-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-item:last-child { border-bottom: none; }
+  .sum-img {
+    width: 48px; height: 48px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: var(--border);
+    flex-shrink: 0; overflow: hidden;
+  }
+  .sum-img img { width: 100%; height: 100%; object-fit: cover; }
+  .sum-name { font-size: 0.88rem; font-weight: 500; flex: 1; }
+  .sum-qty  { font-size: 0.8rem; color: var(--muted); }
+  .sum-price { font-size: 0.9rem; font-weight: 600; }
+
+  .summary-totals { padding: 16px 24px; }
+  .tot-row {
+    display: flex; justify-content: space-between;
+    font-size: 0.9rem; margin-bottom: 10px;
+  }
+  .tot-row .lbl { color: var(--muted); }
+  .tot-final {
+    display: flex; justify-content: space-between;
+    padding-top: 12px;
+    border-top: 2px solid var(--ink);
+    margin-top: 4px;
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+  .secure-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background: var(--paper);
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* Back button */
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: all .13s;
+  }
+  .back-btn:hover { border-color: var(--ink); color: var(--ink); }
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Steps -->
+<div class="steps-bar">
+  <div class="step done">
+    <span class="step-num"><i class="bi bi-check2"></i></span>
+    <span class="d-none d-sm-inline">Cart</span>
+  </div>
+  <div class="step-line"></div>
+  <div class="step active">
+    <span class="step-num">2</span>
+    <span class="d-none d-sm-inline">Checkout</span>
+  </div>
+  <div class="step-line"></div>
+  <div class="step">
+    <span class="step-num">3</span>
+    <span class="d-none d-sm-inline">Confirmation</span>
+  </div>
+</div>
+
+<div class="container">
+  <div style="padding-top:32px;">
+    <a href="{% url 'marketplace:cart' %}" class="back-btn">
+      <i class="bi bi-arrow-left"></i> Back to Cart
+    </a>
+  </div>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} mt-3">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post" action="{% url 'marketplace:checkout' %}">
+    {% csrf_token %}
+
+    <div class="checkout-layout">
+
+      <!-- ── Left: Forms ── -->
+      <div>
+
+        <!-- Contact info -->
+        <div class="form-card">
+          <h2 class="form-card-title">
+            <i class="bi bi-person-circle" style="color:var(--accent);"></i>
+            Contact Information
+          </h2>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>Full Name <span class="req">*</span></label>
+              <div class="input-wrap">
+                <i class="bi bi-person"></i>
+                <input type="text" name="full_name"
+                       value="{{ form_data.full_name|default:'' }}"
+                       placeholder="Jane Doe" required>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Phone <span class="req">*</span></label>
+              <div class="input-wrap">
+                <i class="bi bi-telephone"></i>
+                <input type="tel" name="phone"
+                       value="{{ form_data.phone|default:'' }}"
+                       placeholder="+254 7XX XXX XXX" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-row single">
+            <div class="field-group">
+              <label>Email Address <span class="req">*</span></label>
+              <div class="input-wrap">
+                <i class="bi bi-envelope"></i>
+                <input type="email" name="email"
+                       value="{{ form_data.email|default:request.user.email|default:'' }}"
+                       placeholder="you@example.com" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── SHIPPING ADDRESS (only when physical items in cart) ── -->
+          {% if has_physical %}
+          <div class="section-sep"><span>Delivery Address</span></div>
+
+          <div class="shipping-section">
+            <div class="title">
+              <i class="bi bi-truck"></i>
+              Your cart contains physical items — please enter a shipping address
+            </div>
+
+            <div class="field-row single">
+              <div class="field-group">
+                <label>Street / Building Address <span class="req">*</span></label>
+                <div class="input-wrap">
+                  <i class="bi bi-geo-alt"></i>
+                  <input type="text" name="address_1"
+                         value="{{ form_data.address_1|default:'' }}"
+                         placeholder="123 Kenyatta Avenue, Apt 4" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-row single">
+              <div class="field-group">
+                <label>Address Line 2 <span style="color:var(--muted); font-weight:400;">(optional)</span></label>
+                <div class="input-wrap">
+                  <i class="bi bi-building"></i>
+                  <input type="text" name="address_2"
+                         value="{{ form_data.address_2|default:'' }}"
+                         placeholder="Floor, building name, etc.">
+                </div>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field-group">
+                <label>City / Town <span class="req">*</span></label>
+                <div class="input-wrap">
+                  <i class="bi bi-pin-map"></i>
+                  <input type="text" name="city"
+                         value="{{ form_data.city|default:'' }}"
+                         placeholder="Nairobi" required>
+                </div>
+              </div>
+              <div class="field-group">
+                <label>County / Region</label>
+                <div class="input-wrap">
+                  <i class="bi bi-map"></i>
+                  <input type="text" name="county"
+                         value="{{ form_data.county|default:'' }}"
+                         placeholder="Nairobi County">
+                </div>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field-group">
+                <label>Postal Code</label>
+                <div class="input-wrap">
+                  <i class="bi bi-mailbox"></i>
+                  <input type="text" name="postal_code"
+                         value="{{ form_data.postal_code|default:'' }}"
+                         placeholder="00100">
+                </div>
+              </div>
+              <div class="field-group">
+                <label>Country</label>
+                <div class="input-wrap">
+                  <i class="bi bi-globe"></i>
+                  <select name="country">
+                    <option value="Kenya" {% if form_data.country == 'Kenya' or not form_data %}selected{% endif %}>Kenya</option>
+                    <option value="Uganda" {% if form_data.country == 'Uganda' %}selected{% endif %}>Uganda</option>
+                    <option value="Tanzania" {% if form_data.country == 'Tanzania' %}selected{% endif %}>Tanzania</option>
+                    <option value="Rwanda" {% if form_data.country == 'Rwanda' %}selected{% endif %}>Rwanda</option>
+                    <option value="Other" {% if form_data.country == 'Other' %}selected{% endif %}>Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /shipping-section -->
+          {% endif %}
+
+          <!-- ── Payment note ── -->
+          <div class="section-sep"><span>Payment</span></div>
+          <div style="padding:16px; background:#fffbeb; border:1px solid #fcd34d; border-radius:12px; font-size:0.88rem; color:#92400e; display:flex; gap:10px; align-items:flex-start;">
+            <i class="bi bi-phone-fill" style="margin-top:2px; font-size:1.1rem;"></i>
+            <div>
+              <strong>M-Pesa STK Push</strong> — after placing your order, you'll receive
+              a payment prompt on your registered phone number. Complete the payment to
+              confirm your order.
+            </div>
+          </div>
+
+          <button type="submit" class="btn-place-order">
+            <i class="bi bi-lock-fill"></i>
+            Place Order — KES {{ total|floatformat:2 }}
+          </button>
+
+          <p style="text-align:center; font-size:0.78rem; color:var(--muted); margin-top:12px;">
+            By placing your order you agree to our
+            <a href="/terms/" style="color:var(--ink);">Terms &amp; Conditions</a>
+          </p>
+        </div><!-- /form-card -->
+
+      </div><!-- /left -->
+
+      <!-- ── Right: Summary ── -->
+      <div class="summary-panel">
+        <div class="summary-header">Order Summary</div>
+
+        <div class="summary-items">
+          {% for pid, item in cart.items %}
+          <div class="summary-item">
+            <div class="sum-img">
+              {% if item.image %}
+                <img src="{{ item.image }}" alt="{{ item.name }}">
+              {% else %}
+                {% if item.product_type == 'digital' %}<i class="bi bi-cpu"></i>
+                {% elif item.product_type == 'merch' %}<i class="bi bi-bag"></i>
+                {% else %}<i class="bi bi-palette"></i>{% endif %}
+              {% endif %}
+            </div>
+            <div>
+              <div class="sum-name">{{ item.name }}</div>
+              <div class="sum-qty">Qty: {{ item.quantity }}</div>
+            </div>
+            <div class="sum-price">
+              KES {{ item.price|floatformat:0 }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="summary-totals">
+          <div class="tot-row">
+            <span class="lbl">Subtotal</span>
+            <span>KES {{ subtotal|floatformat:2 }}</span>
+          </div>
+          <div class="tot-row">
+            <span class="lbl">Shipping</span>
+            <span>
+              {% if shipping_cost > 0 %}KES {{ shipping_cost|floatformat:2 }}
+              {% else %}<span style="color:var(--accent2);">Free</span>{% endif %}
+            </span>
+          </div>
+          <div class="tot-final">
+            <span>Total</span>
+            <span>KES {{ total|floatformat:2 }}</span>
+          </div>
+        </div>
+
+        <div class="secure-row">
+          <i class="bi bi-shield-check" style="color:var(--accent2);"></i>
+          SSL encrypted • Secure checkout
+        </div>
+      </div>
+
+    </div><!-- /checkout-layout -->
+  </form>
+
+</div>
+{% endblock %}

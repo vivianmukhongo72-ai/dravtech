@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="main">
+  <section class="contact-history section">
+    <div class="container">
+      <div class="section-title" data-aos="fade-up">
+        <h2>Your Contact History</h2>
+        <p>View all your submitted contact inquiries and their status.</p>
+      </div>
+
+      {% if user_submissions %}
+        <div class="history-list" data-aos="fade-up" data-aos-delay="100">
+          {% for submission in user_submissions %}
+            <div class="history-card">
+              <div class="history-header">
+                <div>
+                  <div class="history-date">
+                    <i class="bi bi-calendar3"></i>
+                    {{ submission.created_at|date:"F j, Y g:i A" }}
+                  </div>
+                  <div class="history-subject">{{ submission.subject|default:"No Subject" }}</div>
+                </div>
+                <div class="history-status {% if submission.responded %}status-responded{% else %}status-pending{% endif %}">
+                  {% if submission.responded %}
+                    <i class="bi bi-check-circle"></i> Responded
+                  {% else %}
+                    <i class="bi bi-clock"></i> Pending
+                  {% endif %}
+                </div>
+              </div>
+              
+              <div class="history-message">
+                {{ submission.message|linebreaks }}
+              </div>
+              
+              <div class="history-meta">
+                <div>
+                  <i class="bi bi-person"></i>
+                  {{ submission.name }}
+                </div>
+                <div>
+                  <i class="bi bi-envelope"></i>
+                  {{ submission.email }}
+                </div>
+                {% if submission.confirmation_sent %}
+                  <div>
+                    <i class="bi bi-check-circle" style="color: #28a745;"></i>
+                    Confirmation sent
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state" data-aos="fade-up">
+          <i class="bi bi-inbox"></i>
+          <h3>No Contact Submissions Yet</h3>
+          <p>You haven't submitted any contact inquiries yet.</p>
+          <a href="{% url 'contact' %}" class="btn btn-primary mt-3">
+            <i class="bi bi-envelope"></i>
+            Send Your First Message
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+</main>
+
+{% endblock %}

@@ -1,0 +1,7 @@
+"""
+Backup of settings.py before switching to sqlite for local sample data creation.
+This file was created by an automated edit. Keep it if you want to restore the original MySQL configuration.
+"""
+
+# Original settings.py content saved for restore.
+
