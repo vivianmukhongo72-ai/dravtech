@@ -1,0 +1,97 @@
+
+
+<div class="marketplace-product-card {% if product.is_featured %}featured{% endif %}">
+  {% if product.is_featured %}
+    <div class="product-badge">Featured</div>
+  {% endif %}
+
+  <!-- Image -->
+  <div class="product-image">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.title }}" loading="lazy">
+    {% else %}
+      <div class="product-placeholder">
+        {% if product.product_type == 'digital' %}
+          <i class="bi bi-laptop"></i>
+        {% elif product.product_type == 'merch' %}
+          <i class="bi bi-bag"></i>
+        {% elif product.product_type == 'artwork' %}
+          <i class="bi bi-palette"></i>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Content -->
+  <div class="product-content">
+    <h3>{{ product.title }}</h3>
+    <p class="product-description">
+      {{ product.tagline|default:product.description|truncatewords:15 }}
+    </p>
+
+    <!-- Features preview -->
+    {% if product.features %}
+      <div class="product-features">
+        <ul>
+          {% for feature in product.features|slice:":3" %}
+            <li><i class="bi bi-check-circle"></i> {{ feature }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <!-- ── DIGITAL ──────────────────────────────────────────── -->
+    {% if product.product_type == 'digital' %}
+      <div class="product-ctas">
+        <a href="{% url 'marketplace:request-demo' product.slug %}" class="btn btn-primary">
+          <i class="bi bi-play-circle"></i> Request Demo
+        </a>
+        <a href="{% url 'marketplace:product-detail' product.slug %}" class="btn btn-outline-primary">
+          <i class="bi bi-eye"></i> View Details
+        </a>
+      </div>
+
+    <!-- ── MERCH ─────────────────────────────────────────────── -->
+    {% elif product.product_type == 'merch' %}
+      {% if product.price %}
+        <div class="product-price">
+          <span class="price">KES {{ product.price|floatformat:0 }}</span>
+          <span class="price-period">+ shipping</span>
+        </div>
+      {% endif %}
+      <div class="product-ctas">
+        <button class="btn btn-primary btn-add-to-cart add-to-cart-btn"
+                data-product-id="{{ product.id }}"
+                data-product-name="{{ product.title }}">
+          <i class="bi bi-cart-plus"></i> Add to Cart
+        </button>
+        <a href="{% url 'marketplace:product-detail' product.slug %}" class="btn btn-outline-primary">
+          <i class="bi bi-eye"></i> View Details
+        </a>
+      </div>
+
+    <!-- ── ARTWORK ───────────────────────────────────────────── -->
+    {% elif product.product_type == 'artwork' %}
+      {% if product.price %}
+        <div class="product-price">
+          <span class="price">KES {{ product.price|floatformat:0 }}</span>
+          <span class="price-period">
+            {% if product.is_downloadable %}download{% else %}+ shipping{% endif %}
+          </span>
+        </div>
+      {% endif %}
+      <div class="product-ctas">
+        <button class="btn btn-primary btn-add-to-cart add-to-cart-btn"
+                data-product-id="{{ product.id }}"
+                data-product-name="{{ product.title }}">
+          <i class="bi bi-cart-plus"></i>
+          {% if product.is_downloadable %}Buy &amp; Download{% else %}Add to Cart{% endif %}
+        </button>
+        <a href="{% url 'marketplace:product-detail' product.slug %}" class="btn btn-outline-primary">
+          <i class="bi bi-eye"></i> View Details
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</div>

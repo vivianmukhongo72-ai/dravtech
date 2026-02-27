@@ -1,0 +1,1049 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Marketplace — DravTech{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET & ROOT ─────────────────────────────── */
+:root {
+  --mp-bg:        #08090c;
+  --mp-surface:   #0f1117;
+  --mp-surface2:  #171922;
+  --mp-border:    rgba(255,255,255,0.07);
+  --mp-primary:   #5b7fff;
+  --mp-accent:    #a78bfa;
+  --mp-gold:      #f0c060;
+  --mp-text:      #f0f1f5;
+  --mp-muted:     #7a7f93;
+  --mp-success:   #34d399;
+  --mp-error:     #f87171;
+  --mp-radius:    14px;
+  --mp-radius-lg: 22px;
+  --mp-trans:     all 0.28s cubic-bezier(0.4,0,0.2,1);
+  --font-display: 'Clash Display', sans-serif;
+  --font-body:    'Cabinet Grotesk', sans-serif;
+}
+
+.mp-wrap * { box-sizing: border-box; margin: 0; padding: 0; }
+
+.mp-wrap {
+  font-family: var(--font-body);
+  background: var(--mp-bg);
+  min-height: 100vh;
+  color: var(--mp-text);
+  overflow-x: hidden;
+}
+
+/* ─── NOISE OVERLAY ────────────────────────────── */
+.mp-wrap::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ─── HERO ──────────────────────────────────────── */
+.mp-hero {
+  position: relative;
+  padding: 100px 0 80px;
+  text-align: center;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Glowing orbs */
+.mp-hero::before,
+.mp-hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+}
+.mp-hero::before {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(91,127,255,0.18) 0%, transparent 70%);
+  top: -100px; left: 50%;
+  transform: translateX(-60%);
+}
+.mp-hero::after {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(167,139,250,0.14) 0%, transparent 70%);
+  top: 0; right: 10%;
+}
+
+.mp-hero-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.mp-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(91,127,255,0.12);
+  border: 1px solid rgba(91,127,255,0.25);
+  color: var(--mp-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 100px;
+  margin-bottom: 28px;
+}
+
+.mp-eyebrow span {
+  width: 6px; height: 6px;
+  background: var(--mp-primary);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.5); }
+}
+
+.mp-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+
+.mp-title em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--mp-primary) 0%, var(--mp-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mp-sub {
+  font-size: 1.15rem;
+  color: var(--mp-muted);
+  line-height: 1.7;
+  max-width: 540px;
+  margin: 0 auto 44px;
+}
+
+.mp-cta-row {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--mp-primary);
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 14px 28px;
+  border-radius: var(--mp-radius);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--mp-trans);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(91,127,255,0.4); }
+.btn-primary:hover::before { opacity: 1; }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--mp-text);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 13px 28px;
+  border-radius: var(--mp-radius);
+  border: 1px solid var(--mp-border);
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--mp-trans);
+}
+
+.btn-ghost:hover {
+  border-color: rgba(91,127,255,0.4);
+  color: var(--mp-primary);
+  transform: translateY(-2px);
+}
+
+/* Hero Stats */
+.mp-stats {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 64px;
+  flex-wrap: wrap;
+}
+
+.stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  padding: 14px 20px;
+  border-radius: var(--mp-radius);
+  min-width: 160px;
+  transition: var(--mp-trans);
+}
+
+.stat-chip:hover {
+  border-color: rgba(91,127,255,0.3);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.stat-icon.blue   { background: rgba(91,127,255,0.15);  color: var(--mp-primary); }
+.stat-icon.purple { background: rgba(167,139,250,0.15); color: var(--mp-accent); }
+.stat-icon.gold   { background: rgba(240,192,96,0.15);  color: var(--mp-gold); }
+
+.stat-val  { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; line-height: 1; }
+.stat-lbl  { font-size: 0.78rem; color: var(--mp-muted); margin-top: 3px; }
+
+/* ─── DIVIDER ───────────────────────────────────── */
+.mp-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--mp-border), transparent);
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+/* ─── FILTER TABS ───────────────────────────────── */
+.mp-filter {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(8,9,12,0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--mp-border);
+  padding: 0 24px;
+}
+
+.mp-filter-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.mp-filter-inner::-webkit-scrollbar { display: none; }
+
+.filter-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: 100px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--mp-muted);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--mp-trans);
+  white-space: nowrap;
+}
+
+.filter-tab:hover {
+  color: var(--mp-text);
+  background: var(--mp-surface);
+}
+
+.filter-tab.active {
+  background: var(--mp-primary);
+  color: #fff;
+  border-color: transparent;
+}
+
+.filter-tab .tab-count {
+  background: rgba(255,255,255,0.2);
+  color: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 100px;
+  min-width: 22px;
+  text-align: center;
+}
+
+.filter-tab.active .tab-count { background: rgba(255,255,255,0.25); }
+
+/* ─── PRODUCTS SECTION ──────────────────────────── */
+.mp-products {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.mp-section-header {
+  margin-bottom: 36px;
+}
+
+.mp-section-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.mp-section-sub {
+  color: var(--mp-muted);
+  font-size: 0.95rem;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 20px;
+}
+
+/* ─── PRODUCT CARD ──────────────────────────────── */
+.product-card {
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--mp-trans);
+  position: relative;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  border-color: rgba(91,127,255,0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(91,127,255,0.1);
+}
+
+.product-card:hover .card-img img {
+  transform: scale(1.06);
+}
+
+/* Card image */
+.card-img {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: var(--mp-surface2);
+}
+
+.card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+
+.card-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  background: linear-gradient(135deg, var(--mp-surface2) 0%, rgba(91,127,255,0.08) 100%);
+}
+
+/* Type badge */
+.card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 100px;
+  border: 1px solid;
+}
+
+.card-badge.digital  { background: rgba(91,127,255,0.2);  color: #7da4ff; border-color: rgba(91,127,255,0.3); }
+.card-badge.artwork  { background: rgba(167,139,250,0.2); color: #c4b5fd; border-color: rgba(167,139,250,0.3); }
+.card-badge.merch    { background: rgba(240,192,96,0.2);  color: #f5d080; border-color: rgba(240,192,96,0.3); }
+.card-badge.service  { background: rgba(52,211,153,0.2);  color: #6ee7b7; border-color: rgba(52,211,153,0.3); }
+
+/* Card body */
+.card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 8px;
+  color: var(--mp-text);
+}
+
+.card-desc {
+  font-size: 0.85rem;
+  color: var(--mp-muted);
+  line-height: 1.6;
+  flex: 1;
+  margin-bottom: 18px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.card-price {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--mp-text);
+}
+
+.card-price span {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--mp-muted);
+  margin-right: 2px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-card-view {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: var(--mp-surface2);
+  border: 1px solid var(--mp-border);
+  color: var(--mp-muted);
+  text-decoration: none;
+  transition: var(--mp-trans);
+  font-size: 0.9rem;
+}
+
+.btn-card-view:hover {
+  background: var(--mp-surface);
+  color: var(--mp-text);
+  border-color: rgba(91,127,255,0.3);
+}
+
+.btn-card-cart {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 16px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--mp-primary);
+  border: none;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--mp-trans);
+  white-space: nowrap;
+}
+
+.btn-card-cart:hover {
+  background: #7094ff;
+  transform: translateY(-1px);
+}
+
+.btn-card-cart:active {
+  transform: scale(0.97);
+}
+
+.btn-card-cart.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* ─── EMPTY STATE ───────────────────────────────── */
+.mp-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.mp-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.4;
+}
+
+.mp-empty h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.mp-empty p { color: var(--mp-muted); font-size: 0.9rem; }
+
+/* ─── SKELETON LOADER ───────────────────────────── */
+.skeleton-card {
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius-lg);
+  overflow: hidden;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--mp-surface2) 25%, rgba(255,255,255,0.04) 50%, var(--mp-surface2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.sk-img { height: 200px; border-radius: 0; }
+.sk-body { padding: 20px; }
+.sk-title { height: 20px; width: 75%; margin-bottom: 10px; }
+.sk-desc  { height: 14px; width: 100%; margin-bottom: 6px; }
+.sk-desc2 { height: 14px; width: 60%; margin-bottom: 20px; }
+.sk-price { height: 28px; width: 40%; }
+
+/* ─── TOAST ─────────────────────────────────────── */
+#mp-toast-container {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.mp-toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: var(--mp-radius);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  animation: toastIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  min-width: 260px;
+  max-width: 340px;
+  pointer-events: all;
+}
+
+.mp-toast.success { background: #1a3d2e; border: 1px solid rgba(52,211,153,0.3); }
+.mp-toast.error   { background: #3d1a1a; border: 1px solid rgba(248,113,113,0.3); }
+
+.mp-toast-icon { font-size: 1.1rem; flex-shrink: 0; }
+.mp-toast.success .mp-toast-icon { color: var(--mp-success); }
+.mp-toast.error   .mp-toast-icon { color: var(--mp-error); }
+
+.mp-toast.out { animation: toastOut 0.25s ease forwards; }
+
+@keyframes toastIn  { from { opacity:0; transform: translateX(20px) scale(0.95); } to { opacity:1; transform: none; } }
+@keyframes toastOut { from { opacity:1; transform: none; } to { opacity:0; transform: translateX(20px) scale(0.95); } }
+
+/* ─── RESPONSIVE ────────────────────────────────── */
+@media (max-width: 768px) {
+  .mp-hero { padding: 70px 0 56px; }
+  .mp-title { font-size: 2.4rem; }
+  .mp-stats { gap: 12px; }
+  .stat-chip { min-width: 140px; padding: 12px 14px; }
+  .products-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  #mp-toast-container { bottom: 16px; right: 16px; left: 16px; }
+  .mp-toast { min-width: unset; max-width: unset; }
+}
+
+@media (max-width: 480px) {
+  .mp-cta-row { flex-direction: column; align-items: center; }
+  .btn-primary, .btn-ghost { width: 100%; max-width: 280px; justify-content: center; }
+  .products-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── STAGGER ANIMATION ─────────────────────────── */
+.product-card {
+  opacity: 0;
+  animation: cardReveal 0.45s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Inject serialized product data safely -->
+<script id="mp-products-data" type="application/json">
+  {{ all_products|safe }}
+</script>
+
+<div class="mp-wrap">
+
+  <!-- ── HERO ─────────────────────────────────── -->
+  <section class="mp-hero">
+    <div class="mp-hero-inner">
+
+      <div class="mp-eyebrow">
+        <span></span> Dravtech Store
+      </div>
+
+      <h1 class="mp-title">
+        Premium Tools &<br><em>Digital Experiences</em>
+      </h1>
+
+      <p class="mp-sub">
+        Digital systems, original artwork, and curated merchandise — crafted with purpose, built for impact.
+      </p>
+
+      <div class="mp-cta-row">
+        <a href="#mp-products" class="btn-primary">
+          <i class="bi bi-grid-3x3-gap-fill"></i> Browse All
+        </a>
+        <a href="#mp-products" class="btn-ghost" id="btn-featured">
+          <i class="bi bi-star-fill"></i> Featured
+        </a>
+      </div>
+
+      <div class="mp-stats">
+        <div class="stat-chip">
+          <div class="stat-icon blue"><i class="bi bi-cpu-fill"></i></div>
+          <div>
+            <div class="stat-val" id="stat-digital">—</div>
+            <div class="stat-lbl">Digital Products</div>
+          </div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-icon purple"><i class="bi bi-palette-fill"></i></div>
+          <div>
+            <div class="stat-val" id="stat-artwork">—</div>
+            <div class="stat-lbl">Artwork Pieces</div>
+          </div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-icon gold"><i class="bi bi-bag-fill"></i></div>
+          <div>
+            <div class="stat-val" id="stat-merch">—</div>
+            <div class="stat-lbl">Merch Items</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="mp-divider"></div>
+
+  <!-- ── FILTER TABS ────────────────────────────── -->
+  <nav class="mp-filter">
+    <div class="mp-filter-inner">
+      <button class="filter-tab active" data-category="all">
+        <i class="bi bi-grid"></i> All
+        <span class="tab-count" id="count-all">0</span>
+      </button>
+      <button class="filter-tab" data-category="digital">
+        <i class="bi bi-cpu"></i> Digital
+        <span class="tab-count" id="count-digital">0</span>
+      </button>
+      <button class="filter-tab" data-category="artwork">
+        <i class="bi bi-palette"></i> Artwork
+        <span class="tab-count" id="count-artwork">0</span>
+      </button>
+      <button class="filter-tab" data-category="merch">
+        <i class="bi bi-bag"></i> Merch
+        <span class="tab-count" id="count-merch">0</span>
+      </button>
+      <button class="filter-tab" data-category="service">
+        <i class="bi bi-briefcase"></i> Services
+        <span class="tab-count" id="count-service">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── PRODUCTS ───────────────────────────────── -->
+  <section id="mp-products" class="mp-products">
+    <div class="mp-section-header">
+      <h2 class="mp-section-title" id="section-title">All Products</h2>
+      <p class="mp-section-sub" id="section-sub">Explore our complete collection</p>
+    </div>
+    <div class="products-grid" id="productsGrid">
+      <!-- Skeleton placeholders shown before JS runs -->
+      {% for _ in "123456"|make_list %}
+      <div class="skeleton-card">
+        <div class="skeleton sk-img"></div>
+        <div class="sk-body">
+          <div class="skeleton sk-title"></div>
+          <div class="skeleton sk-desc"></div>
+          <div class="skeleton sk-desc2"></div>
+          <div class="skeleton sk-price"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+</div><!-- .mp-wrap -->
+
+<!-- Toast container -->
+<div id="mp-toast-container"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── 1. PARSE DATA ───────────────────────────────────────────────────────
+  let allProducts = [];
+
+  try {
+    const raw = document.getElementById('mp-products-data').textContent.trim();
+    allProducts = JSON.parse(raw);
+  } catch (err) {
+    console.error('[Marketplace] Failed to parse product data:', err);
+    renderError();
+    return;
+  }
+
+  // ── 2. TYPE ICONS & LABELS ──────────────────────────────────────────────
+  const TYPE_META = {
+    digital: { icon: '💻', label: 'Digital',  badgeClass: 'digital' },
+    artwork: { icon: '🎨', label: 'Artwork',   badgeClass: 'artwork' },
+    merch:   { icon: '👕', label: 'Merch',     badgeClass: 'merch'   },
+    service: { icon: '⚙️', label: 'Service',   badgeClass: 'service' },
+  };
+
+  // ── 3. COUNTS ───────────────────────────────────────────────────────────
+  function updateCounts() {
+    const types = ['digital', 'artwork', 'merch', 'service'];
+    const total = allProducts.length;
+
+    document.getElementById('count-all').textContent = total;
+
+    types.forEach(t => {
+      const c = allProducts.filter(p => p.product_type === t).length;
+      const el = document.getElementById('count-' + t);
+      if (el) el.textContent = c;
+    });
+
+    // Hero stats
+    document.getElementById('stat-digital').textContent =
+      allProducts.filter(p => p.product_type === 'digital').length;
+    document.getElementById('stat-artwork').textContent =
+      allProducts.filter(p => p.product_type === 'artwork').length;
+    document.getElementById('stat-merch').textContent =
+      allProducts.filter(p => p.product_type === 'merch').length;
+  }
+
+  // ── 4. RENDER PRODUCTS ──────────────────────────────────────────────────
+  const grid = document.getElementById('productsGrid');
+
+  function renderProducts(products) {
+    console.log('renderProducts called with', products.length, 'products');
+    grid.innerHTML = '';
+
+    if (!products.length) {
+      grid.innerHTML = `
+        <div class="mp-empty">
+          <div class="mp-empty-icon">🔍</div>
+          <h3>Nothing here yet</h3>
+          <p>No products found in this category. Check back soon.</p>
+        </div>`;
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+
+    products.forEach((product, i) => {
+      console.log(`Rendering product ${i + 1}:`, product.title);
+      
+      const meta   = TYPE_META[product.product_type] || { icon: '📦', label: product.product_type, badgeClass: 'digital' };
+      const price  = parseFloat(product.price || 0) || 0; // Handle None/invalid prices
+      const desc   = (product.description || '').trim();
+      const imgSrc = product.image
+        ? (product.image.startsWith('http') ? product.image : '/media/' + product.image)
+        : null;
+
+      try {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.style.animationDelay = (i * 0.05) + 's';
+        card.dataset.category = product.product_type;
+
+        card.innerHTML = `
+          <div class="card-img">
+            ${imgSrc
+              ? `<img src="${escHtml(imgSrc)}" alt="${escHtml(product.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=card-img-placeholder>${meta.icon}</div>'">`
+              : `<div class="card-img-placeholder">${meta.icon}</div>`
+            }
+            <span class="card-badge ${meta.badgeClass}">${meta.label}</span>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">${escHtml(product.title)}</h3>
+            <p class="card-desc">${escHtml(desc) || 'No description available.'}</p>
+            <div class="card-footer">
+              <div class="card-price">
+                <span>KES</span>${price.toLocaleString('en-KE')}
+              </div>
+              <div class="card-actions">
+                <a href="/marketplace/products/${escHtml(product.slug)}/"
+                   class="btn-card-view"
+                   title="View details"
+                   aria-label="View ${escHtml(product.title)}">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <button class="btn-card-cart"
+                        data-product-id="${product.id}"
+                        aria-label="Add ${escHtml(product.title)} to cart">
+                  <i class="bi bi-cart-plus"></i> Add
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Cart button handler
+        card.querySelector('.btn-card-cart').addEventListener('click', function (e) {
+          e.stopPropagation();
+          addToCart(this, product.id, product.title);
+        });
+
+        // Card click → navigate to product
+        card.addEventListener('click', function (e) {
+          if (!e.target.closest('.btn-card-cart') && !e.target.closest('.btn-card-view')) {
+            window.location.href = `/marketplace/products/${product.slug}/`;
+          }
+        });
+
+        fragment.appendChild(card);
+        console.log(`Successfully added product ${i + 1} to fragment`);
+      } catch (error) {
+        console.error(`Error rendering product ${i + 1}:`, error);
+      }
+    });
+
+    grid.appendChild(fragment);
+    console.log('Finished rendering. Total cards in grid:', grid.children.length);
+  }
+
+  function renderError() {
+    const g = document.getElementById('productsGrid');
+    if (!g) return;
+    g.innerHTML = `
+      <div class="mp-empty">
+        <div class="mp-empty-icon">⚠️</div>
+        <h3>Could not load products</h3>
+        <p>There was a problem loading the product data. Please refresh the page.</p>
+      </div>`;
+  }
+
+  // ── 5. FILTER TABS ──────────────────────────────────────────────────────
+  const tabs        = document.querySelectorAll('.filter-tab');
+  const sectionTitle = document.getElementById('section-title');
+  const sectionSub   = document.getElementById('section-sub');
+
+  const CATEGORY_LABELS = {
+    all:     ['All Products',      'Explore our complete collection'],
+    digital: ['Digital Products',  'Downloadable tools, templates & guides'],
+    artwork: ['Artwork',           'Original digital art and icon collections'],
+    merch:   ['Merchandise',       'Dravtech branded hoodies, tees, caps & bags'],
+    service: ['Services',          'Consultation and strategy sessions'],
+  };
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function () {
+      tabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+
+      const cat  = this.dataset.category;
+      const list = cat === 'all' ? allProducts : allProducts.filter(p => p.product_type === cat);
+      const lbl  = CATEGORY_LABELS[cat] || [cat, ''];
+
+      sectionTitle.textContent = lbl[0];
+      sectionSub.textContent   = lbl[1];
+
+      renderProducts(list);
+    });
+  });
+
+  // Featured button → scroll + highlight
+  document.getElementById('btn-featured').addEventListener('click', function (e) {
+    e.preventDefault();
+    document.getElementById('mp-products').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // ── 6. ADD TO CART ──────────────────────────────────────────────────────
+  function addToCart(btn, productId, productTitle) {
+    if (btn.classList.contains('loading')) return;
+
+    btn.classList.add('loading');
+    btn.innerHTML = '<i class="bi bi-arrow-repeat"></i>';
+
+    fetch(`/marketplace/cart/add/${productId}/`, {
+      method:  'POST',
+      headers: {
+        'X-CSRFToken':  getCsrfToken(),
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+      credentials: 'same-origin',
+    })
+    .then(r => {
+      if (!r.ok) throw new Error('Network response was not ok');
+      return r.json();
+    })
+    .then(data => {
+      if (data.success) {
+        btn.innerHTML = '<i class="bi bi-check2"></i> Added';
+        btn.style.background = '#1a3d2e';
+        updateCartCount(data.count);
+        toast('Added to cart — ' + productTitle, 'success');
+
+        setTimeout(() => {
+          btn.classList.remove('loading');
+          btn.innerHTML = '<i class="bi bi-cart-plus"></i> Add';
+          btn.style.background = '';
+        }, 2200);
+      } else {
+        throw new Error(data.message || 'Could not add to cart');
+      }
+    })
+    .catch(err => {
+      console.error('[Cart]', err);
+      btn.classList.remove('loading');
+      btn.innerHTML = '<i class="bi bi-cart-plus"></i> Add';
+      toast(err.message || 'Failed to add to cart', 'error');
+    });
+  }
+
+  function updateCartCount(count) {
+    if (count === undefined) {
+      fetch('/marketplace/cart/count/', { credentials: 'same-origin' })
+        .then(r => r.json())
+        .then(d => setCartBadge(d.count))
+        .catch(() => {});
+    } else {
+      setCartBadge(count);
+    }
+  }
+
+  function setCartBadge(n) {
+    document.querySelectorAll('.cart-count, [data-cart-count]').forEach(el => {
+      el.textContent = n;
+    });
+  }
+
+  // ── 7. TOAST ────────────────────────────────────────────────────────────
+  function toast(message, type = 'success') {
+    const container = document.getElementById('mp-toast-container');
+    const icons = { success: 'bi-check-circle-fill', error: 'bi-exclamation-triangle-fill' };
+
+    const el = document.createElement('div');
+    el.className = `mp-toast ${type}`;
+    el.innerHTML = `
+      <i class="bi ${icons[type]} mp-toast-icon"></i>
+      <span>${escHtml(message)}</span>
+    `;
+
+    container.appendChild(el);
+
+    setTimeout(() => {
+      el.classList.add('out');
+      el.addEventListener('animationend', () => el.remove(), { once: true });
+    }, 3200);
+  }
+
+  // ── 8. UTILS ────────────────────────────────────────────────────────────
+  function getCsrfToken() {
+    const meta = document.querySelector('meta[name=csrf-token]');
+    if (meta) return meta.getAttribute('content');
+    const match = document.cookie.match(/csrftoken=([^;]+)/);
+    return match ? match[1] : '';
+  }
+
+  function escHtml(str) {
+    return String(str ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // ── 9. INIT ──────────────────────────────────────────────────────────────
+  updateCounts();
+  renderProducts(allProducts);
+
+})();
+</script>
+
+{% endblock %}

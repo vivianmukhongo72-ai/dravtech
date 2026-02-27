@@ -46,7 +46,7 @@ class MarketplaceCart {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': window.csrfToken || this.getCookie('csrftoken')
+          'X-CSRFToken': this.getCSRFToken()
         },
         body: `product_id=${productId}`,
         credentials: 'same-origin'
@@ -179,7 +179,7 @@ class MarketplaceCart {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': window.csrfToken || this.getCookie('csrftoken')
+          'X-CSRFToken': this.getCSRFToken()
         },
         body: `product_id=${productId}`
       });
@@ -270,6 +270,11 @@ class MarketplaceCart {
       notification.classList.remove('show');
       setTimeout(() => notification.remove(), 300);
     }, 3000);
+  }
+
+  getCSRFToken() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+    return csrfToken ? csrfToken.value : this.getCookie('csrftoken');
   }
 
   getCookie(name) {

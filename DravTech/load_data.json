@@ -1,0 +1,1171 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "fredrick.wainaina",
+      "first_name": "Fredrick",
+      "last_name": "Wainaina",
+      "email": "fredrick@dravtech.co.ke",
+      "is_staff": true,
+      "is_superuser": true,
+      "is_active": true,
+      "password": "pbkdf2_sha256$placeholder"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "samuel.macharia",
+      "first_name": "Samuel",
+      "last_name": "Macharia",
+      "email": "samuel@dravtech.co.ke",
+      "is_staff": true,
+      "is_superuser": false,
+      "is_active": true,
+      "password": "pbkdf2_sha256$placeholder"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "david.muiruri",
+      "first_name": "David",
+      "last_name": "Muiruri",
+      "email": "david@dravtech.co.ke",
+      "is_staff": true,
+      "is_superuser": false,
+      "is_active": true,
+      "password": "pbkdf2_sha256$placeholder"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "username": "grace.njeri",
+      "first_name": "Grace",
+      "last_name": "Njeri",
+      "email": "grace.njeri@gmail.com",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "password": "pbkdf2_sha256$placeholder"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+      "username": "brian.otieno",
+      "first_name": "Brian",
+      "last_name": "Otieno",
+      "email": "brian.otieno@gmail.com",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "password": "pbkdf2_sha256$placeholder"
+    }
+  },
+  {
+    "model": "services.servicecategory",
+    "pk": 1,
+    "fields": {
+      "name": "Software & Digital Systems",
+      "slug": "software-digital-systems",
+      "description": "End-to-end software development covering web apps, mobile apps, enterprise systems, and custom integrations.",
+      "icon": "lucide-code",
+      "display_order": 1,
+      "is_active": true,
+      "created_at": "2024-01-10T08:00:00Z"
+    }
+  },
+  {
+    "model": "services.servicecategory",
+    "pk": 2,
+    "fields": {
+      "name": "AI & Data Solutions",
+      "slug": "ai-data-solutions",
+      "description": "Intelligent automation, machine learning models, data pipelines, and analytics dashboards.",
+      "icon": "lucide-brain",
+      "display_order": 2,
+      "is_active": true,
+      "created_at": "2024-01-10T08:05:00Z"
+    }
+  },
+  {
+    "model": "services.servicecategory",
+    "pk": 3,
+    "fields": {
+      "name": "Creative & Graphic Design",
+      "slug": "creative-graphic-design",
+      "description": "Brand identity, UI/UX design, digital artwork, and visual communication solutions.",
+      "icon": "lucide-palette",
+      "display_order": 3,
+      "is_active": true,
+      "created_at": "2024-01-10T08:10:00Z"
+    }
+  },
+  {
+    "model": "services.servicecategory",
+    "pk": 4,
+    "fields": {
+      "name": "IT Consultancy & Cloud",
+      "slug": "it-consultancy-cloud",
+      "description": "Cloud infrastructure, cybersecurity, hosting, and IT strategy consulting.",
+      "icon": "lucide-cloud",
+      "display_order": 4,
+      "is_active": true,
+      "created_at": "2024-01-10T08:15:00Z"
+    }
+  },
+  {
+    "model": "services.service",
+    "pk": 1,
+    "fields": {
+      "title": "Custom Web Application Development",
+      "slug": "custom-web-application-development",
+      "category": 1,
+      "tagline": "Scalable, modern web apps built to power your business.",
+      "overview": "We design and build robust web applications tailored to your exact requirements \u2014 from internal dashboards and portals to customer-facing SaaS platforms. Our stack includes Django, React, and cloud-native architectures.",
+      "image": "",
+      "primary_cta_type": "quote",
+      "primary_cta_label": "Request a Quote",
+      "cta_external_link": "",
+      "meta_title": "Custom Web App Development Kenya | Dravtech",
+      "meta_description": "Hire Dravtech for scalable web application development in Kenya.",
+      "is_featured": true,
+      "is_active": true,
+      "display_order": 1,
+      "created_at": "2024-02-01T09:00:00Z",
+      "updated_at": "2024-02-01T09:00:00Z"
+    }
+  },
+  {
+    "model": "services.service",
+    "pk": 2,
+    "fields": {
+      "title": "Mobile App Development",
+      "slug": "mobile-app-development",
+      "category": 1,
+      "tagline": "Cross-platform mobile apps that your users will love.",
+      "overview": "We build high-performance Android and iOS applications using React Native and Flutter. From MVPs to enterprise-grade apps, our team handles the full lifecycle from concept to App Store deployment.",
+      "image": "",
+      "primary_cta_type": "book",
+      "primary_cta_label": "",
+      "cta_external_link": "",
+      "meta_title": "Mobile App Development Kenya | Dravtech",
+      "meta_description": "Professional Android and iOS mobile app development by Dravtech, Nairobi.",
+      "is_featured": true,
+      "is_active": true,
+      "display_order": 2,
+      "created_at": "2024-02-05T09:00:00Z",
+      "updated_at": "2024-02-05T09:00:00Z"
+    }
+  },
+  {
+    "model": "services.service",
+    "pk": 3,
+    "fields": {
+      "title": "Enterprise Systems & ERP Integration",
+      "slug": "enterprise-systems-erp-integration",
+      "category": 1,
+      "tagline": "Unify your business operations with smart system integration.",
+      "overview": "We design and deploy enterprise resource planning systems, integrating inventory, finance, HR, and CRM into one unified platform. Custom-built or integrated with leading platforms like Odoo.",
+      "image": "",
+      "primary_cta_type": "contact",
+      "primary_cta_label": "Talk to Our Team",
+      "cta_external_link": "",
+      "meta_title": "ERP & Enterprise Systems Kenya | Dravtech",
+      "meta_description": "Custom ERP and enterprise system integration services by Dravtech Kenya.",
+      "is_featured": false,
+      "is_active": true,
+      "display_order": 3,
+      "created_at": "2024-02-10T09:00:00Z",
+      "updated_at": "2024-02-10T09:00:00Z"
+    }
+  },
+  {
+    "model": "services.service",
+    "pk": 4,
+    "fields": {
+      "title": "AI Automation & Intelligent Bots",
+      "slug": "ai-automation-intelligent-bots",
+      "category": 2,
+      "tagline": "Automate the repetitive. Amplify the intelligent.",
+      "overview": "We build AI-powered automation workflows, chatbots, and decision-support tools using OpenAI, LangChain, and custom ML models. Reduce operational overhead and increase accuracy across your business processes.",
+      "image": "",
+      "primary_cta_type": "book",
+      "primary_cta_label": "Book a Demo",
+      "cta_external_link": "",
+      "meta_title": "AI Automation & Chatbot Development | Dravtech",
+      "meta_description": "AI-powered automation and chatbot services for businesses in Kenya and Africa.",
+      "is_featured": true,
+      "is_active": true,
+      "display_order": 1,
+      "created_at": "2024-03-01T09:00:00Z",
+      "updated_at": "2024-03-01T09:00:00Z"
+    }
+  },
+  {
+    "model": "services.service",
+    "pk": 5,
+    "fields": {
+      "title": "Data Analytics & Business Intelligence",
+      "slug": "data-analytics-business-intelligence",
+      "category": 2,
+      "tagline": "Turn your raw data into actionable insight.",
+      "overview": "We build interactive BI dashboards, data pipelines, and reporting tools that give decision-makers real-time visibility into their operations. Tools include Power BI, custom Django dashboards, and Python data stacks.",
+      "image": "",
+      "primary_cta_type": "quote",
+      "primary_cta_label": "",
+      "cta_external_link": "",
+      "meta_title": "Data Analytics & BI Solutions Kenya | Dravtech",
+      "meta_description": "Business intelligence and data analytics consulting by Dravtech.",
+      "is_featured": false,
+      "is_active": true,
+      "display_order": 2,
+      "created_at": "2024-03-05T09:00:00Z",
+      "updated_at": "2024-03-05T09:00:00Z"
+    }
+  },
+  {
+    "model": "services.service",
+    "pk": 6,
+    "fields": {
+      "title": "Brand Identity & UI/UX Design",
+      "slug": "brand-identity-ui-ux-design",
+      "category": 3,
+      "tagline": "Designs that communicate, convert, and captivate.",
+      "overview": "From logos and brand guidelines to complete UI/UX design for web and mobile products, our creative team delivers polished, functional visuals that reflect your brand's identity and engage your audience.",
+      "image": "",
+      "primary_cta_type": "book",
+      "primary_cta_label": "Start Your Brand",
+      "cta_external_link": "",
+      "meta_title": "Brand Identity & UI/UX Design Kenya | Dravtech",
+      "meta_description": "Professional brand identity and digital design services from Dravtech.",
+      "is_featured": true,
+      "is_active": true,
+      "display_order": 1,
+      "created_at": "2024-03-10T09:00:00Z",
+      "updated_at": "2024-03-10T09:00:00Z"
+    }
+  },
+  {
+    "model": "services.service",
+    "pk": 7,
+    "fields": {
+      "title": "Cloud Infrastructure & DevOps",
+      "slug": "cloud-infrastructure-devops",
+      "category": 4,
+      "tagline": "Reliable, scalable cloud architecture for modern applications.",
+      "overview": "We architect, deploy, and manage cloud environments on AWS, GCP, and Azure. Our DevOps practice covers CI/CD pipelines, containerisation with Docker & Kubernetes, and infrastructure-as-code using Terraform.",
+      "image": "",
+      "primary_cta_type": "contact",
+      "primary_cta_label": "Get Infrastructure Audit",
+      "cta_external_link": "",
+      "meta_title": "Cloud & DevOps Services Kenya | Dravtech",
+      "meta_description": "Cloud infrastructure setup, DevOps consulting, and managed hosting by Dravtech.",
+      "is_featured": false,
+      "is_active": true,
+      "display_order": 1,
+      "created_at": "2024-03-15T09:00:00Z",
+      "updated_at": "2024-03-15T09:00:00Z"
+    }
+  },
+  {
+    "model": "services.servicehighlight",
+    "pk": 1,
+    "fields": {
+      "service": 1,
+      "title": "Full-Stack Expertise",
+      "description": "From database architecture to pixel-perfect frontends \u2014 one team, zero hand-off gaps.",
+      "icon": "lucide-layers",
+      "display_order": 1
+    }
+  },
+  {
+    "model": "services.servicehighlight",
+    "pk": 2,
+    "fields": {
+      "service": 1,
+      "title": "Agile Delivery",
+      "description": "Two-week sprints, regular demos, and continuous feedback so you always know where things stand.",
+      "icon": "lucide-repeat",
+      "display_order": 2
+    }
+  },
+  {
+    "model": "services.servicehighlight",
+    "pk": 3,
+    "fields": {
+      "service": 1,
+      "title": "Post-Launch Support",
+      "description": "24/7 monitoring, bug fixes, and feature updates after go-live.",
+      "icon": "lucide-shield-check",
+      "display_order": 3
+    }
+  },
+  {
+    "model": "services.servicehighlight",
+    "pk": 4,
+    "fields": {
+      "service": 4,
+      "title": "LLM Integration",
+      "description": "Native integration with GPT-4, Claude, and Gemini APIs for intelligent responses.",
+      "icon": "lucide-brain",
+      "display_order": 1
+    }
+  },
+  {
+    "model": "services.servicehighlight",
+    "pk": 5,
+    "fields": {
+      "service": 4,
+      "title": "Process Automation",
+      "description": "Automate approvals, notifications, data entry, and reporting workflows.",
+      "icon": "lucide-zap",
+      "display_order": 2
+    }
+  },
+  {
+    "model": "services.servicehighlight",
+    "pk": 6,
+    "fields": {
+      "service": 2,
+      "title": "Cross-Platform Delivery",
+      "description": "One React Native or Flutter codebase ships to Android and iOS simultaneously.",
+      "icon": "lucide-smartphone",
+      "display_order": 1
+    }
+  },
+  {
+    "model": "services.servicehighlight",
+    "pk": 7,
+    "fields": {
+      "service": 6,
+      "title": "Brand Guidelines",
+      "description": "Comprehensive guidelines covering typography, colour palette, logo usage, and tone of voice.",
+      "icon": "lucide-book-open",
+      "display_order": 1
+    }
+  },
+  {
+    "model": "services.serviceprocessstep",
+    "pk": 1,
+    "fields": {
+      "service": 1,
+      "step_number": 1,
+      "title": "Discovery & Scoping",
+      "description": "We meet with stakeholders to define goals, map requirements, and agree on a project scope document."
+    }
+  },
+  {
+    "model": "services.serviceprocessstep",
+    "pk": 2,
+    "fields": {
+      "service": 1,
+      "step_number": 2,
+      "title": "Design & Architecture",
+      "description": "Our team produces wireframes, database schemas, and system architecture diagrams for sign-off."
+    }
+  },
+  {
+    "model": "services.serviceprocessstep",
+    "pk": 3,
+    "fields": {
+      "service": 1,
+      "step_number": 3,
+      "title": "Development Sprints",
+      "description": "Iterative two-week sprints with deployments to a staging environment after each sprint."
+    }
+  },
+  {
+    "model": "services.serviceprocessstep",
+    "pk": 4,
+    "fields": {
+      "service": 1,
+      "step_number": 4,
+      "title": "QA & Testing",
+      "description": "Automated and manual testing covering unit, integration, and user acceptance testing."
+    }
+  },
+  {
+    "model": "services.serviceprocessstep",
+    "pk": 5,
+    "fields": {
+      "service": 1,
+      "step_number": 5,
+      "title": "Deployment & Handover",
+      "description": "Production deployment, documentation handover, and 30-day post-launch support."
+    }
+  },
+  {
+    "model": "services.serviceprocessstep",
+    "pk": 6,
+    "fields": {
+      "service": 4,
+      "step_number": 1,
+      "title": "Needs Assessment",
+      "description": "Identify which workflows are best suited for automation and define success metrics."
+    }
+  },
+  {
+    "model": "services.serviceprocessstep",
+    "pk": 7,
+    "fields": {
+      "service": 4,
+      "step_number": 2,
+      "title": "Model Selection & Prototyping",
+      "description": "Select the right AI model and build a working prototype for stakeholder review."
+    }
+  },
+  {
+    "model": "services.serviceprocessstep",
+    "pk": 8,
+    "fields": {
+      "service": 4,
+      "step_number": 3,
+      "title": "Integration & Deployment",
+      "description": "Connect the AI solution to your existing tools (Slack, WhatsApp, ERP, CRM)."
+    }
+  },
+  {
+    "model": "services.serviceprocessstep",
+    "pk": 9,
+    "fields": {
+      "service": 2,
+      "step_number": 1,
+      "title": "Product Definition",
+      "description": "Define user stories, platform targets (Android/iOS), and MVP feature set."
+    }
+  },
+  {
+    "model": "services.serviceprocessstep",
+    "pk": 10,
+    "fields": {
+      "service": 2,
+      "step_number": 2,
+      "title": "UI/UX Design",
+      "description": "Craft wireframes and high-fidelity mockups reviewed in Figma before any code is written."
+    }
+  },
+  {
+    "model": "services.serviceprocessstep",
+    "pk": 11,
+    "fields": {
+      "service": 2,
+      "step_number": 3,
+      "title": "Build & Test",
+      "description": "Agile sprints with TestFlight/Play Console beta releases for continuous feedback."
+    }
+  },
+  {
+    "model": "services.serviceprocessstep",
+    "pk": 12,
+    "fields": {
+      "service": 2,
+      "step_number": 4,
+      "title": "Store Submission",
+      "description": "We handle App Store and Google Play submission, compliance, and metadata."
+    }
+  },
+  {
+    "model": "services.servicefaq",
+    "pk": 1,
+    "fields": {
+      "service": 1,
+      "question": "How long does a typical web app project take?",
+      "answer": "A simple web app typically takes 6\u201310 weeks. Complex platforms can take 3\u20136 months depending on scope.",
+      "display_order": 1
+    }
+  },
+  {
+    "model": "services.servicefaq",
+    "pk": 2,
+    "fields": {
+      "service": 1,
+      "question": "What technologies do you use?",
+      "answer": "Our primary stack is Django (Python) for the backend, React or Next.js for the frontend, and PostgreSQL for the database. We also work with REST and GraphQL APIs.",
+      "display_order": 2
+    }
+  },
+  {
+    "model": "services.servicefaq",
+    "pk": 3,
+    "fields": {
+      "service": 1,
+      "question": "Do you provide hosting?",
+      "answer": "Yes. We can deploy to AWS, GCP, or Azure and set up managed hosting with monitoring and backups.",
+      "display_order": 3
+    }
+  },
+  {
+    "model": "services.servicefaq",
+    "pk": 4,
+    "fields": {
+      "service": 4,
+      "question": "Can the AI bot be trained on our own data?",
+      "answer": "Yes. We use retrieval-augmented generation (RAG) to ground the bot's answers in your company documents, knowledge base, or database.",
+      "display_order": 1
+    }
+  },
+  {
+    "model": "services.servicefaq",
+    "pk": 5,
+    "fields": {
+      "service": 4,
+      "question": "Which channels can the bot be deployed on?",
+      "answer": "WhatsApp, Telegram, web chat widget, Slack, and any REST API-compatible platform.",
+      "display_order": 2
+    }
+  },
+  {
+    "model": "services.servicefaq",
+    "pk": 6,
+    "fields": {
+      "service": 2,
+      "question": "Do you build for both Android and iOS?",
+      "answer": "Yes. We use React Native and Flutter to deliver a single codebase that runs natively on both platforms.",
+      "display_order": 1
+    }
+  },
+  {
+    "model": "services.servicefaq",
+    "pk": 7,
+    "fields": {
+      "service": 2,
+      "question": "Can you take over an existing app?",
+      "answer": "Absolutely. We do codebase audits and can maintain, refactor, or extend existing mobile apps.",
+      "display_order": 2
+    }
+  },
+  {
+    "model": "services.casestudy",
+    "pk": 1,
+    "fields": {
+      "service": 1,
+      "title": "Soko360 \u2013 E-Commerce Platform for Kenyan SMEs",
+      "slug": "soko360-ecommerce-platform",
+      "summary": "Built a multi-vendor e-commerce platform enabling 200+ small businesses to sell online with integrated M-Pesa payments, inventory management, and a mobile-responsive storefront.",
+      "image": "",
+      "results": "200+ vendors onboarded in 3 months. Average vendor revenue up 35%. 98.7% payment success rate via M-Pesa Daraja integration.",
+      "display_order": 1,
+      "is_active": true,
+      "is_featured": true,
+      "created_at": "2024-06-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "services.casestudy",
+    "pk": 2,
+    "fields": {
+      "service": 4,
+      "title": "InsureBot \u2013 AI Claims Assistant for a Nairobi Insurer",
+      "slug": "insurebot-ai-claims-assistant",
+      "summary": "Deployed a WhatsApp-based AI assistant that guides customers through the insurance claims process, collects documents, and provides real-time status updates.",
+      "image": "",
+      "results": "Claims processing time reduced by 60%. Customer satisfaction score improved from 3.2 to 4.7/5. Support team workload reduced by 40%.",
+      "display_order": 1,
+      "is_active": true,
+      "is_featured": true,
+      "created_at": "2024-07-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "services.casestudy",
+    "pk": 3,
+    "fields": {
+      "service": 2,
+      "title": "SafariTrack \u2013 Logistics Mobile App",
+      "slug": "safaritrack-logistics-mobile-app",
+      "summary": "Developed a cross-platform mobile app for a logistics company enabling real-time parcel tracking, driver management, and digital proof of delivery.",
+      "image": "",
+      "results": "Delivery confirmation time reduced from 48hr to 2hr. 3,000+ active drivers on platform. App rated 4.6/5 on Google Play.",
+      "display_order": 1,
+      "is_active": true,
+      "is_featured": false,
+      "created_at": "2024-08-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "services.casestudy",
+    "pk": 4,
+    "fields": {
+      "service": 5,
+      "title": "DataPulse \u2013 BI Dashboard for a Retail Chain",
+      "slug": "datapulse-bi-dashboard-retail",
+      "summary": "Built a real-time business intelligence dashboard consolidating sales, inventory, and staff data from 12 branches into one central platform.",
+      "image": "",
+      "results": "Branch managers save 8 hours/week on manual reporting. Stock-out incidents reduced by 25%. Executive team has daily live KPI visibility.",
+      "display_order": 1,
+      "is_active": true,
+      "is_featured": false,
+      "created_at": "2024-08-20T10:00:00Z"
+    }
+  },
+  {
+    "model": "services.serviceinquiry",
+    "pk": 1,
+    "fields": {
+      "service": 1,
+      "name": "Grace Njeri",
+      "email": "grace.njeri@gmail.com",
+      "phone": "+254722100200",
+      "company": "Njeri Superstore",
+      "message": "I need a web app for my retail store \u2014 inventory management and online ordering. Can we have a call?",
+      "preferred_date": "2024-10-15",
+      "estimated_budget": "KES 150,000 \u2013 250,000",
+      "created_at": "2024-10-10T14:30:00Z"
+    }
+  },
+  {
+    "model": "services.serviceinquiry",
+    "pk": 2,
+    "fields": {
+      "service": 4,
+      "name": "Brian Otieno",
+      "email": "brian.otieno@gmail.com",
+      "phone": "+254711200300",
+      "company": "QuickPay Sacco",
+      "message": "We want a chatbot for WhatsApp to help members check their balances and apply for loans. Interested in a demo.",
+      "preferred_date": "2024-10-20",
+      "estimated_budget": "KES 80,000 \u2013 120,000",
+      "created_at": "2024-10-12T10:00:00Z"
+    }
+  },
+  {
+    "model": "services.serviceinquiry",
+    "pk": 3,
+    "fields": {
+      "service": 7,
+      "name": "Patrick Mwangi",
+      "email": "pmwangi@techfirm.co.ke",
+      "phone": "+254733400500",
+      "company": "TechFirm Ltd",
+      "message": "We have an on-premise server setup and want to migrate to AWS. Looking for a managed DevOps partner.",
+      "preferred_date": "2024-11-01",
+      "estimated_budget": "KES 300,000+",
+      "created_at": "2024-10-20T11:00:00Z"
+    }
+  },
+  {
+    "model": "main.category",
+    "pk": 1,
+    "fields": {
+      "name": "Services",
+      "slug": "services",
+      "description": "Professional services and consultations",
+      "is_active": true,
+      "display_order": 1
+    }
+  },
+  {
+    "model": "main.category",
+    "pk": 2,
+    "fields": {
+      "name": "Digital Products",
+      "slug": "digital-products",
+      "description": "Digital downloads and software",
+      "is_active": true,
+      "display_order": 2
+    }
+  },
+  {
+    "model": "main.category",
+    "pk": 3,
+    "fields": {
+      "name": "Merchandise",
+      "slug": "merchandise",
+      "description": "Physical merchandise and apparel",
+      "is_active": true,
+      "display_order": 3
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 1,
+    "fields": {
+      "title": "Web App Development Consultation",
+      "slug": "web-app-dev-consultation",
+      "category": 1,
+      "product_type": "service",
+      "price": "5000.00",
+      "description": "One-hour discovery and scoping session with a senior Dravtech engineer. Includes a written summary and recommended approach document.",
+      "is_active": true,
+      "created_at": "2024-01-15T08:00:00Z",
+      "updated_at": "2024-01-15T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 2,
+    "fields": {
+      "title": "AI Bot Strategy Session",
+      "slug": "ai-bot-strategy-session",
+      "category": 1,
+      "product_type": "service",
+      "price": "4500.00",
+      "description": "60-minute session to design your AI automation roadmap and identify quick wins. Delivered with a written action plan.",
+      "is_active": true,
+      "created_at": "2024-01-20T08:00:00Z",
+      "updated_at": "2024-01-20T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 3,
+    "fields": {
+      "title": "UI/UX Design Sprint",
+      "slug": "ui-ux-design-sprint",
+      "category": 1,
+      "product_type": "service",
+      "price": "8000.00",
+      "description": "Focused two-day design sprint producing wireframes and a clickable Figma prototype. Ideal for validating a product idea before full development.",
+      "is_active": true,
+      "created_at": "2024-01-25T08:00:00Z",
+      "updated_at": "2024-01-25T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 4,
+    "fields": {
+      "title": "Cloud Infrastructure Audit",
+      "slug": "cloud-infrastructure-audit",
+      "category": 1,
+      "product_type": "service",
+      "price": "6000.00",
+      "description": "Comprehensive review of your existing cloud or on-premise setup with a written report covering security gaps, cost optimisation, and architecture recommendations.",
+      "is_active": true,
+      "created_at": "2024-01-30T08:00:00Z",
+      "updated_at": "2024-01-30T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 5,
+    "fields": {
+      "title": "Django SaaS Starter Kit",
+      "slug": "django-saas-starter-kit",
+      "category": 1,
+      "product_type": "digital",
+      "price": "2500.00",
+      "description": "Production-ready Django boilerplate with auth, subscriptions (Stripe + M-Pesa), multi-tenancy, and a React frontend. Includes full documentation and a 30-min onboarding call.",
+      "is_active": true,
+      "created_at": "2024-02-01T08:00:00Z",
+      "updated_at": "2024-02-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 6,
+    "fields": {
+      "title": "React Admin Dashboard Template",
+      "slug": "react-admin-dashboard-template",
+      "category": 1,
+      "product_type": "digital",
+      "price": "1800.00",
+      "description": "Fully responsive React + Tailwind admin dashboard with dark mode, recharts, data tables, and role-based UI components. Download includes source code and documentation.",
+      "is_active": true,
+      "created_at": "2024-02-05T08:00:00Z",
+      "updated_at": "2024-02-05T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 7,
+    "fields": {
+      "title": "M-Pesa Daraja Integration Guide (PDF)",
+      "slug": "mpesa-daraja-integration-guide",
+      "category": 1,
+      "product_type": "digital",
+      "price": "800.00",
+      "description": "Comprehensive 80-page PDF covering STK Push, B2C, C2B, and Reversal APIs with full Python/Django code examples and Postman collections included.",
+      "is_active": true,
+      "created_at": "2024-02-10T08:00:00Z",
+      "updated_at": "2024-02-10T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 8,
+    "fields": {
+      "title": "AI Chatbot Python Starter (LangChain + RAG)",
+      "slug": "ai-chatbot-python-starter",
+      "category": 1,
+      "product_type": "digital",
+      "price": "3200.00",
+      "description": "Downloadable Python project for building a RAG-powered chatbot with LangChain, OpenAI, and ChromaDB. Includes WhatsApp-ready webhook and deployment guide.",
+      "is_active": true,
+      "created_at": "2024-02-15T08:00:00Z",
+      "updated_at": "2024-02-15T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 9,
+    "fields": {
+      "title": "Django REST API Boilerplate",
+      "slug": "django-rest-api-boilerplate",
+      "category": 1,
+      "product_type": "digital",
+      "price": "1500.00",
+      "description": "A clean Django + DRF starter with JWT auth, throttling, filtering, pagination, Swagger docs, and Docker configuration. Get your API running in minutes.",
+      "is_active": true,
+      "created_at": "2024-02-20T08:00:00Z",
+      "updated_at": "2024-02-20T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 10,
+    "fields": {
+      "title": "Nairobi Skyline – Digital Art Print",
+      "slug": "nairobi-skyline-digital-print",
+      "category": 2,
+      "product_type": "artwork",
+      "price": "1200.00",
+      "description": "High-resolution (300 DPI, A2) digital art print of the Nairobi skyline rendered in a vibrant Afrofuturist aesthetic. Delivered as downloadable PNG and print-ready PDF.",
+      "is_active": true,
+      "created_at": "2024-02-25T08:00:00Z",
+      "updated_at": "2024-02-25T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 11,
+    "fields": {
+      "title": "Abstract Circuit Board – Digital Artwork",
+      "slug": "abstract-circuit-board-digital-art",
+      "category": 2,
+      "product_type": "artwork",
+      "price": "950.00",
+      "description": "Striking abstract piece merging African textile patterns with PCB circuit board aesthetics. 300 DPI PNG, A3 size. Perfect for office or workspace walls.",
+      "is_active": true,
+      "created_at": "2024-03-01T08:00:00Z",
+      "updated_at": "2024-03-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 12,
+    "fields": {
+      "title": "Dravtech Brand Icon Set (SVG)",
+      "slug": "dravtech-brand-icon-set-svg",
+      "category": 2,
+      "product_type": "artwork",
+      "price": "600.00",
+      "description": "60 custom SVG icons in the Dravtech visual language — tech, AI, cloud, and business categories. Figma file and standalone SVGs included.",
+      "is_active": true,
+      "created_at": "2024-03-05T08:00:00Z",
+      "updated_at": "2024-03-05T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 13,
+    "fields": {
+      "title": "Afrofuturist Tech Poster – Digital Print",
+      "slug": "afrofuturist-tech-poster",
+      "category": 2,
+      "product_type": "artwork",
+      "price": "1000.00",
+      "description": "Bold A1 digital poster blending African cultural motifs with futuristic technology themes. 300 DPI PNG and print-ready PDF delivered on purchase.",
+      "is_active": true,
+      "created_at": "2024-03-10T08:00:00Z",
+      "updated_at": "2024-03-10T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 14,
+    "fields": {
+      "title": "Dravtech Classic Hoodie – Black",
+      "slug": "dravtech-classic-hoodie-black",
+      "category": 3,
+      "product_type": "merch",
+      "price": "3500.00",
+      "description": "Premium 320gsm fleece hoodie with the Dravtech logo embroidered on the chest and 'Build. Automate. Scale.' printed on the back. Available in S, M, L, XL, XXL.",
+      "is_active": true,
+      "created_at": "2024-03-15T08:00:00Z",
+      "updated_at": "2024-03-15T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 15,
+    "fields": {
+      "title": "Dravtech Hoodie – Navy Blue",
+      "slug": "dravtech-hoodie-navy-blue",
+      "category": 3,
+      "product_type": "merch",
+      "price": "3500.00",
+      "description": "Same great 320gsm fleece hoodie in navy blue with gold embroidery. A team favourite. Available in S, M, L, XL, XXL.",
+      "is_active": true,
+      "created_at": "2024-03-20T08:00:00Z",
+      "updated_at": "2024-03-20T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 16,
+    "fields": {
+      "title": "Dravtech Tech T-Shirt – White",
+      "slug": "dravtech-tech-tshirt-white",
+      "category": 3,
+      "product_type": "merch",
+      "price": "1500.00",
+      "description": "100% combed cotton crew-neck tee. Minimalist Dravtech logo on the chest, circuit-board graphic on the back. Unisex sizing S–XXL.",
+      "is_active": true,
+      "created_at": "2024-03-25T08:00:00Z",
+      "updated_at": "2024-03-25T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 17,
+    "fields": {
+      "title": "Dravtech Tech T-Shirt – Black",
+      "slug": "dravtech-tech-tshirt-black",
+      "category": 3,
+      "product_type": "merch",
+      "price": "1500.00",
+      "description": "All-black edition with white print. A developer wardrobe staple. 100% combed cotton, unisex sizing S–XXL.",
+      "is_active": true,
+      "created_at": "2024-03-30T08:00:00Z",
+      "updated_at": "2024-03-30T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 18,
+    "fields": {
+      "title": "Dravtech Snapback Cap",
+      "slug": "dravtech-snapback-cap",
+      "category": 3,
+      "product_type": "merch",
+      "price": "1200.00",
+      "description": "Structured snapback with embroidered Dravtech 'D' logo on the front panel. Black colourway, adjustable fit, one size fits most.",
+      "is_active": true,
+      "created_at": "2024-04-01T08:00:00Z",
+      "updated_at": "2024-04-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 19,
+    "fields": {
+      "title": "Dravtech Dad Cap – Charcoal",
+      "slug": "dravtech-dad-cap-charcoal",
+      "category": 3,
+      "product_type": "merch",
+      "price": "1000.00",
+      "description": "Low-profile washed cotton dad cap in charcoal grey with subtle tonal Dravtech wordmark embroidery. Adjustable brass clasp.",
+      "is_active": true,
+      "created_at": "2024-04-05T08:00:00Z",
+      "updated_at": "2024-04-05T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 20,
+    "fields": {
+      "title": "Dravtech Canvas Tote Bag",
+      "slug": "dravtech-canvas-tote-bag",
+      "category": 3,
+      "product_type": "merch",
+      "price": "800.00",
+      "description": "Heavy-duty natural canvas tote. Dravtech logo screenprinted on the front, tech quote on the back. Internal zip pocket, reinforced handles.",
+      "is_active": true,
+      "created_at": "2024-04-10T08:00:00Z",
+      "updated_at": "2024-04-10T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.aboutpage",
+    "pk": 1,
+    "fields": {
+      "is_active": true,
+      "hero_headline": "Building Africa's Digital Future, One Innovation at a Time",
+      "hero_subtitle": "We are a team of passionate technologists, designers, and strategists dedicated to transforming businesses across Kenya and Africa through cutting-edge digital solutions.",
+      "hero_cta_label": "Start Your Journey",
+      "hero_cta_url": "/request-demo/",
+      "mission_title": "Our Mission",
+      "mission_body": "To empower African businesses with world-class digital solutions that drive growth, efficiency, and innovation. We believe in leveraging technology to solve real-world challenges and create opportunities for sustainable development across the continent.",
+      "vision_title": "Our Vision",
+      "vision_body": "To be Africa's leading technology partner, recognized for our innovative solutions, exceptional service, and commitment to digital transformation. We envision a future where every African business has access to the technology they need to compete globally.",
+      "how_we_work_title": "How We Work",
+      "how_we_work_intro": "Our approach is collaborative, transparent, and results-driven. We work closely with our clients to understand their unique challenges and deliver tailored solutions that exceed expectations.",
+      "final_cta_headline": "Ready to Transform Your Business?",
+      "final_cta_subtext": "Let's discuss how we can help you leverage technology to achieve your business goals. From concept to deployment, we're here to support your digital journey.",
+      "final_cta_label": "Get Started Today",
+      "final_cta_url": "/contact/",
+      "created_at": "2024-01-01T08:00:00Z",
+      "updated_at": "2024-01-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.timelineentry",
+    "pk": 1,
+    "fields": {
+      "year_label": "2020",
+      "title": "DravTech Founded",
+      "description": "Started with a vision to transform African businesses through technology. Began with a small team of 3 passionate developers.",
+      "is_active": true,
+      "display_order": 1,
+      "created_at": "2024-01-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.timelineentry",
+    "pk": 2,
+    "fields": {
+      "year_label": "2021",
+      "title": "First Major Client",
+      "description": "Secured our first enterprise client and delivered a comprehensive e-commerce solution that processed over 10,000 transactions in the first year.",
+      "is_active": true,
+      "display_order": 2,
+      "created_at": "2024-01-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.timelineentry",
+    "pk": 3,
+    "fields": {
+      "year_label": "2022",
+      "title": "Team Expansion",
+      "description": "Grew our team to 15 members and expanded our service offerings to include AI solutions and cloud infrastructure services.",
+      "is_active": true,
+      "display_order": 3,
+      "created_at": "2024-01-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.timelineentry",
+    "pk": 4,
+    "fields": {
+      "year_label": "2023",
+      "title": "Regional Expansion",
+      "description": "Expanded operations to serve clients across Kenya, Uganda, and Tanzania. Launched our flagship SaaS product for African SMEs.",
+      "is_active": true,
+      "display_order": 4,
+      "created_at": "2024-01-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "main.companyvalue",
+    "pk": 1,
+    "fields": {
+      "title": "Innovation First",
+      "description": "We embrace cutting-edge technology and creative thinking to solve complex problems. Innovation is at the heart of everything we do.",
+      "is_active": true,
+      "display_order": 1
+    }
+  },
+  {
+    "model": "main.companyvalue",
+    "pk": 2,
+    "fields": {
+      "title": "Client Success",
+      "description": "Our success is measured by our clients' success. We are committed to delivering solutions that drive real business value and growth.",
+      "is_active": true,
+      "display_order": 2
+    }
+  },
+  {
+    "model": "main.companyvalue",
+    "pk": 3,
+    "fields": {
+      "title": "Integrity & Transparency",
+      "description": "We believe in honest communication, ethical practices, and complete transparency in all our business relationships.",
+      "is_active": true,
+      "display_order": 3
+    }
+  },
+  {
+    "model": "main.companyvalue",
+    "pk": 4,
+    "fields": {
+      "title": "Continuous Learning",
+      "description": "Technology evolves rapidly, and so do we. We invest in continuous learning and development to stay at the forefront of innovation.",
+      "is_active": true,
+      "display_order": 4
+    }
+  },
+  {
+    "model": "main.teammember",
+    "pk": 1,
+    "fields": {
+      "name": "Fredrick Wainaina",
+      "role": "CEO & Founder",
+      "bio": "Visionary leader with over 10 years of experience in software development and digital transformation. Passionate about leveraging technology to solve African challenges.",
+      "linkedin": "https://linkedin.com/in/fredrick-wainaina",
+      "github": "https://github.com/fwainaina",
+      "twitter": "https://twitter.com/fwainaina",
+      "email": "fredrick@dravtech.co.ke",
+      "website": "https://dravtech.co.ke",
+      "is_active": true,
+      "display_order": 1
+    }
+  },
+  {
+    "model": "main.teammember",
+    "pk": 2,
+    "fields": {
+      "name": "Samuel Macharia",
+      "role": "CTO & Lead Engineer",
+      "bio": "Full-stack architect with expertise in Django, React, and cloud technologies. Ensures our solutions are scalable, secure, and performant.",
+      "linkedin": "https://linkedin.com/in/samuel-macharia",
+      "github": "https://github.com/smacharia",
+      "email": "samuel@dravtech.co.ke",
+      "is_active": true,
+      "display_order": 2
+    }
+  },
+  {
+    "model": "main.teammember",
+    "pk": 3,
+    "fields": {
+      "name": "David Muiruri",
+      "role": "Head of Design & UX",
+      "bio": "Creative designer focused on user-centered design principles. Transforms complex ideas into intuitive, beautiful digital experiences.",
+      "linkedin": "https://linkedin.com/in/david-muiruri",
+      "github": "https://github.com/dmuiruri",
+      "twitter": "https://twitter.com/dmuiruri",
+      "email": "david@dravtech.co.ke",
+      "is_active": true,
+      "display_order": 3
+    }
+  },
+  {
+    "model": "main.teammember",
+    "pk": 4,
+    "fields": {
+      "name": "Grace Njeri",
+      "role": "Senior AI Engineer",
+      "bio": "AI specialist with expertise in machine learning, natural language processing, and computer vision. Building intelligent solutions for African businesses.",
+      "linkedin": "https://linkedin.com/in/grace-njeri",
+      "github": "https://github.com/gracenjeri",
+      "email": "grace@dravtech.co.ke",
+      "is_active": true,
+      "display_order": 4
+    }
+  },
+  {
+    "model": "main.teammember",
+    "pk": 5,
+    "fields": {
+      "name": "Brian Otieno",
+      "role": "DevOps & Cloud Engineer",
+      "bio": "Cloud infrastructure expert ensuring our applications are secure, scalable, and always available. Specializes in AWS, Docker, and Kubernetes.",
+      "linkedin": "https://linkedin.com/in/brian-otieno",
+      "github": "https://github.com/botieno",
+      "email": "brian@dravtech.co.ke",
+      "is_active": true,
+      "display_order": 5
+    }
+  }
+]

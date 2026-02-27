@@ -1,5 +1,7 @@
+import json
 import os
 import mimetypes
+from django.http import JsonResponse
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -88,8 +90,22 @@ def marketplace_hub(request):
     )
     featured_products = all_products.filter(is_featured=True)[:6]
 
+    # Serialize products for JavaScript
+    products_data = []
+    for product in all_products:
+        products_data.append({
+            'id': product.id,
+            'title': product.title,
+            'slug': product.slug,
+            'description': product.description,
+            'price': str(product.price),
+            'product_type': product.product_type,
+            'image': product.image.url if product.image else None,
+            'category': product.category.name if product.category else None,
+        })
+
     return render(request, "marketplace/index.html", {
-        "all_products":      all_products,
+        "all_products":      json.dumps(products_data),
         "featured_products": featured_products,
     })
 
@@ -219,19 +235,53 @@ def _has_physical(cart):
 
 
 def cart_page(request):
-    cart  = request.session.get("cart", {})
-    total = _cart_totals(cart)
+    cart = request.session.get("cart", {})
+    
+    # Clean cart of any invalid entries
+    cleaned_cart = {}
+    for key, value in cart.items():
+        try:
+            int(key)  # Test if key can be converted to int
+            cleaned_cart[key] = value
+        except (ValueError, TypeError):
+            continue  # Skip invalid keys
+    
+    request.session["cart"] = cleaned_cart
+    request.session.modified = True
+    
+    total = _cart_totals(cleaned_cart)
     return render(request, "marketplace/cart.html", {
-        "cart":         cart,
+        "cart":         cleaned_cart,
         "total":        total,
-        "has_physical": _has_physical(cart),
-        "item_count":   sum(i["quantity"] for i in cart.values()),
+        "has_physical": _has_physical(cleaned_cart),
+        "item_count":   sum(i["quantity"] for i in cleaned_cart.values()),
     })
 
 
 @csrf_exempt
 @require_POST
 def add_to_cart(request, product_id):
+    try:
+        # Ensure product_id is treated as integer
+        product_id = int(product_id)
+    except (ValueError, TypeError):
+        # Clear any corrupted session data
+        if 'cart' in request.session:
+            cart = request.session.get('cart', {})
+            # Remove any non-integer keys from cart
+            cleaned_cart = {}
+            for key, value in cart.items():
+                try:
+                    int(key)  # Test if key can be converted to int
+                    cleaned_cart[key] = value
+                except (ValueError, TypeError):
+                    continue  # Skip invalid keys
+            request.session['cart'] = cleaned_cart
+            request.session.modified = True
+        
+        return JsonResponse({"success": False,
+                             "error": "Invalid product ID format."}, status=400)
+    
     product = get_object_or_404(Product, id=product_id, is_active=True)
 
     # Digital products are never added to cart
@@ -272,12 +322,28 @@ def add_to_cart(request, product_id):
 def remove_from_cart(request):
     product_id = request.POST.get("product_id")
     cart       = request.session.get("cart", {})
-    pid        = str(product_id)
+    
+    try:
+        pid = str(product_id)
+    except (ValueError, TypeError):
+        return JsonResponse({"success": False, "error": "Invalid product ID format."})
 
-    removed_name = cart[pid]["name"] if pid in cart else "Product"
-    cart.pop(pid, None)
+    # Clean cart of any invalid entries
+    cleaned_cart = {}
+    for key, value in cart.items():
+        try:
+            int(key)  # Test if key can be converted to int
+            cleaned_cart[key] = value
+        except (ValueError, TypeError):
+            continue  # Skip invalid keys
+    
+    request.session["cart"] = cleaned_cart
+    request.session.modified = True
 
-    request.session["cart"] = cart
+    removed_name = cleaned_cart[pid]["name"] if pid in cleaned_cart else "Product"
+    cleaned_cart.pop(pid, None)
+
+    request.session["cart"] = cleaned_cart
     request.session.modified = True
 
     return JsonResponse({
@@ -300,7 +366,12 @@ def update_quantity(request):
     product_id   = request.POST.get("product_id")
     new_quantity = request.POST.get("quantity")
     cart         = request.session.get("cart", {})
-    pid          = str(product_id)
+    
+    try:
+        # Convert product_id to string for session lookup
+        pid = str(product_id)
+    except (ValueError, TypeError):
+        return JsonResponse({"success": False, "error": "Invalid product ID format."})
 
     if pid not in cart:
         return JsonResponse({"success": False, "error": "Item not in cart."})
@@ -335,12 +406,24 @@ def checkout_view(request):
     collects shipping address, saves Order + OrderItems, clears cart.
     """
     cart = request.session.get("cart", {})
+    
+    # Clean cart of any invalid entries
+    cleaned_cart = {}
+    for key, value in cart.items():
+        try:
+            int(key)  # Test if key can be converted to int
+            cleaned_cart[key] = value
+        except (ValueError, TypeError):
+            continue  # Skip invalid keys
+    
+    request.session["cart"] = cleaned_cart
+    request.session.modified = True
 
-    if not cart:
+    if not cleaned_cart:
         return redirect("marketplace:cart")
 
-    subtotal      = _cart_totals(cart)
-    has_physical  = _has_physical(cart)
+    subtotal      = _cart_totals(cleaned_cart)
+    has_physical  = _has_physical(cleaned_cart)
     shipping_cost = 300.00 if has_physical else 0   # KES flat rate; swap for real logic
     total         = subtotal + shipping_cost
 
@@ -353,7 +436,7 @@ def checkout_view(request):
             if missing:
                 messages.error(request, "Please complete all required shipping fields.")
                 return render(request, "marketplace/checkout.html", {
-                    "cart": cart, "subtotal": subtotal,
+                    "cart": cleaned_cart, "subtotal": subtotal,
                     "shipping_cost": shipping_cost, "total": total,
                     "has_physical": has_physical,
                     "form_data": request.POST,
@@ -385,8 +468,15 @@ def checkout_view(request):
         )
 
         # ── Create OrderItems (with title snapshot) ───────────────────────
-        for pid, item in cart.items():
-            product = Product.objects.filter(id=item["id"]).first()
+        for pid, item in cleaned_cart.items():
+            try:
+                product_id = int(item["id"])
+                product = Product.objects.filter(id=product_id).first()
+                if not product:
+                    continue  # Skip invalid products
+            except (ValueError, TypeError, KeyError):
+                continue  # Skip invalid items
+                
             OrderItem.objects.create(
                 order         = order,
                 product       = product,
@@ -406,7 +496,7 @@ def checkout_view(request):
         return redirect("marketplace:order-confirmation", order_id=order.id)
 
     return render(request, "marketplace/checkout.html", {
-        "cart":          cart,
+        "cart":          cleaned_cart,
         "subtotal":      subtotal,
         "shipping_cost": shipping_cost,
         "total":         total,
@@ -451,6 +541,11 @@ def download_artwork(request, product_id):
     FIX 2: Verifies purchase via PurchasedDownload.
     FIX 3: Increments download_count and enforces max_downloads.
     """
+    try:
+        product_id = int(product_id)
+    except (ValueError, TypeError):
+        raise Http404("Invalid product ID format.")
+    
     product = get_object_or_404(
         Product, id=product_id, is_downloadable=True, is_active=True
     )

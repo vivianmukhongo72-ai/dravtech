@@ -27,7 +27,6 @@ urlpatterns = [
     # Pages for the services app (list + detail)
     path("services/", include("services.urls")),
     path("marketplace/", include("marketplace.urls")),
-    path("accounts/", include("accounts.urls")),
 ]
 
 if settings.DEBUG:

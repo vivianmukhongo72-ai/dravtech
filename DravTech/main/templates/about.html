@@ -1,0 +1,730 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'assets/css/about.css' %}">
+
+<style>
+/* ── Hard reset — kill any white bg from about.css ── */
+*, *::before, *::after { box-sizing: border-box; }
+.about-page,
+.about-page .main,
+.about-bg,
+.about-content,
+.about-section,
+.jumbotron-section,
+.jumbotron-card,
+.container,
+body .about-page .container {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.about-page { margin: 0; padding: 0; }
+
+.about-bg {
+  min-height: 100vh;
+  width: 100%;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.about-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 9, 22, 0.78);
+  z-index: 0;
+  pointer-events: none;
+}
+.about-content {
+  position: relative;
+  z-index: 1;
+  padding: 60px 40px 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Section spacing ── */
+.about-section { margin-bottom: 72px; }
+
+/* ── Section header ── */
+.section-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.section-icon {
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; color: #fff;
+  margin: 0 auto 14px;
+  backdrop-filter: blur(6px);
+}
+.section-header h2 {
+  font-size: 2rem; font-weight: 700;
+  color: #fff; margin: 0 0 8px;
+}
+.section-header p {
+  color: rgba(255,255,255,0.7);
+  max-width: 560px; margin: 0 auto;
+  font-size: 0.97rem;
+}
+
+/* ══════════════════════════
+   HERO CARD
+══════════════════════════ */
+.hero-jumbo {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  padding: 52px 44px;
+  text-align: center;
+  margin-bottom: 72px;
+}
+.hero-jumbo .jumbotron-icon {
+  font-size: 2.2rem; color: #7c6ef7; margin-bottom: 16px;
+}
+.hero-jumbo h1 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800; color: #fff; margin-bottom: 14px;
+}
+.hero-jumbo .hero-subtitle {
+  color: rgba(255,255,255,0.72); font-size: 1.05rem;
+  max-width: 600px; margin: 0 auto 28px;
+}
+.hero-jumbo .btn-primary {
+  background: linear-gradient(135deg, #7c6ef7, #4facde);
+  border: none; border-radius: 50px;
+  padding: 12px 32px; font-weight: 600;
+  color: #fff; font-size: 0.97rem;
+  transition: transform .2s, box-shadow .2s;
+}
+.hero-jumbo .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(124,110,247,0.45);
+}
+
+/* ══════════════════════════
+   TIMELINE
+══════════════════════════ */
+.timeline-staircase { display: flex; flex-direction: column; gap: 0; }
+.timeline-step { display: flex; }
+.timeline-step:nth-child(even) { justify-content: flex-end; }
+.timeline-step-card {
+  width: min(460px, 90%);
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.13);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 24px 28px;
+  position: relative;
+  margin-bottom: 20px;
+  transition: transform .25s;
+}
+.timeline-step-card:hover { transform: translateY(-3px); }
+.timeline-year-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: linear-gradient(135deg, #f7a35c, #f05053);
+  border-radius: 50px; padding: 5px 14px;
+  font-size: 0.8rem; font-weight: 700; color: #fff;
+  margin-bottom: 12px;
+}
+.timeline-step-card h3 { color: #fff; font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
+.timeline-step-card p { color: rgba(255,255,255,0.7); font-size: 0.9rem; margin: 0; }
+
+/* ══════════════════════════
+   MISSION & VISION  — compact colorful
+══════════════════════════ */
+.mv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 640px) { .mv-grid { grid-template-columns: 1fr; } }
+
+.mv-card {
+  border-radius: 16px;
+  padding: 28px 26px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s, box-shadow .25s;
+}
+.mv-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.35); }
+.mv-card.mission-card {
+  background: linear-gradient(135deg, #1a1a6e 0%, #4f46e5 60%, #7c3aed 100%);
+  border: 1px solid rgba(124,58,237,0.4);
+}
+.mv-card.vision-card {
+  background: linear-gradient(135deg, #064e3b 0%, #059669 60%, #10b981 100%);
+  border: 1px solid rgba(16,185,129,0.4);
+}
+.mv-card-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(255,255,255,0.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; color: #fff; margin-bottom: 14px;
+}
+.mv-card h2 { color: #fff; font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; }
+.mv-card p { color: rgba(255,255,255,0.82); font-size: 0.9rem; margin: 0; line-height: 1.6; }
+
+/* ══════════════════════════
+   VALUES — colorful small cards
+══════════════════════════ */
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+.value-card {
+  border-radius: 14px;
+  padding: 22px 20px;
+  transition: transform .25s, box-shadow .25s;
+  position: relative;
+  overflow: hidden;
+}
+.value-card:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,0,0,.3); }
+.value-card:nth-child(1) { background: linear-gradient(135deg, #1e3a5f, #2563eb); }
+.value-card:nth-child(2) { background: linear-gradient(135deg, #4a1942, #9333ea); }
+.value-card:nth-child(3) { background: linear-gradient(135deg, #1a4731, #16a34a); }
+.value-card:nth-child(4) { background: linear-gradient(135deg, #7c2d12, #ea580c); }
+.value-card:nth-child(5) { background: linear-gradient(135deg, #134e4a, #0d9488); }
+.value-card:nth-child(6) { background: linear-gradient(135deg, #1e1b4b, #7c3aed); }
+.value-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; color: #fff; margin-bottom: 12px;
+}
+.value-card h3 { color: #fff; font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+.value-card p { color: rgba(255,255,255,0.78); font-size: 0.82rem; margin: 0; line-height: 1.5; }
+
+/* ══════════════════════════
+   TEAM — reference style
+══════════════════════════ */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+.team-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px 24px 24px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,.15);
+  transition: transform .25s, box-shadow .25s;
+  overflow: hidden;
+}
+.team-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,.25); }
+
+.team-photo-wrapper {
+  position: relative;
+  width: 110px; height: 110px;
+  margin: 0 auto 16px;
+}
+.team-photo-ring {
+  position: absolute; inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(#f05053, #e96c50, #f7a35c, #f05053);
+  animation: spin 6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.team-photo-inner {
+  position: relative; z-index: 1;
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #fff;
+  background: #f0f0f0;
+}
+.team-photo-inner img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.placeholder-avatar {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem; color: #ccc;
+}
+.online-dot {
+  position: absolute;
+  bottom: 6px; right: 6px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #10b981;
+  border: 2px solid #fff;
+  z-index: 2;
+}
+
+.team-role {
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: #f05053; margin-bottom: 6px;
+}
+.team-name {
+  font-size: 1.15rem; font-weight: 800;
+  color: #0d1117; margin-bottom: 10px;
+  line-height: 1.25;
+}
+.team-divider {
+  width: 36px; height: 2px;
+  background: linear-gradient(90deg, #f05053, #f7a35c);
+  margin: 0 auto 10px; border-radius: 2px;
+}
+.team-bio-short {
+  font-size: 0.82rem; color: #555;
+  line-height: 1.5; margin-bottom: 16px;
+}
+.team-socials {
+  display: flex; justify-content: center; gap: 8px;
+  margin-bottom: 16px;
+}
+.team-socials a {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: #f4f4f4;
+  display: flex; align-items: center; justify-content: center;
+  color: #444; font-size: 0.9rem;
+  transition: background .2s, color .2s;
+  text-decoration: none;
+}
+.team-socials a:hover { background: #f05053; color: #fff; }
+.btn-view-bio {
+  display: inline-block;
+  background: linear-gradient(135deg, #f05053, #f7a35c);
+  color: #fff; border: none; border-radius: 50px;
+  padding: 8px 22px; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: transform .2s, box-shadow .2s;
+  text-decoration: none;
+}
+.btn-view-bio:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(240,80,83,.4);
+  color: #fff;
+}
+
+/* ══════════════════════════
+   HOW WE WORK — colorful steps
+══════════════════════════ */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+.step-card {
+  border-radius: 16px;
+  padding: 26px 22px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s, box-shadow .25s;
+  text-align: center;
+}
+.step-card:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,0,0,.3); }
+.step-card:nth-child(1) { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
+.step-card:nth-child(2) { background: linear-gradient(135deg, #831843, #ec4899); }
+.step-card:nth-child(3) { background: linear-gradient(135deg, #14532d, #22c55e); }
+.step-card:nth-child(4) { background: linear-gradient(135deg, #78350f, #f59e0b); }
+.step-card:nth-child(5) { background: linear-gradient(135deg, #1e1b4b, #8b5cf6); }
+.step-card:nth-child(6) { background: linear-gradient(135deg, #0c4a6e, #0ea5e9); }
+.step-number-badge {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; font-weight: 800; color: #fff;
+  margin: 0 auto 14px;
+}
+.step-card h3 { color: #fff; font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
+.step-card p { color: rgba(255,255,255,0.78); font-size: 0.82rem; margin: 0; line-height: 1.5; }
+
+/* ══════════════════════════
+   PROJECTS
+══════════════════════════ */
+.project-card {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.13);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform .25s;
+}
+.project-card:hover { transform: translateY(-4px); }
+.project-image-wrapper { position: relative; height: 160px; overflow: hidden; }
+.project-image-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s; }
+.project-card:hover .project-image-wrapper img { transform: scale(1.06); }
+.project-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.4);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .25s;
+  font-size: 2rem; color: #fff;
+}
+.project-card:hover .project-overlay { opacity: 1; }
+.project-body { padding: 20px; }
+.project-body h3 { color: #fff; font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+.project-body .summary { color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 12px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.tag {
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.85);
+  border-radius: 50px; padding: 3px 10px;
+  font-size: 0.75rem;
+}
+.project-link { color: #7c6ef7; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+.project-link:hover { color: #a78bfa; }
+
+/* ══════════════════════════
+   TESTIMONIALS
+══════════════════════════ */
+.testimonial-card {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.13);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 28px;
+  transition: transform .25s;
+}
+.testimonial-card:hover { transform: translateY(-4px); }
+.quote-icon { font-size: 2rem; color: #7c6ef7; margin-bottom: 10px; }
+.testimonial-card .quote { color: rgba(255,255,255,0.82); font-style: italic; font-size: 0.9rem; line-height: 1.6; margin-bottom: 16px; }
+.author { display: flex; align-items: center; gap: 12px; }
+.author-avatar { font-size: 2rem; color: rgba(255,255,255,0.4); }
+.author .name { display: block; color: #fff; font-weight: 700; font-size: 0.9rem; }
+.author .meta { color: rgba(255,255,255,0.55); font-size: 0.78rem; }
+
+/* ══════════════════════════
+   FINAL CTA
+══════════════════════════ */
+.cta-jumbo {
+  background: linear-gradient(135deg, rgba(124,110,247,0.25), rgba(79,172,222,0.2));
+  border: 1px solid rgba(124,110,247,0.3);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  padding: 52px 44px;
+  text-align: center;
+}
+.cta-icon { font-size: 2.4rem; color: #7c6ef7; margin-bottom: 16px; }
+.cta-jumbo h2 { color: #fff; font-size: 2rem; font-weight: 800; margin-bottom: 12px; }
+.cta-jumbo p { color: rgba(255,255,255,0.72); max-width: 540px; margin: 0 auto 28px; }
+.cta-jumbo .btn-primary {
+  background: linear-gradient(135deg, #7c6ef7, #4facde);
+  border: none; border-radius: 50px;
+  padding: 12px 32px; font-weight: 600; color: #fff;
+}
+.cta-jumbo .btn-outline-light {
+  border-radius: 50px; padding: 12px 32px; font-weight: 600;
+}
+
+/* ══════════════════════════
+   BIO MODAL
+══════════════════════════ */
+.bio-modal .modal-content {
+  border-radius: 16px; border: none;
+  background: #0d1117;
+}
+.bio-modal .modal-header {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 20px 24px;
+}
+.bio-modal .modal-title { color: #fff; font-weight: 700; }
+.bio-modal .btn-close { filter: invert(1); }
+.bio-modal .modal-body { padding: 24px; color: rgba(255,255,255,0.8); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .about-content { padding: 40px 12px 60px; }
+  .hero-jumbo { padding: 36px 20px; }
+  .cta-jumbo { padding: 36px 20px; }
+  .team-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+}
+</style>
+
+<main class="main about-page">
+  <div class="about-bg" style="background-image: url('{% static "assets/img/about/about-5.webp" %}');">
+    <div class="about-overlay"></div>
+
+    <div class="about-content">
+
+      <!-- ── HERO ── -->
+      {% if about_page %}
+      <section id="about-hero" class="about-section" data-aos="fade-up">
+        <div class="hero-jumbo">
+          <div class="jumbotron-icon"><i class="bi bi-rocket-takeoff"></i></div>
+          <h1>{{ about_page.hero_headline }}</h1>
+          {% if about_page.hero_subtitle %}
+            <p class="hero-subtitle">{{ about_page.hero_subtitle }}</p>
+          {% endif %}
+          {% if about_page.hero_cta_label %}
+            <a href="{{ about_page.hero_cta_url|default:'/request-demo/' }}" class="btn btn-primary btn-lg">
+              {{ about_page.hero_cta_label }} <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+          {% endif %}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- ── TIMELINE ── -->
+      {% if timeline_entries %}
+      <section id="about-timeline" class="about-section" data-aos="fade-up">
+        <div class="section-header">
+          <div class="section-icon"><i class="bi bi-clock-history"></i></div>
+          <h2>Our Journey</h2>
+          <p>How Dravtech grew from a grassroots idea into a multidisciplinary company.</p>
+        </div>
+        <div class="timeline-staircase">
+          {% for item in timeline_entries %}
+          <div class="timeline-step" data-aos="fade-{{ forloop.counter0|divisibleby:2|yesno:'right,left' }}" data-aos-delay="{{ forloop.counter0|add:1|stringformat:'d' }}00">
+            <div class="timeline-step-card">
+              <div class="timeline-year-badge">
+                <i class="bi bi-calendar-check"></i> {{ item.year_label }}
+              </div>
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.description }}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- ── MISSION & VISION ── -->
+      {% if about_page and about_page.mission_body %}
+      <section id="about-mission-vision" class="about-section" data-aos="fade-up">
+        <div class="mv-grid">
+          {% if about_page.mission_body %}
+          <div class="mv-card mission-card" data-aos="zoom-in" data-aos-delay="100">
+            <div class="mv-card-icon"><i class="bi bi-bullseye"></i></div>
+            <h2>{{ about_page.mission_title|default:"Our Mission" }}</h2>
+            <p>{{ about_page.mission_body }}</p>
+          </div>
+          {% endif %}
+          {% if about_page.vision_body %}
+          <div class="mv-card vision-card" data-aos="zoom-in" data-aos-delay="200">
+            <div class="mv-card-icon"><i class="bi bi-lightbulb"></i></div>
+            <h2>{{ about_page.vision_title|default:"Our Vision" }}</h2>
+            <p>{{ about_page.vision_body }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- ── VALUES ── -->
+      {% if values %}
+      <section id="about-values" class="about-section" data-aos="fade-up">
+        <div class="section-header">
+          <div class="section-icon"><i class="bi bi-gem"></i></div>
+          <h2>Our Values</h2>
+          <p>Principles that guide how we make decisions and build solutions.</p>
+        </div>
+        <div class="values-grid">
+          {% for value in values %}
+          <div class="value-card" data-aos="flip-left" data-aos-delay="{{ forloop.counter0|add:1|stringformat:'d' }}00">
+            <div class="value-icon">
+              <i class="bi bi-{{ forloop.counter }}-circle-fill"></i>
+            </div>
+            <h3>{{ value.title }}</h3>
+            <p>{{ value.description }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- ── TEAM ── -->
+      {% if team_members %}
+      <section id="about-team" class="about-section" data-aos="fade-up">
+        <div class="section-header">
+          <div class="section-icon"><i class="bi bi-people"></i></div>
+          <h2>Meet Our Expert Team</h2>
+          <p>DravTech is powered by a passionate team of technology innovators, creative designers, strategic thinkers, and problem solvers. Our diverse expertise spans software engineering, data science, cybersecurity, digital marketing, and business strategy, enabling us to deliver comprehensive solutions that drive real impact for our clients across Kenya and beyond.</p>
+        </div>
+        <div class="team-grid">
+          {% for member in team_members %}
+          <div class="team-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|stringformat:'d' }}00">
+            <div class="team-photo-wrapper">
+              <div class="team-photo-ring"></div>
+              <div class="team-photo-inner">
+                {% if member.photo %}
+                  <img src="{{ member.photo.url }}" alt="{{ member.name }}">
+                {% else %}
+                  <div class="placeholder-avatar"><i class="bi bi-person-circle"></i></div>
+                {% endif %}
+              </div>
+              <div class="online-dot"></div>
+            </div>
+
+            <div class="team-role">{{ member.role }}</div>
+            <div class="team-name">{{ member.name }}</div>
+            <div class="team-divider"></div>
+
+            {% if member.bio %}
+              <p class="team-bio-short">{{ member.bio|truncatewords:18 }}</p>
+            {% endif %}
+
+            <div class="team-socials">
+              {% if member.linkedin %}
+                <a href="{{ member.linkedin }}" target="_blank"><i class="bi bi-linkedin"></i></a>
+              {% endif %}
+              {% if member.twitter %}
+                <a href="{{ member.twitter }}" target="_blank"><i class="bi bi-twitter-x"></i></a>
+              {% endif %}
+              {% if member.github %}
+                <a href="{{ member.github }}" target="_blank"><i class="bi bi-github"></i></a>
+              {% endif %}
+              {% if member.email %}
+                <a href="mailto:{{ member.email }}"><i class="bi bi-envelope"></i></a>
+              {% endif %}
+            </div>
+
+            <button class="btn-view-bio" data-bs-toggle="modal" data-bs-target="#bioModal-{{ forloop.counter }}">
+              <i class="bi bi-person-lines-fill me-1"></i> View Bio
+            </button>
+          </div>
+
+          <!-- Bio Modal -->
+          <div class="modal fade bio-modal" id="bioModal-{{ forloop.counter }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">{{ member.name }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <p class="text-warning fw-bold mb-2">{{ member.role }}</p>
+                  {% if member.bio %}
+                    <p>{{ member.bio }}</p>
+                  {% else %}
+                    <p class="text-muted">No bio available.</p>
+                  {% endif %}
+                  <div class="d-flex gap-2 mt-3">
+                    {% if member.linkedin %}<a href="{{ member.linkedin }}" class="btn btn-sm btn-outline-light" target="_blank"><i class="bi bi-linkedin me-1"></i>LinkedIn</a>{% endif %}
+                    {% if member.email %}<a href="mailto:{{ member.email }}" class="btn btn-sm btn-outline-light"><i class="bi bi-envelope me-1"></i>Email</a>{% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- ── PROJECTS ── -->
+      {% if projects %}
+      <section id="about-projects" class="about-section" data-aos="fade-up">
+        <div class="section-header">
+          <div class="section-icon"><i class="bi bi-folder-open"></i></div>
+          <h2>Selected Projects</h2>
+          <p>A sample of the work we've delivered across technology, media, design, and research.</p>
+        </div>
+        <div class="row g-4">
+          {% for project in projects %}
+          <div class="col-md-6 col-lg-4" data-aos="zoom-in-up" data-aos-delay="{{ forloop.counter0|add:1|stringformat:'d' }}00">
+            <div class="project-card">
+              {% if project.image %}
+              <div class="project-image-wrapper">
+                <img src="{{ project.image.url }}" alt="{{ project.title }}">
+                <div class="project-overlay"><i class="bi bi-eye"></i></div>
+              </div>
+              {% endif %}
+              <div class="project-body">
+                <h3>{{ project.title }}</h3>
+                <p class="summary">{{ project.summary }}</p>
+                {% if project.related_services.all %}
+                <div class="tags">
+                  {% for service in project.related_services.all %}
+                    <span class="tag"><i class="bi bi-tag-fill me-1"></i>{{ service.title }}</span>
+                  {% endfor %}
+                </div>
+                {% endif %}
+                {% if project.link %}
+                  <a href="{{ project.link }}" class="project-link">View Project <i class="bi bi-arrow-right ms-1"></i></a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- ── TESTIMONIALS ── -->
+      {% if testimonials %}
+      <section id="about-testimonials" class="about-section" data-aos="fade-up">
+        <div class="section-header">
+          <div class="section-icon"><i class="bi bi-chat-quote"></i></div>
+          <h2>What Our Partners Say</h2>
+          <p>Reflections from organizations who trusted Dravtech to help design, build, and scale solutions.</p>
+        </div>
+        <div class="row g-4">
+          {% for t in testimonials %}
+          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|stringformat:'d' }}00">
+            <div class="testimonial-card">
+              <div class="quote-icon"><i class="bi bi-quote"></i></div>
+              <p class="quote">"{{ t.quote }}"</p>
+              <div class="author">
+                <div class="author-avatar"><i class="bi bi-person-circle"></i></div>
+                <div class="author-info">
+                  <span class="name">{% if t.is_anonymous or not t.author_name %}Anonymous{% else %}{{ t.author_name }}{% endif %}</span>
+                  <span class="meta">
+                    {% if t.role %}<i class="bi bi-briefcase me-1"></i>{{ t.role }}{% endif %}
+                    {% if t.organization %}{% if t.role %} · {% endif %}<i class="bi bi-building me-1"></i>{{ t.organization }}{% endif %}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- ── HOW WE WORK ── -->
+      {% if how_we_work_steps %}
+      <section id="about-how-we-work" class="about-section" data-aos="fade-up">
+        <div class="section-header">
+          <div class="section-icon"><i class="bi bi-diagram-3"></i></div>
+          <h2>{{ about_page.how_we_work_title|default:"How We Work" }}</h2>
+          {% if about_page and about_page.how_we_work_intro %}
+            <p>{{ about_page.how_we_work_intro }}</p>
+          {% endif %}
+        </div>
+        <div class="steps-grid">
+          {% for step in how_we_work_steps %}
+          <div class="step-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|stringformat:'d' }}00">
+            <div class="step-number-badge">{{ step.step_number }}</div>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- ── FINAL CTA ── -->
+      {% if about_page %}
+      <section id="about-cta" class="about-section" data-aos="fade-up">
+        <div class="cta-jumbo">
+          <div class="cta-icon"><i class="bi bi-envelope-heart"></i></div>
+          <h2>{{ about_page.final_cta_headline|default:"Ready to Work Together?" }}</h2>
+          <p>{{ about_page.final_cta_subtext|default:"Let's discuss how we can help you build innovative solutions for your organization." }}</p>
+          <div class="cta-buttons">
+            <a href="{{ about_page.final_cta_url|default:'/contact/' }}" class="btn btn-primary btn-lg">
+              <i class="bi bi-chat-dots me-2"></i>{{ about_page.final_cta_label|default:"Get in Touch" }}
+            </a>
+            <a href="{% url 'services_list' %}" class="btn btn-outline-light btn-lg ms-3">
+              <i class="bi bi-grid me-2"></i>Explore Services
+            </a>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+    </div>
+  </div>
+</main>
+
+{% endblock %}

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>DravTech Solution</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+{% load static %}
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/logo.jpeg' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="starter-page-page" data-default-img-fallback="{% static 'assets/img/logo.jpeg' %}">
+
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+
+      <a href="{% url 'home' %}" class="logo d-flex align-items-center me-auto me-xl-0">
+        <!-- image logo -->
+        <img src="{% static 'assets/img/logo.jpeg' %}" alt="DravTech logo">
+        <h1 class="sitename">DRAVTECH</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'services_list' %}">Services</a></li>
+          <li><a href="{% url 'marketplace:marketplace' %}">Marketplace</a></li>
+          <li><a href="{% url 'about' %}">About Us</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+          <li class="nav-cart">
+            <a href="{% url 'marketplace:cart' %}" class="nav-link-cart">
+              <i class="bi bi-cart3"></i>
+              <span class="cart-count">0</span>
+            </a>
+          </li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+  </header>
+  
+  <main class="main-content">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <footer id="footer" class="footer light-background">
+    <!-- Background Video with Fallback -->
+    <video class="footer-video" autoplay muted loop playsinline poster="{% static 'assets/img/footer-bg-fallback.jpg' %}">
+      <source src="{% static 'assets/videos/footer-bg.mp4' %}" type="video/mp4">
+      <!-- Fallback image for browsers that don't support video -->
+    </video>
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-3 col-md-6 footer-info">
+          <a href="{% url 'home' %}" class="logo d-flex align-items-center mb-4">
+            <span class="sitename">DRAVTECH</span>
+          </a>
+          <p>Leading IT solutions provider specializing in innovative technology services, cybersecurity, and software development.</p>
+        </div>
+
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'marketplace:marketplace' %}">Marketplace</a></li>
+            <li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6 footer-links">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#">IT Support</a></li>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Cybersecurity</a></li>
+            <li><a href="#">Software Engineering</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+          <h4>Contact Info</h4>
+          <ul class="contact-list">
+            <li><i class="bi bi-envelope"></i> <a href="mailto:dravislotum@gmail.com">dravislotum@gmail.com</a></li>
+            <li><i class="bi bi-telephone"></i> <a href="tel:+254758067458">+254 758 067 458</a></li>
+            <li><i class="bi bi-geo-alt"></i> Nairobi, Kenya</li>
+          </ul>
+          
+          <!-- Social Links -->
+          <div class="social-links">
+            <a href="https://twitter.com/dravtech" target="_blank" title="Twitter/X">
+              <i class="bi bi-twitter-x"></i>
+            </a>
+            <a href="https://linkedin.com/company/dravtech" target="_blank" title="LinkedIn">
+              <i class="bi bi-linkedin"></i>
+            </a>
+            <a href="https://github.com/dravtech" target="_blank" title="GitHub">
+              <i class="bi bi-github"></i>
+            </a>
+            <a href="https://facebook.com/dravtech" target="_blank" title="Facebook">
+              <i class="bi bi-facebook"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container footer-bottom text-center">
+      <div class="row gy-3">
+        <div class="col-12">
+          <div class="copyright">
+            <p>© 2024 DRAVTECH. All rights reserved. | 🚀 Powered by DRAVTECH | Portfolio &amp; GitHub</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <!-- Floating contact buttons (WhatsApp + Phone) -->
+  <div class="floating-contact" aria-hidden="false">
+    <button class="fab whatsapp-btn" data-bs-toggle="modal" data-bs-target="#whatsappModal" aria-label="WhatsApp" data-tooltip="Chat on WhatsApp">
+      <i class="bi bi-whatsapp"></i>
+    </button>
+    <button class="fab phone-btn" data-bs-toggle="modal" data-bs-target="#phoneModal" aria-label="Call us" data-tooltip="Call Us">
+      <i class="bi bi-telephone"></i>
+    </button>
+  </div>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- WhatsApp Modal -->
+  <div class="modal fade" id="whatsappModal" tabindex="-1" aria-labelledby="whatsappModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="whatsappModalLabel">Message us on WhatsApp</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Chat with our team for quick support and enquiries.</p>
+          <p><strong>WhatsApp:</strong></p>
+          <p><a class="btn btn-success w-100" href="https://wa.me/254758067458" target="_blank" rel="noopener">Open WhatsApp Chat <i class="bi bi-box-arrow-up-right"></i></a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phone Modal -->
+  <div class="modal fade" id="phoneModal" tabindex="-1" aria-labelledby="phoneModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="phoneModalLabel">Call DravTech</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Speak directly with our team.</p>
+          <p><strong>Phone:</strong></p>
+          <p><a class="btn btn-primary w-100" href="tel:+254758067458">+254 758 067 458</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+  
+  <!-- Marketplace JS -->
+  <script src="{% static 'assets/js/marketplace.js' %}"></script>
+
+  <!-- Cart functionality -->
+  <script>
+    // Update cart count on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartCount();
+    });
+
+    // Function to update cart count
+    function updateCartCount() {
+      fetch('/marketplace/api/cart-count/')
+        .then(response => response.json())
+        .then(data => {
+          const cartCountElement = document.querySelector('.cart-count');
+          if (cartCountElement) {
+            cartCountElement.textContent = data.count;
+            if (data.count === 0) {
+              cartCountElement.classList.add('empty');
+            } else {
+              cartCountElement.classList.remove('empty');
+            }
+          }
+        })
+        .catch(error => {
+          console.log('Could not fetch cart count:', error);
+        });
+    }
+
+    // Update cart count after add to cart operations
+    window.addEventListener('cartUpdated', function() {
+      updateCartCount();
+    });
+  </script>
+
+  <style>
+    /* Floating contact buttons */
+    .floating-contact { 
+      position: fixed; 
+      right: 1rem; 
+      bottom: 1rem; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 0.6rem; 
+      z-index: 1080; 
+      animation: slideInRight 0.6s ease-out;
+    }
+    
+    .fab { 
+      width: 56px; 
+      height: 56px; 
+      border-radius: 50%; 
+      display: inline-flex; 
+      align-items: center; 
+      justify-content: center; 
+      border: none; 
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.3); 
+      cursor: pointer; 
+      color: #fff; 
+      font-size: 1.3rem; 
+      transition: all 0.3s ease; 
+      position: relative; 
+      overflow: hidden;
+    }
+    
+    .fab::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    .fab:hover::before {
+      width: 100px;
+      height: 100px;
+    }
+    
+    .fab:hover { 
+      transform: translateY(-3px) scale(1.05); 
+      box-shadow: 0 12px 35px rgba(15, 23, 42, 0.4); 
+    }
+    
+    .fab:active { 
+      transform: translateY(-1px) scale(0.98); 
+    }
+    
+    .whatsapp-btn { 
+      background: linear-gradient(135deg, #25D366, #1DA851); 
+      animation: pulse 2s infinite;
+    }
+    
+    .phone-btn { 
+      background: linear-gradient(135deg, #2563eb, #1e40af); 
+      animation: pulse 2s infinite 0.5s;
+    }
+    
+    /* Pulse animation */
+    @keyframes pulse {
+      0%, 100% { 
+        transform: scale(1); 
+        box-shadow: 0 8px 25px rgba(15, 23, 42, 0.3);
+      }
+      50% { 
+        transform: scale(1.05); 
+        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.4);
+      }
+    }
+    
+    /* Slide in animation */
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    /* Hover tooltips */
+    .fab::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      right: 70px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .fab:hover::after {
+      opacity: 1;
+    }
+    
+    /* Navigation Cart Styling */
+    .nav-cart {
+      position: relative;
+    }
+    
+    .nav-link-cart {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      color: var(--nav-color);
+      font-size: 1.2rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link-cart:hover {
+      color: var(--nav-hover-color);
+      transform: translateY(-2px);
+    }
+    
+    .cart-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 10px;
+      min-width: 18px;
+      text-align: center;
+      line-height: 1;
+      animation: cartPulse 2s infinite;
+    }
+    
+    @keyframes cartPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    .cart-count.empty {
+      background: #6b7280;
+      animation: none;
+    }
+    
+    @media (max-width: 420px) { 
+      .floating-contact { 
+        right: 0.5rem; 
+        bottom: 0.75rem; 
+      } 
+      .fab { 
+        width: 48px; 
+        height: 48px; 
+        font-size: 1.1rem;
+      }
+      .fab::after {
+        right: 60px;
+        font-size: 0.7rem;
+      }
+    }
+  </style>
+
+</body>
+
+</html>

@@ -1,0 +1,506 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - DravTech{% endblock %}
+
+{% block content %}
+<section class="contact-section">
+  <div class="container">
+    <div class="row align-items-start">
+      
+      <!-- Contact Info Panel -->
+      <div class="col-lg-5 mb-4 mb-lg-0">
+        <div class="contact-info-card">
+          <div class="info-header">
+            <div class="header-icon">
+              <i class="bi bi-chat-dots-fill"></i>
+            </div>
+            <h3>Let's Bring Your Vision to Life</h3>
+            <p>Tell us about your goals and constraints — we'll propose a practical plan, timeline, and next steps.</p>
+          </div>
+
+          <div class="contact-methods">
+            <div class="method-item">
+              <div class="method-icon">
+                <i class="bi bi-envelope-paper-fill"></i>
+              </div>
+              <div class="method-details">
+                <span class="method-label">Email Us</span>
+                <a href="mailto:dravislotum@gmail.com">dravislotum@gmail.com</a><br>
+                <a href="mailto:samuelkibunja55@gmail.com">samuelkibunja55@gmail.com</a>
+              </div>
+            </div>
+
+            <div class="method-item">
+              <div class="method-icon">
+                <i class="bi bi-headset"></i>
+              </div>
+              <div class="method-details">
+                <span class="method-label">Call Us</span>
+                <a href="tel:+254758067458">+254 758 067 458</a><br>
+                <a href="tel:+254720357085">+254 720 357 085</a>
+              </div>
+            </div>
+
+            <div class="method-item">
+              <div class="method-icon">
+                <i class="bi bi-pin-map-fill"></i>
+              </div>
+              <div class="method-details">
+                <span class="method-label">Visit Us</span>
+                <span>Nairobi, Kenya</span>
+              </div>
+            </div>
+
+            <div class="method-item">
+              <div class="method-icon">
+                <i class="bi bi-clock"></i>
+              </div>
+              <div class="method-details">
+                <span class="method-label">Working Hours</span>
+                <span>Mon - Fri: 8:00 AM - 6:00 PM</span><br>
+                <span>Sat: 9:00 AM - 2:00 PM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="col-lg-7">
+        <div class="contact-form-card">
+          <div class="form-header">
+            <h4>Send Us a Message</h4>
+            <p>Fill out the form and our team will respond within 24 hours.</p>
+          </div>
+
+          <form method="post" action="{% url 'contact' %}" class="contact-form">
+            {% csrf_token %}
+
+            <!-- Django Messages -->
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.name.id_for_label }}" class="form-label">
+                    <i class="bi bi-person"></i> Your Name *
+                  </label>
+                  {{ form.name }}
+                  {% if form.name.errors %}
+                    <div class="error-message">
+                      {{ form.name.errors.0 }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.email.id_for_label }}" class="form-label">
+                    <i class="bi bi-envelope"></i> Email Address *
+                  </label>
+                  {{ form.email }}
+                  {% if form.email.errors %}
+                    <div class="error-message">
+                      {{ form.email.errors.0 }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.phone.id_for_label }}" class="form-label">
+                    <i class="bi bi-telephone"></i> Phone Number
+                  </label>
+                  {{ form.phone }}
+                  {% if form.phone.errors %}
+                    <div class="error-message">
+                      {{ form.phone.errors.0 }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.company.id_for_label }}" class="form-label">
+                    <i class="bi bi-building"></i> Company
+                  </label>
+                  {{ form.company }}
+                  {% if form.company.errors %}
+                    <div class="error-message">
+                      {{ form.company.errors.0 }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.contact_type.id_for_label }}" class="form-label">
+                    <i class="bi bi-tag"></i> Inquiry Type
+                  </label>
+                  {{ form.contact_type }}
+                  {% if form.contact_type.errors %}
+                    <div class="error-message">
+                      {{ form.contact_type.errors.0 }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.priority.id_for_label }}" class="form-label">
+                    <i class="bi bi-flag"></i> Priority
+                  </label>
+                  {{ form.priority }}
+                  {% if form.priority.errors %}
+                    <div class="error-message">
+                      {{ form.priority.errors.0 }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="{{ form.subject.id_for_label }}" class="form-label">
+                    <i class="bi bi-chat-left-text"></i> Subject *
+                  </label>
+                  {{ form.subject }}
+                  {% if form.subject.errors %}
+                    <div class="error-message">
+                      {{ form.subject.errors.0 }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="{{ form.message.id_for_label }}" class="form-label">
+                    <i class="bi bi-chat-text"></i> Your Message *
+                  </label>
+                  {{ form.message }}
+                  {% if form.message.errors %}
+                    <div class="error-message">
+                      {{ form.message.errors.0 }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-submit">
+                <i class="bi bi-send"></i>
+                Send Message
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.contact-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  min-height: 100vh;
+}
+
+.contact-info-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  height: 100%;
+  animation: slideInRight 0.6s ease-out;
+}
+
+.info-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+  padding: 40px 30px;
+}
+
+.header-icon {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 24px;
+}
+
+.info-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.info-header p {
+  opacity: 0.9;
+  margin: 0;
+}
+
+.contact-methods {
+  padding: 30px;
+}
+
+.method-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 15px;
+  border-left: 4px solid #667eea;
+  transition: all 0.3s ease;
+}
+
+.method-item:hover {
+  transform: translateX(10px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.1);
+}
+
+.method-icon {
+  font-size: 20px;
+  color: #667eea;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.method-label {
+  font-weight: 600;
+  color: #1e293b;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.method-details a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.method-details a:hover {
+  text-decoration: underline;
+}
+
+.contact-form-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.form-header {
+  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  color: white;
+  text-align: center;
+  padding: 30px;
+}
+
+.form-header h4 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.form-header p {
+  opacity: 0.9;
+  margin: 0;
+}
+
+.contact-form {
+  padding: 40px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.form-label i {
+  margin-right: 8px;
+  color: #667eea;
+}
+
+/* Style Django form fields */
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: #f8fafc;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background: white;
+  outline: none;
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  padding: 5px 10px;
+  background: #f8d7da;
+  border-radius: 5px;
+  border-left: 3px solid #dc3545;
+}
+
+.alert {
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border-left: 4px solid;
+}
+
+.alert-success {
+  background: #d4edda;
+  border-color: #28a745;
+  color: #155724;
+}
+
+.alert-warning {
+  background: #fff3cd;
+  border-color: #ffc107;
+  color: #856404;
+}
+
+.alert-danger {
+  background: #f8d7da;
+  border-color: #dc3545;
+  color: #721c24;
+}
+
+.btn-close {
+  float: right;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 60px 0;
+  }
+  
+  .contact-form {
+    padding: 25px;
+  }
+  
+  .info-header {
+    padding: 30px 20px;
+  }
+  
+  .contact-methods {
+    padding: 20px;
+  }
+  
+  .method-item {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px;
+  }
+  
+  .method-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,630 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Secure Checkout — DravTech{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Override any conflicting styles from base template */
+.checkout-page {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  color: #fff;
+  min-height: 100vh;
+}
+
+/* Header bar */
+.checkout-page .co-header {
+  background: rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 16px 0;
+}
+
+.checkout-page .co-header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.checkout-page .co-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+}
+
+.checkout-page .co-brand-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0d0f1a;
+  font-weight: 800;
+  font-size: .9rem;
+}
+
+.checkout-page .co-header-title {
+  font-size: .95rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.6);
+}
+
+/* Steps indicator */
+.checkout-page .co-steps {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.checkout-page .co-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .8rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.35);
+}
+
+.checkout-page .co-step.done {
+  color: #10b981;
+}
+
+.checkout-page .co-step.active {
+  color: #fff;
+}
+
+.checkout-page .co-step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .75rem;
+}
+
+.checkout-page .co-step.active .co-step-num {
+  background: #fff;
+  color: #1f2937;
+  border-color: #fff;
+}
+
+.checkout-page .co-step.done .co-step-num {
+  background: #10b981;
+  border-color: #10b981;
+}
+
+/* Main content */
+.checkout-page .checkout-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+}
+
+.checkout-page .checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 40px;
+}
+
+@media (max-width: 968px) {
+  .checkout-page .checkout-layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+/* Form cards */
+.checkout-page .form-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.checkout-page .form-card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.checkout-page .form-card-title i {
+  color: #f59e0b;
+}
+
+/* Form fields */
+.checkout-page .field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.checkout-page .field-row.single {
+  grid-template-columns: 1fr;
+}
+
+.checkout-page .field-group {
+  margin-bottom: 20px;
+}
+
+.checkout-page .field-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.8);
+  margin-bottom: 8px;
+}
+
+.checkout-page .req {
+  color: #ef4444;
+}
+
+.checkout-page .input-wrap {
+  position: relative;
+}
+
+.checkout-page .input-wrap i {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,.4);
+  font-size: 1.1rem;
+  z-index: 1;
+}
+
+.checkout-page .field-group input,
+.checkout-page .field-group select {
+  width: 100%;
+  padding: 14px 16px 14px 44px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.checkout-page .field-group input:focus,
+.checkout-page .field-group select:focus {
+  outline: none;
+  border-color: #f59e0b;
+  background: rgba(255,255,255,0.12);
+}
+
+.checkout-page .field-group input::placeholder {
+  color: rgba(255,255,255,.4);
+}
+
+/* Summary panel */
+.checkout-page .summary-panel {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  position: sticky;
+  top: 20px;
+}
+
+.checkout-page .summary-header {
+  background: rgba(255,255,255,0.08);
+  padding: 20px 24px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.checkout-page .summary-items {
+  padding: 20px 24px;
+}
+
+.checkout-page .summary-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.checkout-page .summary-item:last-child {
+  border-bottom: none;
+}
+
+.checkout-page .sum-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: rgba(255,255,255,.4);
+}
+
+.checkout-page .sum-name {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.checkout-page .sum-qty {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,.5);
+}
+
+.checkout-page .sum-price {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #f59e0b;
+}
+
+.checkout-page .summary-totals {
+  padding: 20px 24px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.checkout-page .tot-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.checkout-page .tot-row .lbl {
+  color: rgba(255,255,255,.6);
+}
+
+.checkout-page .tot-final {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  padding-top: 12px;
+  border-top: 2px solid rgba(255,255,255,0.2);
+  margin-top: 8px;
+}
+
+.checkout-page .secure-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 24px;
+  background: rgba(16,185,129,0.1);
+  font-size: 0.8rem;
+  color: #10b981;
+}
+
+/* Submit button */
+.checkout-page .btn-place-order {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.checkout-page .btn-place-order:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16,185,129,0.3);
+}
+
+/* Back button */
+.checkout-page .back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  color: rgba(255,255,255,.8);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  margin-bottom: 24px;
+}
+
+.checkout-page .back-btn:hover {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+/* Alerts */
+.checkout-page .alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
+.checkout-page .alert-success {
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.3);
+  color: #10b981;
+}
+
+.checkout-page .alert-danger {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: #ef4444;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .checkout-page .checkout-container {
+    padding: 20px 16px 40px;
+  }
+  
+  .checkout-page .form-card {
+    padding: 24px 20px;
+  }
+  
+  .checkout-page .field-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .checkout-page .summary-panel {
+    position: static;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="checkout-page">
+
+<!-- Header -->
+<header class="co-header">
+  <div class="co-header-inner">
+    <a href="{% url 'marketplace:marketplace' %}" class="co-brand">
+      <div class="co-brand-icon">D</div>
+      DRAVTECH
+    </a>
+    <div class="co-header-title">Secure Checkout</div>
+  </div>
+</header>
+
+<!-- Steps -->
+<div class="co-steps">
+  <div class="co-step done">
+    <div class="co-step-num">1</div>
+    <span>Cart</span>
+  </div>
+  <div class="co-step-line"></div>
+  <div class="co-step active">
+    <div class="co-step-num">2</div>
+    <span>Details</span>
+  </div>
+  <div class="co-step-line"></div>
+  <div class="co-step">
+    <div class="co-step-num">3</div>
+    <span>Payment</span>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="checkout-container">
+  <form method="post" action="{% url 'marketplace:checkout' %}">
+    {% csrf_token %}
+
+    <div class="checkout-layout">
+      
+      <!-- Left: Forms -->
+      <div>
+        
+        <!-- Contact Information -->
+        <div class="form-card">
+          <h2 class="form-card-title">
+            <i class="bi bi-person-circle"></i>
+            Contact Information
+          </h2>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>Full Name <span class="req">*</span></label>
+              <div class="input-wrap">
+                <i class="bi bi-person"></i>
+                <input type="text" name="full_name"
+                       value="{{ form_data.full_name|default:'' }}"
+                       placeholder="Jane Doe" required>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Phone <span class="req">*</span></label>
+              <div class="input-wrap">
+                <i class="bi bi-telephone"></i>
+                <input type="tel" name="phone"
+                       value="{{ form_data.phone|default:'' }}"
+                       placeholder="+254 7XX XXX XXX" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-row single">
+            <div class="field-group">
+              <label>Email Address <span class="req">*</span></label>
+              <div class="input-wrap">
+                <i class="bi bi-envelope"></i>
+                <input type="email" name="email"
+                       value="{{ form_data.email|default:request.user.email|default:'' }}"
+                       placeholder="you@example.com" required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping Information (if needed) -->
+        {% if has_physical %}
+        <div class="form-card">
+          <h2 class="form-card-title">
+            <i class="bi bi-truck"></i>
+            Shipping Information
+          </h2>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>Address Line 1 <span class="req">*</span></label>
+              <div class="input-wrap">
+                <i class="bi bi-geo-alt"></i>
+                <input type="text" name="address_1"
+                       value="{{ form_data.address_1|default:'' }}"
+                       placeholder="123 Main Street" required>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Address Line 2</label>
+              <div class="input-wrap">
+                <i class="bi bi-building"></i>
+                <input type="text" name="address_2"
+                       value="{{ form_data.address_2|default:'' }}"
+                       placeholder="Apartment, suite, etc.">
+              </div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>City <span class="req">*</span></label>
+              <div class="input-wrap">
+                <i class="bi bi-geo"></i>
+                <input type="text" name="city"
+                       value="{{ form_data.city|default:'' }}"
+                       placeholder="Nairobi" required>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>County</label>
+              <div class="input-wrap">
+                <i class="bi bi-map"></i>
+                <input type="text" name="county"
+                       value="{{ form_data.county|default:'' }}"
+                       placeholder="Nairobi County">
+              </div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>Postal Code</label>
+              <div class="input-wrap">
+                <i class="bi bi-mailbox"></i>
+                <input type="text" name="postal_code"
+                       value="{{ form_data.postal_code|default:'' }}"
+                       placeholder="00100">
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Country</label>
+              <div class="input-wrap">
+                <i class="bi bi-globe"></i>
+                <input type="text" name="country"
+                       value="{{ form_data.country|default:'Kenya' }}"
+                       placeholder="Kenya">
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Back button -->
+        <a href="{% url 'marketplace:cart' %}" class="back-btn">
+          <i class="bi bi-arrow-left"></i>
+          Back to Cart
+        </a>
+      </div>
+
+      <!-- Right: Summary -->
+      <div class="summary-panel">
+        <div class="summary-header">Order Summary</div>
+
+        <div class="summary-items">
+          {% for pid, item in cart.items %}
+          <div class="summary-item">
+            <div class="sum-img">
+              {% if item.image %}
+                <img src="{{ item.image }}" alt="{{ item.name }}">
+              {% else %}
+                {% if item.product_type == 'digital' %}<i class="bi bi-cpu"></i>
+                {% elif item.product_type == 'merch' %}<i class="bi bi-bag"></i>
+                {% else %}<i class="bi bi-palette"></i>{% endif %}
+              {% endif %}
+            </div>
+            <div>
+              <div class="sum-name">{{ item.name }}</div>
+              <div class="sum-qty">Qty: {{ item.quantity }}</div>
+            </div>
+            <div class="sum-price">
+              KES {{ item.price|floatformat:0 }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="summary-totals">
+          <div class="tot-row">
+            <span class="lbl">Subtotal</span>
+            <span>KES {{ subtotal|floatformat:2 }}</span>
+          </div>
+          <div class="tot-row">
+            <span class="lbl">Shipping</span>
+            <span>
+              {% if shipping_cost > 0 %}KES {{ shipping_cost|floatformat:2 }}
+              {% else %}<span style="color: #10b981;">Free</span>{% endif %}
+            </span>
+          </div>
+          <div class="tot-final">
+            <span>Total</span>
+            <span>KES {{ total|floatformat:2 }}</span>
+          </div>
+        </div>
+
+        <div class="secure-row">
+          <i class="bi bi-shield-check"></i>
+          SSL encrypted • Secure checkout
+        </div>
+
+        <button type="submit" class="btn-place-order">
+          <i class="bi bi-lock-fill"></i>
+          Place Order — KES {{ total|floatformat:2 }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+</div>
+{% endblock %}

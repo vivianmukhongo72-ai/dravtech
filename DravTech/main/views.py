@@ -19,11 +19,8 @@ from .models import (
     CompanyValue,
     ContactMessage,
     HowWeWorkStep,
-    PricingPlan,
     Product,
-    ProductInquiry,
     Project,
-    Service,
     SiteStat,
     TeamMember,
     Testimonial,
@@ -107,60 +104,6 @@ def home(request):
     )
 
 
-def portfolio_list(request):
-    """
-    Display portfolio of case studies grouped by services.
-    """
-    category_filter = request.GET.get('category', 'all')
-    
-    # Get all case studies with their related services
-    case_studies = CaseStudy.objects.filter(is_active=True).select_related('service', 'service__category')
-    
-    # Filter by category if specified
-    if category_filter != 'all':
-        case_studies = case_studies.filter(service__category__slug=category_filter)
-    
-    # Group case studies by services for filtering
-    case_studies_by_service = {}
-    for case_study in case_studies:
-        service = case_study.service
-        if service not in case_studies_by_service:
-            case_studies_by_service[service] = []
-        case_studies_by_service[service].append(case_study)
-    
-    # Get all service categories for filtering
-    categories = Service.objects.filter(is_active=True).order_by('display_order', 'title')
-    
-    context = {
-        'case_studies': case_studies,
-        'categories': categories,
-        'case_studies_by_service': case_studies_by_service,
-        'selected_category': category_filter,
-        'page_title': 'Portfolio',
-        'page_description': 'Explore our portfolio of case studies across different services and industries.',
-    }
-    
-    return render(request, 'portfolio.html', context)
-
-
-def portfolio_detail(request, slug):
-    """
-    Display individual project details with service information.
-    """
-    project = get_object_or_404(Project, slug=slug, is_active=True)
-    
-    # Get related projects (same services)
-    related_projects = Project.objects.filter(
-        is_active=True,
-        related_services__in=project.related_services.all()
-    ).exclude(id=project.id).distinct()
-    
-    context = {
-        'project': project,
-        'related_projects': related_projects,
-    }
-    
-    return render(request, 'portfolio_detail.html', context)
 def products_list(request):
     """List all active products for the products page."""
     products = (
@@ -200,9 +143,6 @@ def product_detail(request, slug):
     }
     
     return render(request, 'product_detail.html', context)
-
-
-
 
 
 def get_client_ip(request):
@@ -280,7 +220,8 @@ def contact(request):
                 request,
                 "Thank you! Your message has been sent. We'll get back to you within 24 hours."
             )
-            return redirect('contact')
+            # Redirect to contact confirmation page
+            return redirect('contact_confirmation')
 
         else:
             messages.error(
@@ -292,6 +233,11 @@ def contact(request):
         form = ContactForm()
 
     return render(request, 'contact/contact.html', {'form': form})
+
+
+def contact_confirmation(request):
+    """Display contact confirmation page"""
+    return render(request, 'contact/contact_confirmation.html')
 
 @login_required
 def user_contact_history(request):
@@ -398,54 +344,94 @@ def request_demo(request):
                     body,
                     from_email,
                     admin_emails,
-                    fail_silently=True,
+                    fail_silently=False,
                 )
-            except Exception:
-                pass
+                print(f"✅ Demo request admin notification sent to {admin_emails}")
+            except Exception as e:
+                print(f"❌ Failed to send demo request admin notification: {e}")
+                import traceback
+                traceback.print_exc()
             
-            # Simple confirmation email to requester
+            # Enhanced HTML confirmation email to requester
             try:
-                confirmation_subject = "Thanks for your demo request"
-                confirmation_body = (
-                    f"Hi {inquiry.name},\n\n"
-                    "Thanks for requesting a demo from DravTech."
-                )
+                confirmation_subject = f"{settings.EMAIL_SUBJECT_PREFIX}Demo Request Confirmation"
+                
+                html_message = f"""
+                <html>
+                <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+                            <h1 style="color: white; margin: 0; font-size: 28px;">Demo Request Confirmed!</h1>
+                            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">Thank you for your interest in our services</p>
+                        </div>
+                        
+                        <div style="background: #f9fafb; padding: 20px; border-radius: 10px; border-left: 4px solid #3b82f6;">
+                            <h2 style="color: #1f2937; margin-top: 0;">Request Details:</h2>
+                            <p><strong>Name:</strong> {inquiry.name}</p>
+                            <p><strong>Email:</strong> {inquiry.email}</p>
+                            <p><strong>Company:</strong> {inquiry.company}</p>
+                            <p><strong>Phone:</strong> {inquiry.phone}</p>"""
+                
                 if product:
-                    confirmation_body += f"\nWe've received your request for a demo of {product.title}. "
-                    confirmation_body += f"Our team will contact you soon to schedule your session on {inquiry.preferred_date} at {inquiry.get_preferred_time_display()}."
-                else:
-                    confirmation_body += "Our team will contact you soon to schedule your demo session."
-                confirmation_body += "\n\nBest regards,\nThe DravTech Team"
+                    html_message += f"""<p><strong>Product:</strong> {product.title}</p>
+                    <p><strong>Preferred Date:</strong> {inquiry.preferred_date}</p>
+                    <p><strong>Preferred Time:</strong> {inquiry.get_preferred_time_display()}</p>"""
+                
+                html_message += f"""<p><strong>Message:</strong> {inquiry.message}</p>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f3f4f6; border-radius: 10px;">
+                            <p style="margin: 0; color: #6b7280;">Our team will contact you within 24 hours to schedule your demo.</p>
+                            <p style="margin: 10px 0 0 0; font-weight: bold;">Best regards,<br>The DravTech Team</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+                """
                 
                 send_mail(
-                    confirmation_subject,
-                    confirmation_body,
-                    from_email,
-                    [inquiry.email],
-                    fail_silently=True,
+                    subject=confirmation_subject,
+                    message="",
+                    from_email=from_email,
+                    recipient_list=[inquiry.email],
+                    html_message=html_message,
+                    fail_silently=False,
                 )
-            except Exception:
-                pass
+                print(f"✅ Demo confirmation email sent to {inquiry.email}")
+            except Exception as e:
+                print(f"❌ Failed to send demo confirmation email: {e}")
+                import traceback
+                traceback.print_exc()
             
-            return render(
-                request,
-                'request_demo.html',
-                {
-                    'form': RequestDemoForm(initial={'product': product}),  # Pre-select product if available
-                    'product': product,
-                    'booking_confirmed': True,
-                }
-            )
-    
-    # For GET requests or no product found, show the form
+            messages.success(request, 'Your demo request has been submitted successfully! A confirmation email has been sent to your email.')
+            
+            # Redirect to demo confirmation page
+            if product:
+                return redirect(f'/services/{product.slug}/demo-confirmation/?email={inquiry.email}&message={inquiry.message}')
+            else:
+                return redirect(f'/demo-confirmation/?email={inquiry.email}&message={inquiry.message}')
+            
     return render(
         request,
         'request_demo.html',
         {
-            'form': RequestDemoForm(),
+            'form': RequestDemoForm(initial={'product': product}),  # Pre-select product if available
             'product': product,
         }
     )
+
+
+def demo_confirmation(request):
+    """Display demo confirmation page"""
+    email = request.GET.get('email', '')
+    message = request.GET.get('message', '')
+    
+    context = {
+        'email': email,
+        'message': message,
+    }
+    
+    return render(request, 'main/demo_confirmation.html', context)
 
 
 def about(request):

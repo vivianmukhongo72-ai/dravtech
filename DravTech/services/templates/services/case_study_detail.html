@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}{{ case_study.title }} - Case Study | DravTech{% endblock %}
+
+{% block content %}
+<!-- ======= Case Study Hero Section ======= -->
+<section id="hero" class="hero d-flex align-items-center">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <h1>{{ case_study.title }}</h1>
+        <p class="lead">{{ case_study.summary|truncatewords:30 }}</p>
+        <div class="mt-4">
+          <a href="{% url 'services:detail' case_study.service.slug %}" class="btn-get-started scrollto">
+            Back to {{ case_study.service.title }}
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-6 hero-img">
+        {% if case_study.image %}
+          <img src="{{ case_study.image.url }}" class="img-fluid" alt="{{ case_study.title }}">
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<main id="main">
+  <!-- ======= Case Study Details Section ======= -->
+  <section id="case-study-details" class="inner-page">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="case-study-content">
+            <!-- Overview -->
+            <div class="content-section">
+              <h3>Project Overview</h3>
+              <p>{{ case_study.summary }}</p>
+            </div>
+
+            <!-- Results -->
+            {% if case_study.results %}
+            <div class="content-section">
+              <h3>Results & Impact</h3>
+              <p>{{ case_study.results }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Service Information -->
+            <div class="content-section">
+              <h3>Service Provided</h3>
+              <p>This project was delivered as part of our <a href="{% url 'services:detail' case_study.service.slug %}">{{ case_study.service.title }}</a> service.</p>
+              
+              {% if case_study.service.tagline %}
+              <p><em>{{ case_study.service.tagline }}</em></p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="sidebar">
+            <!-- Project Info Card -->
+            <div class="info-card">
+              <h4>Project Information</h4>
+              <ul>
+                <li><strong>Service:</strong> {{ case_study.service.title }}</li>
+                <li><strong>Category:</strong> {{ case_study.service.category.name }}</li>
+                {% if case_study.created_at %}
+                <li><strong>Completed:</strong> {{ case_study.created_at|date:"F Y" }}</li>
+                {% endif %}
+              </ul>
+            </div>
+
+            <!-- CTA -->
+            <div class="cta-card">
+              <h4>Need Similar Results?</h4>
+              <p>Let's discuss how we can achieve similar outcomes for your business.</p>
+              <a href="{% url 'services:detail' case_study.service.slug %}" class="btn-get-started">
+                Get Started
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<style>
+.content-section {
+  margin-bottom: 3rem;
+}
+
+.content-section h3 {
+  color: #37517e;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.content-section p {
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.sidebar {
+  position: sticky;
+  top: 2rem;
+}
+
+.info-card,
+.cta-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+.info-card h4,
+.cta-card h4 {
+  color: #37517e;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.info-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-card li {
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #eee;
+}
+
+.info-card li:last-child {
+  border-bottom: none;
+}
+
+.info-card strong {
+  color: #37517e;
+}
+
+.cta-card p {
+  margin-bottom: 1.5rem;
+}
+
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 80px 0;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.hero .lead {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.hero-img img {
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.btn-get-started {
+  background: #47b2e4;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.btn-get-started:hover {
+  background: #209dd8;
+  color: white;
+  transform: translateY(-2px);
+}
+</style>
+{% endblock %}

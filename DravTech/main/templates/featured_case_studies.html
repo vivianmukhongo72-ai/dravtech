@@ -1,0 +1,80 @@
+<!-- Featured Case Studies Section -->
+<section class="portfolio-listing">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2>Featured Case Studies</h2>
+      <p>Real-world examples of our work delivering measurable results for clients across different industries.</p>
+    </div>
+
+    <!-- Featured Case Studies Grid -->
+    <div class="portfolio-grid">
+      {% if featured_case_studies %}
+        {% for case_study in featured_case_studies %}
+          <div class="case-study-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+              
+              <!-- Case Study Image -->
+              {% if case_study.image %}
+                <img src="{{ case_study.image.url }}" 
+                     alt="{{ case_study.title }}" 
+                     class="case-study-image"
+                     loading="lazy">
+              {% endif %}
+
+              <!-- Case Study Content -->
+              <div class="case-study-content">
+                <h3>{{ case_study.title }}</h3>
+                <p>
+                  {{ case_study.summary|truncatewords:25 }}
+                </p>
+
+                <!-- Service Information -->
+                <div class="case-study-meta">
+                  <div class="case-study-service">
+                    <span class="service-badge">{{ case_study.service.category.name }}</span>
+                    <span>{{ case_study.service.title }}</span>
+                  </div>
+                </div>
+
+                <!-- Key Results -->
+                {% if case_study.results %}
+                  <div class="case-study-results">
+                    <h5>Key Results</h5>
+                    {% for result in case_study.results_list %}
+                      <div class="result-item">
+                        <span class="result-label">{{ result|truncatewords:8 }}</span>
+                        <span class="result-value">{{ result|truncatewords:12 }}</span>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+                <!-- Action Buttons -->
+                <div class="case-study-action">
+                  <a href="{% url 'services:case_study_detail' case_study.slug %}" class="btn-view-case">
+                    <i class="bi bi-eye"></i>
+                    View Case Study
+                  </a>
+                  <a href="{% url 'services:detail' case_study.service.slug %}" class="btn-view-service">
+                    <i class="bi bi-info-circle"></i>
+                    View Service Details
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-12 text-center">
+            <div class="empty-state">
+              <i class="bi bi-briefcase"></i>
+              <h3>No Case Studies Available</h3>
+              <p>We're currently updating our portfolio. Please check back soon.</p>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</main>
+
+{% endblock %}

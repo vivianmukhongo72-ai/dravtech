@@ -46,8 +46,184 @@
 }
 
 /*--------------------------------------------------------------
-# General Styling & Shared Classes
+# Side Navigation
 --------------------------------------------------------------*/
+
+.side-nav {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 280px;
+  height: 100vh;
+  background: var(--surface-color);
+  border-right: 1px solid var(--border-color);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  transition: left 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.side-nav.open {
+  left: 0;
+}
+
+.side-nav-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-nav-header {
+  background: var(--accent-color);
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.side-nav-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.side-nav-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.side-nav-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.side-nav-menu {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+.nav-section {
+  margin-bottom: 2rem;
+}
+
+.nav-section h4 {
+  color: var(--heading-color);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--accent-color);
+}
+
+.nav-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-section li {
+  margin-bottom: 0.5rem;
+}
+
+.nav-section a {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: var(--default-color);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-section a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.nav-section a:hover::before {
+  left: 100%;
+}
+
+.nav-section a:hover {
+  background: var(--accent-color);
+  color: white;
+  transform: translateX(5px);
+}
+
+.nav-section a.active {
+  background: var(--accent-color);
+  color: white;
+  font-weight: 600;
+}
+
+.nav-section i {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.nav-section a:hover i {
+  transform: scale(1.1);
+}
+
+/* Adjust main content to account for side nav */
+.main-content {
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+}
+
+.side-nav.open ~ .main-content {
+  margin-left: 280px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .side-nav {
+    width: 250px;
+    left: -250px;
+  }
+  
+  .side-nav.open {
+    left: 0;
+  }
+  
+  .side-nav.open ~ .main-content {
+    margin-left: 0;
+  }
+  
+  .nav-section a {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .nav-section h4 {
+    font-size: 0.8rem;
+  }
+}
+
+/* Toggle button for mobile */
+@media (min-width: 769px) {
+  .side-nav-toggle {
+    display: none;
+  }
+}
 body {
   color: var(--default-color);
   background-color: var(--background-color);
@@ -6996,3 +7172,183 @@ section,
     font-size: 2.5rem;
   }
 }
+/*--------------------------------------------------------------
+# Side Navigation
+--------------------------------------------------------------*/
+
+.side-nav {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 280px;
+  height: 100vh;
+  background: var(--surface-color);
+  border-right: 1px solid var(--border-color);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  transition: left 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.side-nav.open {
+  left: 0;
+}
+
+.side-nav-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-nav-header {
+  background: var(--accent-color);
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.side-nav-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.side-nav-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.side-nav-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.side-nav-menu {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+.nav-section {
+  margin-bottom: 2rem;
+}
+
+.nav-section h4 {
+  color: var(--heading-color);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--accent-color);
+}
+
+.nav-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-section li {
+  margin-bottom: 0.5rem;
+}
+
+.nav-section a {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: var(--default-color);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-section a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.nav-section a:hover::before {
+  left: 100%;
+}
+
+.nav-section a:hover {
+  background: var(--accent-color);
+  color: white;
+  transform: translateX(5px);
+}
+
+.nav-section a.active {
+  background: var(--accent-color);
+  color: white;
+  font-weight: 600;
+}
+
+.nav-section i {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.nav-section a:hover i {
+  transform: scale(1.1);
+}
+
+/* Adjust main content to account for side nav */
+.main-content {
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+}
+
+.side-nav.open ~ .main-content {
+  margin-left: 280px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .side-nav {
+    width: 250px;
+    left: -250px;
+  }
+  
+  .side-nav.open {
+    left: 0;
+  }
+  
+  .side-nav.open ~ .main-content {
+    margin-left: 0;
+  }
+  
+  .nav-section a {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .nav-section h4 {
+    font-size: 0.8rem;
+  }
+}
+
+/* Toggle button for mobile */
+@media (min-width: 769px) {
+  .side-nav-toggle {
+    display: none;
+  }
+}
+

@@ -249,7 +249,7 @@ class ProductInquiry(models.Model):
 # ─────────────────────────────────────────────
 
 class AboutPage(models.Model):
-    """Singleton-ish config for the About page. Use most-recent active instance."""
+    """Singleton-ish config for About page. Use most-recent active instance."""
 
     is_active        = models.BooleanField(default=True)
     hero_headline    = models.CharField(max_length=200)
@@ -262,6 +262,10 @@ class AboutPage(models.Model):
     vision_body      = models.TextField(blank=True)
     how_we_work_title = models.CharField(max_length=150, default="How We Work")
     how_we_work_intro = models.TextField(blank=True)
+    final_cta_headline = models.CharField(max_length=200, blank=True, default="Ready to Work Together?")
+    final_cta_subtext = models.TextField(blank=True, default="Let's discuss how we can help you build innovative solutions for your organization.")
+    final_cta_label = models.CharField(max_length=80, blank=True, default="Get in Touch")
+    final_cta_url = models.CharField(max_length=255, blank=True, default="/contact/")
     created_at       = models.DateTimeField(auto_now_add=True)
     updated_at       = models.DateTimeField(auto_now=True)
 

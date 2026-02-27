@@ -1,0 +1,635 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.title }} — DravTech{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dravtech-primary: #2563eb;
+  --dravtech-primary-dark: #1d4ed8;
+  --dravtech-secondary: #f59e0b;
+  --dravtech-success: #10b981;
+  --dravtech-danger: #ef4444;
+  --dravtech-dark: #1f2937;
+  --dravtech-darker: #111827;
+  --dravtech-light: #f8fafc;
+  --dravtech-lighter: #f1f5f9;
+  --dravtech-border: #e2e8f0;
+  --dravtech-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --dravtech-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, var(--dravtech-light) 0%, var(--dravtech-lighter) 100%);
+  color: var(--dravtech-dark);
+  line-height: 1.6;
+}
+
+/* Breadcrumb */
+.breadcrumb-bar {
+  background: white;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--dravtech-border);
+}
+
+.breadcrumb-bar .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.breadcrumb-bar a {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-bar a:hover {
+  color: var(--dravtech-primary);
+}
+
+.breadcrumb-bar .sep {
+  margin: 0 8px;
+  color: #cbd5e1;
+}
+
+.breadcrumb-bar .cur {
+  color: var(--dravtech-dark);
+  font-weight: 600;
+}
+
+/* Hero Section */
+.product-hero {
+  padding: 60px 0;
+  background: white;
+}
+
+.product-hero .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+/* Product Image Card */
+.product-image-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--dravtech-shadow-lg);
+  position: relative;
+  aspect-ratio: 4/3;
+  border: 1px solid var(--dravtech-border);
+}
+
+.product-image-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-image-card .no-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--dravtech-light), var(--dravtech-lighter));
+  font-size: 4rem;
+  color: #94a3b8;
+}
+
+.product-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge-digital {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--dravtech-primary);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.badge-merch {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--dravtech-secondary);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.badge-artwork {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--dravtech-success);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Product Info Card */
+.product-info-card {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: var(--dravtech-shadow);
+  border: 1px solid var(--dravtech-border);
+}
+
+.product-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.product-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--dravtech-dark);
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+
+@media (max-width: 768px) {
+  .product-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-title {
+    font-size: 2rem;
+  }
+}
+
+.product-tagline {
+  font-size: 1.3rem;
+  color: #64748b;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .product-tagline {
+    font-size: 1.1rem;
+  }
+}
+
+/* Price Section */
+.price-card {
+  background: linear-gradient(135deg, var(--dravtech-light), var(--dravtech-lighter));
+  border: 2px solid var(--dravtech-border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.price-main {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--dravtech-primary);
+  margin-bottom: 6px;
+}
+
+@media (max-width: 768px) {
+  .price-main {
+    font-size: 2.2rem;
+  }
+}
+
+.price-note {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--dravtech-primary), var(--dravtech-primary-dark));
+  color: white;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--dravtech-dark);
+  border: 2px solid var(--dravtech-border);
+}
+
+.btn-secondary:hover {
+  background: var(--dravtech-light);
+  border-color: var(--dravtech-primary);
+  color: var(--dravtech-primary);
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--dravtech-success), #059669);
+  color: white;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+/* Notice Cards */
+.notice-card {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 1px solid var(--dravtech-secondary);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.notice-card i {
+  color: var(--dravtech-secondary);
+  font-size: 1.2rem;
+  margin-top: 2px;
+}
+
+.notice-card.download {
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  border-color: var(--dravtech-success);
+}
+
+.notice-card.download i {
+  color: var(--dravtech-success);
+}
+
+/* Content Sections */
+.content-section {
+  padding: 60px 0;
+}
+
+.content-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--dravtech-dark);
+  margin-bottom: 12px;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: #64748b;
+}
+
+/* Description Card */
+.description-card {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: var(--dravtech-shadow);
+  margin-bottom: 48px;
+  border: 1px solid var(--dravtech-border);
+}
+
+.description-text {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #475569;
+}
+
+/* Features Grid */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.feature-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--dravtech-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--dravtech-border);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--dravtech-shadow-lg);
+}
+
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--dravtech-primary), var(--dravtech-primary-dark));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+}
+
+.feature-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dravtech-dark);
+  margin-bottom: 8px;
+}
+
+.feature-description {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Pricing Section */
+.pricing-section {
+  background: linear-gradient(135deg, var(--dravtech-dark), var(--dravtech-darker));
+  border-radius: 24px;
+  padding: 60px 40px;
+  margin-bottom: 48px;
+}
+
+.pricing-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.pricing-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.pricing-subtitle {
+  font-size: 1.1rem;
+  color: #94a3b8;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.pricing-card {
+  background: #334155;
+  border: 2px solid #475569;
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.pricing-card.featured {
+  border-color: var(--dravtech-secondary);
+  background: linear-gradient(135deg, #334155, #1e293b);
+}
+
+.pricing-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--dravtech-secondary);
+  color: var(--dravtech-dark);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.plan-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.plan-price {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--dravtech-secondary);
+  margin-bottom: 4px;
+}
+
+.plan-price .period {
+  font-size: 1rem;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.plan-description {
+  color: #94a3b8;
+  margin-bottom: 24px;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+}
+
+.plan-features li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #cbd5e1;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+.plan-features i {
+  color: var(--dravtech-success);
+  font-size: 0.8rem;
+}
+
+/* Related Products */
+.related-section {
+  margin-bottom: 48px;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.related-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--dravtech-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  border: 1px solid var(--dravtech-border);
+}
+
+.related-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--dravtech-shadow-lg);
+}
+
+.related-card-image {
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  position: relative;
+}
+
+.related-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.related-card:hover .related-card-image img {
+  transform: scale(1.05);
+}
+
+.related-card-body {
+  padding: 20px;
+}
+
+.related-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dravtech-dark);
+  margin-bottom: 8px;
+}
+
+.related-card-price {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--dravtech-primary);
+}
+
+.related-card-type {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-info-card,
+  .description-card,
+  .pricing-section {
+    padding: 24px;
+  }
+  
+  .pricing-section {
+    padding: 32px 20px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+</style>
+{% endblock %}

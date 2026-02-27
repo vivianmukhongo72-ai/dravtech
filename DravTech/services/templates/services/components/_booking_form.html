@@ -1,0 +1,74 @@
+<div class="booking-form">
+  <div class="booking-header">
+    <h3>Book This Service</h3>
+    <p class="booking-subtitle">Get started with your project today</p>
+  </div>
+  
+  <form method="POST" action="{% url 'service_booking' slug=service.slug %}" class="booking-form-inner">
+    {% csrf_token %}
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">
+          <i class="bi bi-person"></i>
+          Your Name
+        </label>
+        <input type="text" id="name" name="name" class="form-control" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">
+          <i class="bi bi-envelope"></i>
+          Email Address
+        </label>
+        <input type="email" id="email" name="email" class="form-control" required>
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="phone">
+          <i class="bi bi-telephone"></i>
+          Phone Number
+        </label>
+        <input type="tel" id="phone" name="phone" class="form-control">
+      </div>
+      
+      <div class="form-group">
+        <label for="preferred_date">
+          <i class="bi bi-calendar-event"></i>
+          Preferred Start Date
+        </label>
+        <input type="date" id="preferred_date" name="preferred_date" class="form-control">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="message">
+        <i class="bi bi-chat-text"></i>
+        Project Details
+      </label>
+      <textarea id="message" name="message" class="form-control" rows="4" placeholder="Tell us about your project requirements..."></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="budget">
+        <i class="bi bi-currency-exchange"></i>
+        Estimated Budget (KES)
+      </label>
+      <select id="budget" name="budget" class="form-control">
+        <option value="">Select Budget Range</option>
+        <option value="50k-100k">KES 50,000 - KES 100,000</option>
+        <option value="100k-250k">KES 100,000 - KES 250,000</option>
+        <option value="250k-500k">KES 250,000 - KES 500,000</option>
+        <option value="500k-1m">KES 500,000 - KES 1,000,000</option>
+        <option value="1m+">KES 1,000,000+</option>
+      </select>
+    </div>
+    
+    <button type="submit" class="btn-book w-100">
+      <i class="bi bi-send-fill"></i>
+      Submit Booking Request
+    </button>
+  </form>
+</div>
