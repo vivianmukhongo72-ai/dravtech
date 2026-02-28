@@ -4,18 +4,11 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.urls import reverse
-from django.core.mail import send_mail, EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.db import transaction
-import logging
+from django.views.decorators.http import require_POST
 from django.utils import timezone
-from .forms import ContactForm, RequestDemoForm
-from services.models import Service, CaseStudy
+import logging
 from .models import (
     AboutPage,
-    Category,
     CompanyValue,
     ContactMessage,
     HowWeWorkStep,
@@ -26,7 +19,8 @@ from .models import (
     Testimonial,
     TimelineEntry,
 )
-
+from .forms import ContactForm
+from services.models import Service, CaseStudy
 
 def home(request):
    
@@ -620,3 +614,53 @@ The DravTech Team"""
     
     # If not POST, redirect to service detail page
     return redirect('services:service_detail', slug=slug)
+
+
+# ── PROJECT VIEWS ───────────────────────────────────────────────────────
+
+def projects(request):
+    """Display all projects with optional filtering by service."""
+    projects_list = Project.objects.filter(is_active=True).prefetch_related('related_services')
+    
+    # Get filter parameters
+    service_slug = request.GET.get('service')
+    
+    if service_slug:
+        projects_list = projects_list.filter(related_services__slug=service_slug)
+    
+    context = {
+        'projects': projects_list,
+        'page_title': 'Our Projects',
+        'page_description': 'Explore our portfolio of successful projects across various industries.',
+    }
+    
+    return render(request, 'main/projects.html', context)
+
+
+def project_detail(request, slug):
+    """Display detailed information about a specific project."""
+    project = get_object_or_404(Project, slug=slug, is_active=True)
+    
+    # Get related projects (excluding current project)
+    related_projects = Project.objects.filter(
+        is_active=True
+    ).exclude(id=project.id)
+    
+    # If project has related services, prioritize projects with same services
+    if project.related_services.exists():
+        related_services = project.related_services.all()
+        related_projects = related_projects.filter(
+            related_services__in=related_services
+        ).distinct()
+    
+    # Limit to 6 related projects
+    related_projects = related_projects[:6]
+    
+    context = {
+        'project': project,
+        'related_projects': related_projects,
+        'page_title': project.title,
+        'page_description': project.summary,
+    }
+    
+    return render(request, 'main/project_detail.html', context)

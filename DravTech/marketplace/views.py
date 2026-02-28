@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
@@ -93,12 +94,20 @@ def marketplace_hub(request):
     # Serialize products for JavaScript
     products_data = []
     for product in all_products:
+        # Get minimum price for digital products
+        min_price = None
+        if product.product_type == Product.TYPE_DIGITAL:
+            pricing_plans = product.pricing_plans.filter(is_active=True)
+            if pricing_plans.exists():
+                min_price = pricing_plans.order_by('price').first().price
+        
         products_data.append({
             'id': product.id,
             'title': product.title,
             'slug': product.slug,
             'description': product.description,
             'price': str(product.price),
+            'min_price': float(min_price) if min_price else None,
             'product_type': product.product_type,
             'image': product.image.url if product.image else None,
             'category': product.category.name if product.category else None,
@@ -265,26 +274,12 @@ def add_to_cart(request, product_id):
         # Ensure product_id is treated as integer
         product_id = int(product_id)
     except (ValueError, TypeError):
-        # Clear any corrupted session data
-        if 'cart' in request.session:
-            cart = request.session.get('cart', {})
-            # Remove any non-integer keys from cart
-            cleaned_cart = {}
-            for key, value in cart.items():
-                try:
-                    int(key)  # Test if key can be converted to int
-                    cleaned_cart[key] = value
-                except (ValueError, TypeError):
-                    continue  # Skip invalid keys
-            request.session['cart'] = cleaned_cart
-            request.session.modified = True
-        
         return JsonResponse({"success": False,
                              "error": "Invalid product ID format."}, status=400)
     
     product = get_object_or_404(Product, id=product_id, is_active=True)
 
-    # Digital products are never added to cart
+    # Check if product can be added to cart
     if not product.can_add_to_cart:
         return JsonResponse({"success": False,
                              "error": "This product cannot be added to cart."}, status=400)
@@ -490,9 +485,19 @@ def checkout_view(request):
         request.session["cart"] = {}
         request.session.modified = True
 
-        # ── Redirect to payment / confirmation ────────────────────────────
-        # In production: integrate M-Pesa STK push or Stripe here.
-        # For now redirect to order confirmation.
+        # ── Send email notifications ───────────────────────────────────────
+        try:
+            # Send email to customer
+            send_order_confirmation_email(request, order)
+            
+            # Send notification to admin
+            send_admin_notification_email(request, order)
+            
+        except Exception as e:
+            # Log error but don't fail the order process
+            print(f"Email sending failed: {e}")
+
+        # ── Redirect to confirmation ───────────────────────────────────────────
         return redirect("marketplace:order-confirmation", order_id=order.id)
 
     return render(request, "marketplace/checkout.html", {
@@ -527,6 +532,24 @@ def order_confirmation(request, order_id):
             raise Http404
 
     return render(request, "marketplace/order_confirmation.html", {"order": order})
+
+
+def order_detail(request, order_id):
+    """Display detailed order information"""
+    order = get_object_or_404(Order, id=order_id)
+    
+    # Basic guard: only the buyer or an admin can see this
+    if order.customer and request.user.is_authenticated:
+        if order.customer != request.user and not request.user.is_staff:
+            raise Http404
+    
+    # Get order items with related products
+    items = order.items.all().select_related('product').order_by('-created_at')
+    
+    return render(request, "marketplace/order_detail.html", {
+        "order": order,
+        "items": items,
+    })
 
 
 # ─────────────────────────────────────────────
@@ -584,3 +607,71 @@ def download_artwork(request, product_id):
         response = HttpResponse(f.read(), content_type=content_type)
         response["Content-Disposition"] = f'attachment; filename="{filename}"'
         return response
+
+
+# ── EMAIL FUNCTIONS ─────────────────────────────────────────────────────
+
+def send_order_confirmation_email(request, order):
+    """Send order confirmation email to customer"""
+    from django.template.loader import render_to_string
+    from django.conf import settings
+    
+    subject = f"Order Confirmation #{order.id} - DravTech"
+    
+    context = {
+        'order': order,
+        'items': order.items.all(),
+        'shipping_address': order.shipping_address,
+        'site_name': 'DravTech',
+        'site_url': request.build_absolute_uri('/'),
+    }
+    
+    html_message = render_to_string('marketplace/emails/order_confirmation.html', context)
+    text_message = render_to_string('marketplace/emails/order_confirmation.txt', context)
+    
+    try:
+        send_mail(
+            subject=subject,
+            message=text_message,
+            from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@dravtech.com'),
+            recipient_list=[order.email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        print(f"Failed to send customer email: {e}")
+        return False
+
+
+def send_admin_notification_email(request, order):
+    """Send new order notification to admin"""
+    from django.template.loader import render_to_string
+    from django.conf import settings
+    
+    subject = f"New Order #{order.id} - DravTech"
+    
+    context = {
+        'order': order,
+        'items': order.items.all(),
+        'shipping_address': order.shipping_address,
+        'site_url': request.build_absolute_uri('/'),
+        'admin_url': request.build_absolute_uri(f'/admin/marketplace/order/{order.id}/change/'),
+    }
+    
+    html_message = render_to_string('marketplace/emails/admin_order_notification.html', context)
+    text_message = render_to_string('marketplace/emails/admin_order_notification.txt', context)
+    
+    try:
+        send_mail(
+            subject=subject,
+            message=text_message,
+            from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@dravtech.com'),
+            recipient_list=[getattr(settings, 'ADMIN_EMAIL', 'admin@dravtech.com')],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        print(f"Failed to send admin email: {e}")
+        return False

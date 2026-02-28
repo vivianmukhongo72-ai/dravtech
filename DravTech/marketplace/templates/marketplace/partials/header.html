@@ -1,0 +1,211 @@
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>DravTech Solution</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+{% load static %}
+  
+  <!-- Global Blue Gradient Background -->
+  <style>
+    :root {
+      --dravtech-primary: #2563eb;
+      --dravtech-primary-dark: #1d4ed8;
+      --dravtech-secondary: #f59e0b;
+      --dravtech-blue-light: #dbeafe;
+      --dravtech-blue-medium: #93c5fd;
+      --dravtech-blue-dark: #1e40af;
+      --dravtech-blue-darker: #1e3a8a;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 25%, #e0f2fe 50%, #f0f9ff 75%, #f8fafc 100%) !important;
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(37, 99, 235, 0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    /* Navigation styling */
+    .navbar {
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.95) 0%, rgba(30, 64, 175, 0.95) 50%, rgba(37, 99, 235, 0.95) 100%) !important;
+      backdrop-filter: blur(10px) !important;
+      box-shadow: 0 4px 20px rgba(30, 58, 138, 0.2) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    .navbar-brand {
+      color: white !important;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    
+    .navbar-nav .nav-link {
+      color: rgba(255, 255, 255, 0.9) !important;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+    
+    .navbar-nav .nav-link:hover {
+      color: white !important;
+    }
+    
+    .navbar-nav .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: white;
+      transition: width 0.3s ease;
+    }
+    
+    .navbar-nav .nav-link:hover::after {
+      width: 80%;
+    }
+    
+    .navbar-nav .nav-link.active {
+      color: white !important;
+    }
+    
+    .navbar-nav .nav-link.active::after {
+      width: 80%;
+    }
+    
+    /* Dropdown menu styling */
+    .dropdown-menu {
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.98) 0%, rgba(37, 99, 235, 0.98) 100%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      box-shadow: 0 8px 32px rgba(30, 58, 138, 0.3) !important;
+      backdrop-filter: blur(10px) !important;
+    }
+    
+    .dropdown-item {
+      color: rgba(255, 255, 255, 0.9) !important;
+      transition: all 0.3s ease;
+    }
+    
+    .dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: white !important;
+    }
+    
+    /* Mobile menu styling */
+    .navbar-toggler {
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      color: white !important;
+    }
+    
+    .navbar-toggler:focus {
+      box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25) !important;
+    }
+    
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+    }
+    
+    /* Content area styling */
+    .main-content {
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Card styling for consistency */
+    .card {
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(10px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      box-shadow: 0 4px 20px rgba(30, 58, 138, 0.1) !important;
+    }
+    
+    /* Button styling */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--dravtech-primary), var(--dravtech-primary-dark)) !important;
+      border: none !important;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--dravtech-primary-dark), var(--dravtech-primary)) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4) !important;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      body {
+        background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 30%, #e0f2fe 70%, #f8fafc 100%) !important;
+      }
+      
+      .navbar {
+        background: linear-gradient(135deg, rgba(30, 58, 138, 0.98) 0%, rgba(37, 99, 235, 0.98) 100%) !important;
+      }
+    }
+  </style>
+  
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/logo.jpeg' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="starter-page-page" data-default-img-fallback="{% static 'assets/img/logo.jpeg' %}">
+
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+
+      <a href="{% url 'home' %}" class="logo d-flex align-items-center me-auto me-xl-0">
+        <!-- image logo -->
+        <img src="{% static 'assets/img/logo.jpeg' %}" alt="DravTech logo">
+        <h1 class="sitename">DRAVTECH</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'services_list' %}">Services</a></li>
+          <li><a href="{% url 'marketplace:marketplace' %}">Marketplace</a></li>
+          <li><a href="{% url 'about' %}">About Us</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+          <li class="nav-cart">
+            <a href="{% url 'marketplace:cart' %}" class="nav-link-cart">
+              <i class="bi bi-cart3"></i>
+              <span class="cart-count">0</span>
+            </a>
+          </li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+  </header>
+  

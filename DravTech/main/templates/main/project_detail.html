@@ -1,0 +1,336 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>{{ project.title }} — DravTech</title>
+  <meta name="description" content="{{ project.summary|truncatechars:160 }}">
+  <meta name="keywords" content="">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+
+  <!-- Main CSS Files -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+<style>
+.project-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  padding: 100px 0 60px;
+  text-align: center;
+  color: white;
+}
+
+.project-hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.project-hero p {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto 40px;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.project-image-container {
+  max-width: 1200px;
+  margin: 0 auto 60px;
+}
+
+.project-image-container img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.project-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.project-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #374151;
+  margin-bottom: 40px;
+}
+
+.project-meta {
+  background: #f8fafc;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+}
+
+.project-services {
+  margin-bottom: 20px;
+}
+
+.project-services h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 15px;
+}
+
+.service-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.service-tag {
+  background: #2563eb;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.project-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+  color: white;
+}
+
+.btn-outline-primary {
+  border: 2px solid #2563eb;
+  color: #2563eb;
+  padding: 10px 22px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-outline-primary:hover {
+  background: #2563eb;
+  color: white;
+}
+
+.related-projects {
+  background: #f8fafc;
+  padding: 60px 0;
+  margin-top: 80px;
+}
+
+.related-projects h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 50px;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.related-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+}
+
+.related-card:hover {
+  transform: translateY(-4px);
+}
+
+.related-image {
+  height: 150px;
+  overflow: hidden;
+  background: #e2e8f0;
+}
+
+.related-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.related-placeholder {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #94a3b8;
+}
+
+.related-content {
+  padding: 20px;
+}
+
+.related-content h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+.related-content p {
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+  .project-hero h1 {
+    font-size: 2rem;
+  }
+  
+  .project-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .related-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body class="starter-page-page">
+
+<!-- Include Header -->
+{% include 'marketplace/partials/header.html' %}
+
+<!-- Main Content -->
+<main class="main-content">
+<!-- Project Hero -->
+<section class="project-hero">
+  <div class="container">
+    <h1>{{ project.title }}</h1>
+    <p>{{ project.summary }}</p>
+  </div>
+</section>
+
+<!-- Project Image -->
+{% if project.image %}
+<div class="project-image-container">
+  <img src="{{ project.image.url }}" alt="{{ project.title }}" loading="lazy">
+</div>
+{% endif %}
+
+<!-- Project Content -->
+<section class="project-content">
+  {% if project.description %}
+  <div class="project-description">
+    {{ project.description|linebreaksbr }}
+  </div>
+  {% endif %}
+
+  <!-- Project Meta -->
+  <div class="project-meta">
+    {% if project.related_services.all %}
+    <div class="project-services">
+      <h4>Related Services</h4>
+      <div class="service-tags">
+        {% for service in project.related_services.all %}
+          <span class="service-tag">{{ service.title }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="project-actions">
+      {% if project.link %}
+        <a href="{{ project.link }}" target="_blank" class="btn-primary">
+          <i class="bi bi-box-arrow-up-right"></i>
+          View Live Project
+        </a>
+      {% endif %}
+      <a href="{% url 'projects' %}" class="btn-outline-primary">
+        <i class="bi bi-arrow-left"></i>
+        Back to Projects
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Related Projects -->
+{% if related_projects %}
+<section class="related-projects">
+  <div class="container">
+    <h2>Related Projects</h2>
+    <div class="related-grid">
+      {% for related_project in related_projects %}
+      <div class="related-card">
+        <div class="related-image">
+          {% if related_project.image %}
+            <img src="{{ related_project.image.url }}" alt="{{ related_project.title }}" loading="lazy">
+          {% else %}
+            <div class="related-placeholder">
+              <i class="bi bi-briefcase"></i>
+            </div>
+          {% endif %}
+        </div>
+        
+        <div class="related-content">
+          <h3>{{ related_project.title }}</h3>
+          <p>{{ related_project.summary|truncatewords:15 }}</p>
+          <a href="{% url 'project_detail' related_project.slug %}" class="btn-outline-primary">
+            <i class="bi bi-eye"></i>
+            View Details
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+</main>
+
+<!-- Include Footer -->
+{% include 'marketplace/partials/footer.html' %}
+
+</body>
+</html>

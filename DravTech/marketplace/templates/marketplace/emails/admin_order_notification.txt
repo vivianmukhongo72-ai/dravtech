@@ -1,0 +1,56 @@
+NEW ORDER NOTIFICATION #{{ order.id }}
+{{ site_name }}
+
+🎉 A new order has been placed!
+
+ORDER DETAILS
+-------------
+Order Number: #{{ order.id }}
+Order Date: {{ order.created_at|date:"F j, Y, g:i A" }}
+Customer Email: {{ order.email }}
+Customer Name: {% if order.customer %}{{ order.customer.get_full_name|default:order.customer.username }}{% else %}Guest Customer{% endif %}
+
+{% if order.shipping_address %}
+SHIPPING ADDRESS
+----------------
+{{ order.shipping_address.full_name }}
+{{ order.shipping_address.address_1 }}{% if order.shipping_address.address_2 %}, {{ order.shipping_address.address_2 }}{% endif %}
+{{ order.shipping_address.city }}{% if order.shipping_address.county %}, {{ order.shipping_address.county }}{% endif %}
+{{ order.shipping_address.country }}{% if order.shipping_address.postal_code %}, {{ order.shipping_address.postal_code }}{% endif %}
+Phone: {{ order.shipping_address.phone }}
+{% endif %}
+
+ITEMS ORDERED
+-------------
+{% for item in items %}
+{{ item.product_title }} ({{ item.get_product_type_display|title }})
+  Quantity: {{ item.quantity }}
+  Price: KES {{ item.unit_price|floatformat:2 }}
+  Total: KES {{ item.unit_price|mul:item.quantity|floatformat:2 }}
+
+{% endfor %}
+
+ORDER SUMMARY
+--------------
+Subtotal: KES {{ order.subtotal|floatformat:2 }}
+Shipping: {% if order.shipping_cost %}KES {{ order.shipping_cost|floatformat:2 }}{% else %}Free{% endif %}
+Total: KES {{ order.total|floatformat:2 }}
+
+{% if order.has_physical_items %}
+PHYSICAL PRODUCTS
+------------------
+This order contains physical items that need to be prepared and shipped.
+{% else %}
+DIGITAL PRODUCTS
+----------------
+This order contains digital products that are ready for immediate delivery.
+{% endif %}
+
+ACTION REQUIRED
+--------------
+Please review this order and prepare it for processing.
+
+Manage this order in the admin panel: {{ admin_url }}
+
+This notification was sent to the site administrator for {{ site_name }}.
+© 2024 {{ site_name }}. All rights reserved.

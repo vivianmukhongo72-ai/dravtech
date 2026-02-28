@@ -119,8 +119,8 @@ class Product(models.Model):
 
     @property
     def can_add_to_cart(self):
-        """Digital products are never added to the cart."""
-        return self.product_type in (self.TYPE_MERCH, self.TYPE_ARTWORK)
+        """Products that can be added to cart - includes digital, merch, and artwork."""
+        return self.product_type in (self.TYPE_MERCH, self.TYPE_ARTWORK, self.TYPE_DIGITAL)
 
     @property
     def display_price(self):

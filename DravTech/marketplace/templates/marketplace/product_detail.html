@@ -1,15 +1,552 @@
-{% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ product.title }} — DravTech{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ product.title }} — DravTech</title>
+  <meta name="description" content="{{ product.description|truncatechars:160 }}">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 
-{% block extra_css %}
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root {
-  --dravtech-primary: #2563eb;
-  --dravtech-primary-dark: #1d4ed8;
-  --dravtech-secondary: #f59e0b;
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+
+  <!-- Main CSS Files -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  
+  <style>
+    /* ── Product Detail Page Styling ── */
+    body {
+      background: #f8fafc;
+      font-family: 'DM Sans', sans-serif;
+      color: #1e293b;
+    }
+
+    .product-detail-page {
+      min-height: 100vh;
+      background: #f8fafc;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      background: white;
+      padding: 20px 0;
+      border-bottom: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .breadcrumb-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    .breadcrumb-inner a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .breadcrumb-inner a:hover {
+      color: #1d4ed8;
+    }
+
+    .breadcrumb-inner .separator {
+      color: #cbd5e1;
+    }
+
+    /* Product Hero Section */
+    .product-hero {
+      background: white;
+      padding: 60px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+
+    .hero-content h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    @media (max-width: 768px) {
+      .hero-content h1 {
+        font-size: 2.2rem;
+      }
+    }
+
+    .hero-content .product-type {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 20px;
+    }
+
+    .hero-content .description {
+      font-size: 1.1rem;
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      font-family: 'Sora', sans-serif;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+      color: white;
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: transparent;
+      color: #64748b;
+      text-decoration: none;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline:hover {
+      background: white;
+      border-color: #2563eb;
+      color: #2563eb;
+    }
+
+    .hero-image {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      background: #f8fafc;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-image-placeholder {
+      font-size: 6rem;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Content Sections */
+    .content-section {
+      padding: 80px 0;
+    }
+
+    .content-section:nth-child(even) {
+      background: white;
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: #64748b;
+      text-align: center;
+      margin-bottom: 48px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+
+    .feature-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      border-color: #2563eb;
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      margin: 0 auto 20px;
+    }
+
+    .feature-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 12px;
+    }
+
+    .feature-description {
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    /* Pricing Section */
+    .pricing-section {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: white;
+      padding: 80px 0;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+      margin: 0 auto;
+      max-width: 1200px;
+      padding: 0 20px;
+    }
+
+    .pricing-card {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 40px 32px;
+      text-align: center;
+      position: relative;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+      border-color: #2563eb;
+    }
+
+    .pricing-card.popular {
+      border-color: #2563eb;
+      box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
+      transform: scale(1.05);
+    }
+
+    .pricing-card.popular:hover {
+      transform: scale(1.05) translateY(-8px);
+      box-shadow: 0 16px 48px rgba(37, 99, 235, 0.4);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .plan-name {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 16px;
+    }
+
+    .plan-price {
+      margin-bottom: 8px;
+    }
+
+    .price-amount {
+      font-family: 'Sora', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #2563eb;
+    }
+
+    .price-period {
+      color: #64748b;
+      font-size: 1rem;
+    }
+
+    .plan-description {
+      color: #64748b;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+
+    .plan-features {
+      text-align: left;
+      margin-bottom: 32px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      color: #374151;
+    }
+
+    .feature-item i {
+      color: #10b981;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .plan-action .btn {
+      width: 100%;
+      padding: 16px 24px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .plan-action .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .plan-action .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+    }
+
+    /* Related Products */
+    .related-products {
+      background: white;
+      padding: 80px 0;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .related-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+
+    .related-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      border-color: #2563eb;
+    }
+
+    .related-image {
+      height: 200px;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #cbd5e1;
+    }
+
+    .related-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .related-content {
+      padding: 24px;
+    }
+
+    .related-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 8px;
+    }
+
+    .related-type {
+      color: #64748b;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+
+    .related-price {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #2563eb;
+      margin-bottom: 16px;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+      
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .btn-primary,
+      .btn-outline {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      
+      .pricing-card {
+        padding: 32px 24px;
+      }
+      
+      .pricing-card.popular {
+        transform: none;
+      }
+      
+      .pricing-card.popular:hover {
+        transform: translateY(-4px);
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      
+      .related-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+  </style>
+</head>
+<body class="starter-page-page">
+
+<!-- Include Header -->
+{% include 'marketplace/partials/header.html' %}
+
+<!-- Main Content -->
+<main class="main-content">
   --dravtech-success: #10b981;
   --dravtech-danger: #ef4444;
   --dravtech-dark: #1f2937;
@@ -631,5 +1168,778 @@ body {
     justify-content: center;
   }
 }
+
+/* Related Products Section */
+.related-products-section {
+  padding: 80px 0;
+  background: #f8fafc;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--dravtech-dark);
+  margin-bottom: 15px;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: #64748b;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.related-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.related-product-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.related-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+.related-product-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.related-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.related-product-card:hover .related-product-image img {
+  transform: scale(1.05);
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: #94a3b8;
+  font-size: 3rem;
+}
+
+.product-type-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.type-digital {
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.type-artwork {
+  background: rgba(167, 139, 250, 0.1);
+  color: #8b5cf6;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+}
+
+.type-merch {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.type-service {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.related-product-content {
+  padding: 25px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.related-product-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--dravtech-dark);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.related-product-description {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.related-product-price {
+  margin-bottom: 20px;
+}
+
+.related-product-price .price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dravtech-primary);
+}
+
+.related-product-price small {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin-left: 5px;
+}
+
+.related-product-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.btn-sm {
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.btn-outline-primary {
+  background: transparent;
+  color: var(--dravtech-primary);
+  border-color: var(--dravtech-primary);
+}
+
+.btn-outline-primary:hover {
+  background: var(--dravtech-primary);
+  color: white;
+}
+
+.btn-primary {
+  background: var(--dravtech-primary);
+  color: white;
+  border-color: var(--dravtech-primary);
+}
+
+.btn-primary:hover {
+  background: var(--dravtech-primary-dark);
+  border-color: var(--dravtech-primary-dark);
+  transform: translateY(-1px);
+}
+
+.no-related-products {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #64748b;
+}
+
+.no-related-products i {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  color: #cbd5e1;
+}
+
+.no-related-products h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: var(--dravtech-dark);
+}
+
+.no-related-products p {
+  margin-bottom: 25px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .related-products-section {
+    padding: 60px 0;
+  }
+  
+  .section-header h2 {
+    font-size: 2rem;
+  }
+  
+  .related-products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .related-product-actions {
+    flex-direction: column;
+  }
+  
+  .btn-sm {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .related-products-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Pricing Section ─────────────────────────────── */
+.pricing-section {
+  padding: 80px 0;
+  background: #f8fafc;
+}
+
+.pricing-section .section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.pricing-section .section-header h3 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--dravtech-dark);
+  margin-bottom: 15px;
+}
+
+.pricing-section .section-header p {
+  font-size: 1.1rem;
+  color: #64748b;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pricing-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 32px;
+  text-align: center;
+  position: relative;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.pricing-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  border-color: var(--dravtech-primary);
+}
+
+.pricing-card.popular {
+  border-color: var(--dravtech-primary);
+  box-shadow: 0 10px 40px rgba(37, 99, 235, 0.2);
+  transform: scale(1.05);
+}
+
+.pricing-card.popular:hover {
+  transform: scale(1.05) translateY(-8px);
+  box-shadow: 0 25px 80px rgba(37, 99, 235, 0.3);
+}
+
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--dravtech-primary), var(--dravtech-primary-dark));
+  color: white;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+}
+
+.pricing-header {
+  margin-bottom: 32px;
+}
+
+.plan-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dravtech-dark);
+  margin-bottom: 16px;
+}
+
+.plan-price {
+  margin-bottom: 16px;
+}
+
+.price-amount {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--dravtech-primary);
+  display: block;
+  line-height: 1;
+}
+
+.price-period {
+  font-size: 1rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.plan-description {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.pricing-features {
+  flex: 1;
+  margin-bottom: 32px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.feature-item i {
+  color: #10b981;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.feature-item span {
+  color: #374151;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.pricing-action {
+  margin-top: auto;
+}
+
+.pricing-action .btn {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.pricing-action .btn-primary {
+  background: linear-gradient(135deg, var(--dravtech-primary), var(--dravtech-primary-dark));
+  color: white;
+  border: none;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+}
+
+.pricing-action .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.4);
+  background: linear-gradient(135deg, var(--dravtech-primary-dark), var(--dravtech-primary));
+}
+
+/* Responsive Pricing */
+@media (max-width: 1024px) {
+  .pricing-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  
+  .pricing-card {
+    padding: 32px 24px;
+  }
+  
+  .pricing-card.popular {
+    transform: scale(1.02);
+  }
+  
+  .pricing-card.popular:hover {
+    transform: scale(1.02) translateY(-4px);
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-section {
+    padding: 60px 0;
+  }
+  
+  .pricing-section .section-header h3 {
+    font-size: 2rem;
+  }
+  
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .pricing-card {
+    padding: 24px 20px;
+  }
+  
+  .pricing-card.popular {
+    transform: none;
+  }
+  
+  .pricing-card.popular:hover {
+    transform: translateY(-4px);
+  }
+  
+  .price-amount {
+    font-size: 2.5rem;
+  }
+  
+  .plan-name {
+    font-size: 1.3rem;
+  }
+}
 </style>
-{% endblock %}
+</head>
+<body class="starter-page-page">
+
+<!-- Include Header -->
+{% include 'marketplace/partials/header.html' %}
+
+<!-- Main Content -->
+<main class="main-content">
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+  <div class="container">
+    <a href="/">Home</a><span class="sep">/</span>
+    <a href="/marketplace/">Marketplace</a><span class="sep">/</span>
+    <a href="/marketplace/products/?type={{ product.product_type }}">{{ product.get_product_type_display }}</a><span class="sep">/</span>
+    <span class="cur">{{ product.title }}</span>
+  </div>
+</div>
+
+<!-- Product Detail Section -->
+<section class="product-detail-section">
+  <div class="container">
+    <div class="product-detail-grid">
+      
+      <!-- Product Image -->
+      <div class="product-image-card">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-main-image">
+        {% else %}
+          <div class="product-image-placeholder">
+            <i class="bi bi-image"></i>
+            <span>No Image Available</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info-card">
+        <div class="product-meta">
+          <span class="product-type-badge type-{{ product.product_type }}">
+            {{ product.get_product_type_display }}
+          </span>
+          {% if product.is_featured %}
+            <span class="featured-badge">
+              <i class="bi bi-star-fill"></i> Featured
+            </span>
+          {% endif %}
+        </div>
+
+        <h1 class="product-title">{{ product.title }}</h1>
+        
+        <div class="product-price">
+          <span class="price-amount">KES {{ product.price|floatformat:0 }}</span>
+          {% if product.product_type != 'digital' %}
+            <span class="price-note">+ shipping</span>
+          {% endif %}
+        </div>
+
+        <div class="product-description">
+          <p>{{ product.description|linebreaksbr }}</p>
+        </div>
+
+        {% if product.category %}
+          <div class="product-category">
+            <strong>Category:</strong> {{ product.category.name }}
+          </div>
+        {% endif %}
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          {% if product.product_type == 'digital' %}
+            <a href="/marketplace/products/{{ product.slug }}/demo/" class="btn btn-primary">
+              <i class="bi bi-play-circle"></i> Request Demo
+            </a>
+            <button class="btn btn-secondary" onclick="window.history.back()">
+              <i class="bi bi-arrow-left"></i> Back
+            </button>
+          {% else %}
+            <button class="btn btn-primary" onclick="addToCart('{{ product.id }}')">
+              <i class="bi bi-cart-plus"></i> Add to Cart
+            </button>
+            <a href="/marketplace/cart/" class="btn btn-secondary">
+              <i class="bi bi-cart"></i> View Cart
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Information -->
+    <div class="additional-info">
+      <div class="description-card">
+        <h3>Product Details</h3>
+        <div class="description-content">
+          {% if product.full_description %}
+            {{ product.full_description|linebreaksbr }}
+          {% else %}
+            <p>{{ product.description|linebreaksbr }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing Section for Digital Products -->
+    {% if product.product_type == 'digital' and pricing_plans %}
+    <section class="pricing-section">
+      <div class="container">
+        <div class="section-header">
+          <h3>Choose Your Plan</h3>
+          <p>Select the perfect pricing plan for your needs</p>
+        </div>
+        
+        <div class="pricing-grid">
+          {% for plan in pricing_plans %}
+          <div class="pricing-card {% if plan.is_popular %}popular{% endif %}">
+            {% if plan.is_popular %}
+              <div class="popular-badge">
+                <span>Most Popular</span>
+              </div>
+            {% endif %}
+            
+            <div class="pricing-header">
+              <h4 class="plan-name">{{ plan.name }}</h4>
+              <div class="plan-price">
+                <span class="price-amount">KES {{ plan.price|floatformat:0 }}</span>
+                {% if plan.billing_period %}
+                  <span class="price-period">/{{ plan.billing_period }}</span>
+                {% endif %}
+              </div>
+              {% if plan.description %}
+                <p class="plan-description">{{ plan.description }}</p>
+              {% endif %}
+            </div>
+            
+            <div class="pricing-features">
+              {% if plan.features %}
+                {% for feature in plan.features %}
+                <div class="feature-item">
+                  <i class="bi bi-check-circle"></i>
+                  <span>{{ feature }}</span>
+                </div>
+                {% endfor %}
+              {% endif %}
+            </div>
+            
+            <div class="pricing-action">
+              {% if plan.is_subscription %}
+                <a href="/marketplace/checkout/?plan={{ plan.id }}" class="btn btn-primary">
+                  <i class="bi bi-credit-card"></i> Subscribe Now
+                </a>
+              {% else %}
+                <a href="/marketplace/checkout/?plan={{ plan.id }}" class="btn btn-primary">
+                  <i class="bi bi-cart-plus"></i> Buy Now
+                </a>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Related Products Section -->
+<section class="related-products-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Related Products</h2>
+      <p>Discover more products similar to {{ product.title }}</p>
+    </div>
+    
+    <div class="related-products-grid">
+      {% for related_product in related_products %}
+        <div class="related-product-card">
+          <div class="related-product-image">
+            {% if related_product.image %}
+              <img src="{{ related_product.image.url }}" alt="{{ related_product.title }}" loading="lazy">
+            {% else %}
+              <div class="image-placeholder">
+                <i class="bi bi-image"></i>
+              </div>
+            {% endif %}
+            <span class="product-type-badge type-{{ related_product.product_type }}">
+              {{ related_product.get_product_type_display }}
+            </span>
+          </div>
+          
+          <div class="related-product-content">
+            <h3 class="related-product-title">{{ related_product.title }}</h3>
+            <p class="related-product-description">
+              {{ related_product.description|truncatewords:15 }}
+            </p>
+            
+            <div class="related-product-price">
+              <span class="price">KES {{ related_product.price|floatformat:0 }}</span>
+              {% if related_product.product_type != 'digital' %}
+                <small>+ shipping</small>
+              {% endif %}
+            </div>
+            
+            <div class="related-product-actions">
+              {% if related_product.product_type == 'digital' %}
+                <a href="/marketplace/products/{{ related_product.slug }}/" class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-eye"></i> View Details
+                </a>
+                <a href="/marketplace/products/{{ related_product.slug }}/demo/" class="btn btn-primary btn-sm">
+                  <i class="bi bi-play-circle"></i> Request Demo
+                </a>
+              {% else %}
+                <a href="/marketplace/products/{{ related_product.slug }}/" class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-eye"></i> View Details
+                </a>
+                <button class="btn btn-primary btn-sm" onclick="addToCart('{{ related_product.id }}')">
+                  <i class="bi bi-cart-plus"></i> Add to Cart
+                </button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="no-related-products">
+          <i class="bi bi-inbox"></i>
+          <h3>No Related Products</h3>
+          <p>Check out our other products in the marketplace</p>
+          <a href="/marketplace/" class="btn btn-primary">
+            <i class="bi bi-grid"></i> Browse All Products
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+  </main>
+
+<!-- Include Footer -->
+{% include 'marketplace/partials/footer.html' %}
+
+<script>
+  function addToCart(productId) {
+    fetch('/marketplace/cart/add/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: 'product_id=' + productId
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Product added to cart!');
+        updateCartCount();
+      } else {
+        alert('Error adding product to cart');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error adding product to cart');
+    });
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  function updateCartCount() {
+    fetch('/marketplace/cart/count/')
+      .then(response => response.json())
+      .then(data => {
+        const cartCountElements = document.querySelectorAll('.cart-count');
+        cartCountElements.forEach(el => {
+          el.textContent = data.count || 0;
+        });
+      });
+  }
+
+  // Update cart count on page load
+  document.addEventListener('DOMContentLoaded', updateCartCount);
+</script>
+
+</body>
+</html>

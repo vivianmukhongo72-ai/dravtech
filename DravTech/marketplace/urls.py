@@ -40,6 +40,7 @@ urlpatterns = [
     path("checkout/",                           views.checkout_view,      name="checkout"),
     path("orders/",                             views.user_orders,       name="user-orders"),
     path("orders/<int:order_id>/confirmation/", views.order_confirmation, name="order-confirmation"),
+    path("orders/<int:order_id>/",           views.order_detail,        name="order-detail"),
 
     # Download (gated behind purchase)
     path("download/<int:product_id>/", views.download_artwork, name="download-artwork"),

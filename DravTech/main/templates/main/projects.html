@@ -1,0 +1,256 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Our Projects — DravTech</title>
+  <meta name="description" content="Explore our portfolio of successful projects across various industries.">
+  <meta name="keywords" content="">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+
+  <!-- Main CSS Files -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+<style>
+.projects-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  padding: 100px 0 60px;
+  text-align: center;
+  color: white;
+}
+
+.projects-hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.projects-hero p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto 40px;
+  opacity: 0.8;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.project-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+.project-image {
+  height: 200px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover .project-image img {
+  transform: scale(1.05);
+}
+
+.project-placeholder {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #cbd5e1;
+}
+
+.project-content {
+  padding: 30px;
+}
+
+.project-content h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 15px;
+}
+
+.project-content p {
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.project-services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.service-tag {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.project-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+  color: white;
+}
+
+.btn-outline-primary {
+  border: 2px solid #2563eb;
+  color: #2563eb;
+  padding: 8px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-outline-primary:hover {
+  background: #2563eb;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .projects-hero h1 {
+    font-size: 2rem;
+  }
+  
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .project-actions {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+<body class="starter-page-page">
+
+<!-- Include Header -->
+{% include 'marketplace/partials/header.html' %}
+
+<!-- Main Content -->
+<main class="main-content">
+<!-- Projects Hero -->
+<section class="projects-hero">
+  <div class="container">
+    <h1>Our Projects</h1>
+    <p>Explore our portfolio of successful projects across various industries. Each project showcases our expertise in delivering innovative solutions that drive real business results.</p>
+  </div>
+</section>
+
+<!-- Projects Grid -->
+<section class="py-5">
+  <div class="container">
+    <div class="projects-grid">
+      {% for project in projects %}
+      <div class="project-card">
+        <div class="project-image">
+          {% if project.image %}
+            <img src="{{ project.image.url }}" alt="{{ project.title }}" loading="lazy">
+          {% else %}
+            <div class="project-placeholder">
+              <i class="bi bi-briefcase"></i>
+            </div>
+          {% endif %}
+        </div>
+        
+        <div class="project-content">
+          <h3>{{ project.title }}</h3>
+          <p>{{ project.summary|truncatewords:20 }}</p>
+          
+          {% if project.related_services.all %}
+          <div class="project-services">
+            {% for service in project.related_services.all %}
+              <span class="service-tag">{{ service.title }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          
+          <div class="project-actions">
+            {% if project.link %}
+              <a href="{{ project.link }}" target="_blank" class="btn-primary">
+                <i class="bi bi-box-arrow-up-right"></i>
+                View Project
+              </a>
+            {% endif %}
+            <a href="{% url 'project_detail' project.slug %}" class="btn-outline-primary">
+              <i class="bi bi-eye"></i>
+              Details
+            </a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5">
+        <h3>No projects available</h3>
+        <p class="text-muted">Check back soon for our latest projects!</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Include Footer -->
+{% include 'marketplace/partials/footer.html' %}
+
+</body>
+</html>

@@ -1,0 +1,754 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order #{{ order.id }} Details — DravTech</title>
+  <meta name="description" content="View detailed order information">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+
+  <!-- Main CSS Files -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  
+  <style>
+    /* ── Order Detail Page Styling ── */
+    body {
+      background: #f8fafc;
+      font-family: 'DM Sans', sans-serif;
+      color: #1e293b;
+    }
+
+    .order-detail-page {
+      min-height: 100vh;
+      background: #f8fafc;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      background: white;
+      padding: 20px 0;
+      border-bottom: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .breadcrumb-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    .breadcrumb-inner a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .breadcrumb-inner a:hover {
+      color: #1d4ed8;
+    }
+
+    .breadcrumb-inner .separator {
+      color: #cbd5e1;
+    }
+
+    /* Header */
+    .page-header {
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 40px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .page-header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .page-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .page-subtitle {
+      color: #64748b;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    .page-actions {
+      display: flex;
+      gap: 16px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #64748b;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 12px 20px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+      border-color: #2563eb;
+      color: #2563eb;
+      background: white;
+    }
+
+    .btn-print {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-print:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+      color: white;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* Order Cards */
+    .order-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .order-cards {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    .order-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+
+    .card-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-title i {
+      color: #2563eb;
+      font-size: 1.2rem;
+    }
+
+    /* Order Status */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    .status-confirmed {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #86efac;
+    }
+
+    .status-processing {
+      background: #dbeafe;
+      color: #0369a1;
+      border: 1px solid #38bdf8;
+    }
+
+    .status-shipped {
+      background: #e0e7ff;
+      color: #1e40af;
+      border: 1px solid #93c5fd;
+    }
+
+    .status-delivered {
+      background: #f0fdf4;
+      color: #065f46;
+      border: 1px solid #86efac;
+    }
+
+    .status-cancelled {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+    }
+
+    /* Order Items */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+    }
+
+    .items-table th {
+      background: #f1f5f9;
+      padding: 16px;
+      text-align: left;
+      font-weight: 600;
+      color: #374151;
+      font-size: 0.9rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .items-table td {
+      padding: 16px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.95rem;
+      vertical-align: middle;
+    }
+
+    .items-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .item-name {
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 4px;
+    }
+
+    .item-meta {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .item-price {
+      font-weight: 700;
+      color: #2563eb;
+    }
+
+    .item-quantity {
+      background: #f8fafc;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      color: #374151;
+      text-align: center;
+      min-width: 60px;
+    }
+
+    /* Order Summary */
+    .summary-section {
+      background: #f8fafc;
+      padding: 24px;
+      border-radius: 12px;
+      margin-top: 24px;
+    }
+
+    .summary-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .summary-title i {
+      color: #2563eb;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+    }
+
+    .summary-label {
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .summary-value {
+      color: #1e293b;
+      font-weight: 600;
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 2px solid #e2e8f0;
+      font-family: 'Sora', sans-serif;
+    }
+
+    /* Shipping Address */
+    .shipping-section {
+      background: #f8fafc;
+      padding: 24px;
+      border-radius: 12px;
+      margin-top: 24px;
+    }
+
+    .shipping-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .shipping-title i {
+      color: #2563eb;
+    }
+
+    .shipping-address {
+      font-size: 0.95rem;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    /* Timeline */
+    .timeline {
+      margin-top: 32px;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-marker {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #2563eb;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .timeline-content {
+      flex: 1;
+      padding-top: 8px;
+    }
+
+    .timeline-date {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .timeline-title {
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 4px;
+    }
+
+    .timeline-description {
+      color: #64748b;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Actions */
+    .action-buttons {
+      display: flex;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      font-family: 'Sora', sans-serif;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+      color: white;
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: transparent;
+      color: #64748b;
+      text-decoration: none;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline:hover {
+      background: white;
+      border-color: #2563eb;
+      color: #2563eb;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: 2rem;
+      }
+      
+      .page-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .btn-primary,
+      .btn-outline {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .order-cards {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .card-title {
+        font-size: 1.2rem;
+      }
+      
+      .items-table {
+        font-size: 0.85rem;
+      }
+      
+      .items-table th,
+      .items-table td {
+        padding: 12px;
+      }
+      
+      .item-quantity {
+        min-width: 50px;
+      }
+      
+      .timeline-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      
+      .timeline-marker {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body class="starter-page-page">
+
+<!-- Include Header -->
+{% include 'marketplace/partials/header.html' %}
+
+<!-- Main Content -->
+<main class="main-content">
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="{% url 'marketplace:marketplace' %}">Marketplace</a>
+    <span class="separator">/</span>
+    <a href="{% url 'marketplace:user-orders' %}">My Orders</a>
+    <span class="separator">/</span>
+    <span>Order #{{ order.id }}</span>
+  </div>
+</div>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <h1 class="page-title">Order #{{ order.id }}</h1>
+    <p class="page-subtitle">
+      Placed on {{ order.created_at|date:"F j, Y, g:i A" }}
+    </p>
+    <div class="page-actions">
+      <a href="{% url 'marketplace:user-orders' %}" class="btn-back">
+        <i class="bi bi-arrow-left"></i>
+        Back to Orders
+      </a>
+      <button onclick="window.print()" class="btn-print">
+        <i class="bi bi-printer"></i>
+        Print Order
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="order-cards">
+
+    <!-- Order Status Card -->
+    <div class="order-card">
+      <h3 class="card-title">
+        <i class="bi bi-info-circle"></i>
+        Order Status
+      </h3>
+      <div style="text-align: center; padding: 20px 0;">
+        <span class="status-badge status-{{ order.status }}">
+          {{ order.get_status_display }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Order Information Card -->
+    <div class="order-card">
+      <h3 class="card-title">
+        <i class="bi bi-receipt"></i>
+        Order Information
+      </h3>
+      
+      <div class="info-row">
+        <span class="info-label">Order Number:</span>
+        <span class="info-value">#{{ order.id }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Order Date:</span>
+        <span class="info-value">{{ order.created_at|date:"F j, Y, g:i A" }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Customer Email:</span>
+        <span class="info-value">{{ order.email }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Payment Status:</span>
+        <span class="info-value">{{ order.get_payment_status_display }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Order Total:</span>
+        <span class="info-value" style="color: #2563eb; font-size: 1.1rem;">KES {{ order.total|floatformat:2 }}</span>
+      </div>
+    </div>
+
+    <!-- Items Ordered Card -->
+    <div class="order-card">
+      <h3 class="card-title">
+        <i class="bi bi-box-seam"></i>
+        Items Ordered ({{ items.count }})
+      </h3>
+      
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>
+              <div class="item-name">{{ item.product_title }}</div>
+              {% if item.product %}
+              <div class="item-meta">{{ item.product.get_product_type_display|title }}</div>
+              {% endif %}
+            </td>
+            <td>KES {{ item.unit_price|floatformat:2 }}</td>
+            <td>
+              <span class="item-quantity">{{ item.quantity }}</span>
+            </td>
+            <td style="font-weight: 700;">
+              KES {{ item.unit_price|mul:item.quantity|floatformat:2 }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Order Summary Card -->
+    <div class="summary-section">
+      <h3 class="summary-title">
+        <i class="bi bi-calculator"></i>
+        Order Summary
+      </h3>
+      
+      <div class="summary-row">
+        <span class="summary-label">Subtotal:</span>
+        <span class="summary-value">KES {{ order.subtotal|floatformat:2 }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Shipping:</span>
+        <span class="summary-value">
+          {% if order.shipping_cost %}KES {{ order.shipping_cost|floatformat:2 }}{% else %}Free{% endif %}
+        </span>
+      </div>
+      <div class="summary-total">
+        <span class="summary-label">Total:</span>
+        <span class="summary-value">KES {{ order.total|floatformat:2 }}</span>
+      </div>
+    </div>
+
+    {% if order.shipping_address %}
+    <!-- Shipping Address Card -->
+    <div class="shipping-section">
+      <h3 class="shipping-title">
+        <i class="bi bi-geo-alt"></i>
+        Shipping Address
+      </h3>
+      <div class="shipping-address">
+        <strong>{{ order.shipping_address.full_name }}</strong><br>
+        {{ order.shipping_address.address_1 }}{% if order.shipping_address.address_2 %}, {{ order.shipping_address.address_2 }}{% endif %}<br>
+        {{ order.shipping_address.city }}{% if order.shipping_address.county %}, {{ order.shipping_address.county }}{% endif %}<br>
+        {{ order.shipping_address.country }}{% if order.shipping_address.postal_code %}, {{ order.shipping_address.postal_code }}{% endif %}
+        <br>
+        {{ order.shipping_address.phone }}
+        <br>
+        {{ order.shipping_address.email }}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Order Timeline -->
+    <div class="timeline">
+      <h3 class="timeline-title">
+        <i class="bi bi-clock-history"></i>
+        Order Timeline
+      </h3>
+      
+      <div class="timeline-item">
+        <div class="timeline-marker">
+          <i class="bi bi-check"></i>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-date">{{ order.created_at|date:"F j, Y" }}</div>
+          <div class="timeline-title">Order Placed</div>
+          <div class="timeline-description">
+            Order successfully placed and confirmed
+          </div>
+        </div>
+      </div>
+      
+      {% if order.status != 'pending' %}
+      <div class="timeline-item">
+        <div class="timeline-marker">
+          <i class="bi bi-arrow-right"></i>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-date">{{ order.updated_at|date:"F j, Y" }}</div>
+          <div class="timeline-title">Order {{ order.get_status_display }}</div>
+          <div class="timeline-description">
+            Order status updated to {{ order.get_status_display|lower }}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <a href="{% url 'marketplace:user-orders' %}" class="btn-outline">
+        <i class="bi bi-arrow-left"></i>
+        Back to Orders
+      </a>
+      <a href="{% url 'marketplace:marketplace' %}" class="btn-primary">
+        <i class="bi bi-shop"></i>
+        Continue Shopping
+      </a>
+    </div>
+
+  </div>
+</div>
+
+</main>
+
+<!-- Include Footer -->
+{% include 'marketplace/partials/footer.html' %}
+
+</body>
+</html>

@@ -1,10 +1,17 @@
-{% extends "base.html" %}
 {% load static %}
 
-{% block title %}Marketplace — DravTech{% endblock %}
-
-{% block extra_css %}
-<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace — DravTech</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
 <style>
 /* ─── RESET & ROOT ─────────────────────────────── */
 :root {
@@ -26,6 +33,24 @@
   --font-body:    'Cabinet Grotesk', sans-serif;
 }
 
+/* Override base template styles for marketplace */
+.main-content {
+  background: var(--mp-bg) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Ensure marketplace styles override everything */
+body.starter-page-page .main-content .mp-wrap {
+  font-family: var(--font-body) !important;
+  background: var(--mp-bg) !important;
+  min-height: 100vh !important;
+  color: var(--mp-text) !important;
+  overflow-x: hidden !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
 .mp-wrap * { box-sizing: border-box; margin: 0; padding: 0; }
 
 .mp-wrap {
@@ -34,6 +59,21 @@
   min-height: 100vh;
   color: var(--mp-text);
   overflow-x: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+/* Debug style to verify CSS is loading */
+.mp-debug {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: red;
+  color: white;
+  padding: 5px 10px;
+  z-index: 9999;
+  font-size: 12px;
+  border-radius: 4px;
 }
 
 /* ─── NOISE OVERLAY ────────────────────────────── */
@@ -343,8 +383,9 @@
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 0 20px;
 }
 
 /* ─── PRODUCT CARD ──────────────────────────────── */
@@ -358,6 +399,7 @@
   transition: var(--mp-trans);
   position: relative;
   cursor: pointer;
+  height: 480px; /* Fixed height for uniform cards */
 }
 
 .product-card:hover {
@@ -373,15 +415,16 @@
 /* Card image */
 .card-img {
   position: relative;
-  height: 200px;
+  height: 220px; /* Fixed image height */
   overflow: hidden;
   background: var(--mp-surface2);
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .card-img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* Ensure images cover the area properly */
   transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
 }
 
@@ -420,27 +463,34 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-height: 0; /* Allow content to shrink properly */
 }
 
 .card-title {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 600;
   line-height: 1.3;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   color: var(--mp-text);
+  height: 2.6em; /* Fixed height for title (2 lines) */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .card-desc {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--mp-muted);
-  line-height: 1.6;
+  line-height: 1.5;
   flex: 1;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  min-height: 3em; /* Minimum height for description */
 }
 
 .card-footer {
@@ -615,11 +665,17 @@
 
 /* ─── RESPONSIVE ────────────────────────────────── */
 @media (max-width: 768px) {
-  .mp-hero { padding: 70px 0 56px; }
+  .mp-hero { padding: 60px 20px; }
   .mp-title { font-size: 2.4rem; }
   .mp-stats { gap: 12px; }
   .stat-chip { min-width: 140px; padding: 12px 14px; }
-  .products-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .products-grid { 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 20px;
+    padding: 0 16px;
+  }
+  .product-card { height: 440px; } /* Slightly smaller on mobile */
+  .card-img { height: 200px; }
   #mp-toast-container { bottom: 16px; right: 16px; left: 16px; }
   .mp-toast { min-width: unset; max-width: unset; }
 }
@@ -627,7 +683,13 @@
 @media (max-width: 480px) {
   .mp-cta-row { flex-direction: column; align-items: center; }
   .btn-primary, .btn-ghost { width: 100%; max-width: 280px; justify-content: center; }
-  .products-grid { grid-template-columns: 1fr; }
+  .products-grid { 
+    grid-template-columns: 1fr; 
+    gap: 16px;
+    padding: 0 12px;
+  }
+  .product-card { height: 420px; } /* Even smaller on small screens */
+  .card-img { height: 180px; }
 }
 
 /* ─── STAGGER ANIMATION ─────────────────────────── */
@@ -641,9 +703,14 @@
   to   { opacity: 1; transform: none; }
 }
 </style>
-{% endblock %}
+</head>
+<body class="starter-page-page">
 
-{% block content %}
+<!-- Include Header -->
+{% include 'marketplace/partials/header.html' %}
+
+<!-- Main Content -->
+<main class="main-content">
 
 <!-- Inject serialized product data safely -->
 <script id="mp-products-data" type="application/json">
@@ -651,6 +718,9 @@
 </script>
 
 <div class="mp-wrap">
+
+<!-- Debug indicator -->
+<div class="mp-debug">CSS LOADED</div>
 
   <!-- ── HERO ─────────────────────────────────── -->
   <section class="mp-hero">
@@ -852,30 +922,54 @@
             <p class="card-desc">${escHtml(desc) || 'No description available.'}</p>
             <div class="card-footer">
               <div class="card-price">
-                <span>KES</span>${price.toLocaleString('en-KE')}
+                ${product.product_type === 'digital' 
+                  ? '<span>From KES</span>' + (product.min_price ? product.min_price.toLocaleString('en-KE') : '5,000')
+                  : '<span>KES</span>' + price.toLocaleString('en-KE')
+                }
+                ${product.product_type === 'digital' ? '<small style="display:block;color:#94a3b8;font-size:0.75rem;margin-top:2px;">Multiple plans available</small>' : ''}
               </div>
               <div class="card-actions">
-                <a href="/marketplace/products/${escHtml(product.slug)}/"
-                   class="btn-card-view"
-                   title="View details"
-                   aria-label="View ${escHtml(product.title)}">
-                  <i class="bi bi-eye"></i>
-                </a>
-                <button class="btn-card-cart"
-                        data-product-id="${product.id}"
-                        aria-label="Add ${escHtml(product.title)} to cart">
-                  <i class="bi bi-cart-plus"></i> Add
-                </button>
+                ${product.product_type === 'digital' 
+                  ? `
+                    <a href="/marketplace/products/${escHtml(product.slug)}/"
+                       class="btn-card-view"
+                       title="View details"
+                       aria-label="View ${escHtml(product.title)}">
+                      <i class="bi bi-eye"></i>
+                    </a>
+                    <button class="btn-card-cart"
+                            data-product-id="${product.id}"
+                            aria-label="Add ${escHtml(product.title)} to cart">
+                      <i class="bi bi-cart-plus"></i> Add
+                    </button>
+                  `
+                  : `
+                    <a href="/marketplace/products/${escHtml(product.slug)}/"
+                       class="btn-card-view"
+                       title="View details"
+                       aria-label="View ${escHtml(product.title)}">
+                      <i class="bi bi-eye"></i>
+                    </a>
+                    <button class="btn-card-cart"
+                            data-product-id="${product.id}"
+                            aria-label="Add ${escHtml(product.title)} to cart">
+                      <i class="bi bi-cart-plus"></i> Add
+                    </button>
+                  `
+                }
               </div>
             </div>
           </div>
         `;
 
-        // Cart button handler
-        card.querySelector('.btn-card-cart').addEventListener('click', function (e) {
-          e.stopPropagation();
-          addToCart(this, product.id, product.title);
-        });
+        // Cart button handler (only for non-digital products)
+        const cartButton = card.querySelector('.btn-card-cart');
+        if (cartButton && cartButton.tagName === 'BUTTON') {
+          cartButton.addEventListener('click', function (e) {
+            e.stopPropagation();
+            addToCart(this, product.id, product.title);
+          });
+        }
 
         // Card click → navigate to product
         card.addEventListener('click', function (e) {
@@ -948,13 +1042,16 @@
     btn.classList.add('loading');
     btn.innerHTML = '<i class="bi bi-arrow-repeat"></i>';
 
+    const formData = new FormData();
+    formData.append('product_id', productId);
+
     fetch(`/marketplace/cart/add/${productId}/`, {
       method:  'POST',
       headers: {
         'X-CSRFToken':  getCsrfToken(),
-        'Content-Type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest',
       },
+      body: formData,
       credentials: 'same-origin',
     })
     .then(r => {
@@ -1046,4 +1143,10 @@
 })();
 </script>
 
-{% endblock %}
+</main>
+
+<!-- Include Footer -->
+{% include 'marketplace/partials/footer.html' %}
+
+</body>
+</html>
