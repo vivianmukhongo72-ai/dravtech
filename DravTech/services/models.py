@@ -13,6 +13,11 @@ class ServiceCategory(models.Model):
 
     name = models.CharField(max_length=150, unique=True)
     slug = models.SlugField(unique=True, blank=True)
+    short_description = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Brief description of the category"
+    )
     description = models.TextField(blank=True)
 
     icon = models.CharField(
@@ -61,7 +66,9 @@ class Service(models.Model):
     category = models.ForeignKey(
         ServiceCategory,
         on_delete=models.CASCADE,
-        related_name="services"
+        related_name="services",
+        null=True,
+        blank=True
     )
 
     tagline = models.CharField(max_length=255, blank=True)

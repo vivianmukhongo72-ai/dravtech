@@ -1,350 +1,625 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Products — DravTech{% endblock %}
-
-{% block extra_css %}
-<style>
-  /* ── Variables ── */
-  :root {
-    --ink:     #0d0d0d;
-    --paper:   #f5f2ec;
-    --accent:  #c8a96e;
-    --accent2: #2d6a4f;
-    --muted:   #6b6b6b;
-    --card-bg: #ffffff;
-    --border:  #e2ddd6;
-    --font-display: 'DM Serif Display', Georgia, serif;
-    --font-body:    'DM Sans', system-ui, sans-serif;
-  }
-
-  body { background: var(--paper); color: var(--ink); font-family: var(--font-body); }
-
-  /* ── Page header ── */
-  .listing-hero {
-    padding: 72px 0 48px;
-    border-bottom: 1px solid var(--border);
-    background:
-      radial-gradient(ellipse 60% 40% at 80% 20%, #c8a96e18 0%, transparent 60%),
-      var(--paper);
-  }
-  .listing-hero h1 {
-    font-family: var(--font-display);
-    font-size: clamp(2.4rem, 5vw, 3.8rem);
-    font-weight: 400;
-    line-height: 1.15;
-    margin: 0 0 12px;
-  }
-  .listing-hero p { color: var(--muted); font-size: 1.05rem; margin: 0; }
-
-  /* ── Filter tabs ── */
-  .filter-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 28px 0 0;
-    flex-wrap: wrap;
-  }
-  .filter-tab {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 8px 20px;
-    border-radius: 100px;
-    border: 1.5px solid var(--border);
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--muted);
-    text-decoration: none;
-    transition: all .18s ease;
-    background: var(--card-bg);
-  }
-  .filter-tab:hover { border-color: var(--accent); color: var(--ink); }
-  .filter-tab.active {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: #fff;
-  }
-  .filter-tab .dot {
-    width: 7px; height: 7px; border-radius: 50%;
-  }
-  .dot-digital  { background: #4f8ef7; }
-  .dot-merch    { background: #e07b4f; }
-  .dot-artwork  { background: var(--accent2); }
-  .dot-all      { background: var(--muted); }
-
-  .result-count {
-    margin-left: auto;
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
-
-  /* ── Grid ── */
-  .products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 28px;
-    padding: 40px 0 80px;
-  }
-
-  /* ── Card ── */
-  .product-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform .2s ease, box-shadow .2s ease;
-    position: relative;
-  }
-  .product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 48px rgba(0,0,0,.1);
-  }
-  .product-card__badge {
-    position: absolute;
-    top: 14px; left: 14px;
-    padding: 4px 12px;
-    border-radius: 100px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    z-index: 2;
-  }
-  .badge-digital  { background: #dbeafe; color: #1d4ed8; }
-  .badge-merch    { background: #fde8d8; color: #9a3412; }
-  .badge-artwork  { background: #d1fae5; color: #065f46; }
-
-  .card-img-wrap {
-    height: 220px;
-    overflow: hidden;
-    background: var(--paper);
-    position: relative;
-  }
-  .card-img-wrap img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform .35s ease;
-  }
-  .product-card:hover .card-img-wrap img { transform: scale(1.04); }
-
-  .card-img-placeholder {
-    width: 100%; height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    color: var(--border);
-  }
-
-  .card-body {
-    padding: 22px 24px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .card-type-tag {
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: .06em;
-    text-transform: uppercase;
-  }
-  .card-title {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 400;
-    margin: 0;
-    line-height: 1.3;
-    color: var(--ink);
-  }
-  .card-tagline {
-    font-size: 0.88rem;
-    color: var(--muted);
-    margin: 0;
-    line-height: 1.5;
-    flex: 1;
-  }
-
-  .card-footer-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px 20px;
-    border-top: 1px solid var(--border);
-  }
-  .card-price {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--ink);
-  }
-  .card-price .from { font-size: 0.78rem; font-weight: 400; color: var(--muted); }
-  .card-price .free { color: var(--accent2); }
-
-  .btn-card {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 18px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all .15s ease;
-  }
-  .btn-card-primary {
-    background: var(--ink);
-    color: #fff;
-  }
-  .btn-card-primary:hover { background: #333; color: #fff; }
-
-  /* ── Empty state ── */
-  .empty-state {
-    text-align: center;
-    padding: 80px 20px;
-    grid-column: 1 / -1;
-  }
-  .empty-state i { font-size: 3rem; color: var(--border); }
-  .empty-state h3 { font-family: var(--font-display); margin: 16px 0 8px; }
-  .empty-state p  { color: var(--muted); }
-
-  /* ── Pagination ── */
-  .pagination-row {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    padding: 0 0 80px;
-  }
-  .page-btn {
-    width: 40px; height: 40px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 8px;
-    border: 1.5px solid var(--border);
-    font-size: 0.9rem;
-    text-decoration: none;
-    color: var(--ink);
-    transition: all .15s ease;
-  }
-  .page-btn.active, .page-btn:hover {
-    background: var(--ink); color: #fff; border-color: var(--ink);
-  }
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-</style>
-{% endblock %}
+{% block title %}Marketplace — DravTech{% endblock %}
 
 {% block content %}
-<!-- Hero -->
-<section class="listing-hero">
-  <div class="container">
-    <h1>Our Products</h1>
-    <p>Digital systems, original artwork, and curated merchandise — crafted with purpose.</p>
 
-    <!-- Filter bar -->
-    <div class="filter-bar">
-      <a href="?type=all" class="filter-tab {% if type_filter == 'all' %}active{% endif %}">
-        <span class="dot dot-all"></span> All
-      </a>
-      <a href="?type=digital" class="filter-tab {% if type_filter == 'digital' %}active{% endif %}">
-        <span class="dot dot-digital"></span> Digital
-      </a>
-      <a href="?type=merch" class="filter-tab {% if type_filter == 'merch' %}active{% endif %}">
-        <span class="dot dot-merch"></span> Merchandise
-      </a>
-      <a href="?type=artwork" class="filter-tab {% if type_filter == 'artwork' %}active{% endif %}">
-        <span class="dot dot-artwork"></span> Artwork
-      </a>
-      <span class="result-count">{{ total_count }} product{{ total_count|pluralize }}</span>
-    </div>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* ── Typography & Base ── */
+:root {
+  --brand-primary: #06b6d4;
+  --brand-primary-dark: #0891b2;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --border-color: #e5e7eb;
+  --bg-light: #f9fafb;
+  --bg-white: #ffffff;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg-white);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* ── Hero Section ── */
+.marketplace-hero {
+  background-color: var(--bg-white);
+  padding: 80px 0 60px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.marketplace-hero h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  letter-spacing: -0.025em;
+}
+
+.marketplace-hero p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+  font-weight: 400;
+}
+
+/* ── Category Tabs ── */
+.category-tabs {
+  background-color: var(--bg-white);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0;
+  margin: 0;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.category-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.category-tab {
+  padding: 20px 24px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+}
+
+.category-tab:hover {
+  color: var(--text-primary);
+}
+
+.category-tab.active {
+  color: var(--brand-primary);
+  border-bottom-color: var(--brand-primary);
+}
+
+/* ── Products Container ── */
+.products-container {
+  padding: 60px 0;
+  background-color: var(--bg-light);
+  min-height: 400px;
+}
+
+/* ── Product Grid ── */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 0;
+}
+
+/* ── Product Card ── */
+.product-card {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: #d1d5db;
+}
+
+.product-card[data-category]:not(.visible) {
+  display: none;
+}
+
+.product-card.visible {
+  display: flex;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Product Image ── */
+.product-image {
+  height: 180px;
+  overflow: hidden;
+  background-color: #f3f4f6;
+  position: relative;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+}
+
+.product-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 2rem;
+}
+
+/* ── Category Badge ── */
+.category-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background-color: #f3f4f6;
+  color: var(--brand-primary);
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 0.625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 2;
+}
+
+/* ── Product Body ── */
+.product-body {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.product-name a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-name a:hover {
+  color: var(--brand-primary);
+}
+
+.product-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Pricing Tiers (Digital Products) ── */
+.pricing-tiers {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.pricing-tier {
+  background-color: #f3f4f6;
+  color: var(--text-secondary);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* ── Delivery Badge (Artwork/Merchandise) ── */
+.delivery-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #f3f4f6;
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+/* ── Price ── */
+.product-price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+  margin-bottom: 16px;
+}
+
+.price-from {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+/* ── CTA Section ── */
+.cta-section {
+  border-top: 1px solid var(--border-color);
+  padding: 16px 20px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.cta-button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.cta-primary {
+  background-color: var(--brand-primary);
+  color: white;
+}
+
+.cta-primary:hover {
+  background-color: var(--brand-primary-dark);
+  color: white;
+  text-decoration: none;
+}
+
+.cta-outline {
+  background-color: transparent;
+  border: 1.5px solid var(--brand-primary);
+  color: var(--brand-primary);
+}
+
+.cta-outline:hover {
+  background-color: rgba(6, 182, 212, 0.1);
+  color: var(--brand-primary);
+  text-decoration: none;
+}
+
+.cta-ghost {
+  background-color: transparent;
+  border: none;
+  color: var(--text-secondary);
+}
+
+.cta-ghost:hover {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+/* ── Empty State ── */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-secondary);
+  grid-column: 1 / -1;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ── Responsive Design ── */
+@media (max-width: 1024px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .marketplace-hero {
+    padding: 60px 0 40px;
+  }
+  
+  .marketplace-hero h1 {
+    font-size: 2rem;
+  }
+  
+  .marketplace-hero p {
+    font-size: 0.875rem;
+  }
+  
+  .category-tabs {
+    padding: 0 16px;
+  }
+  
+  .category-tab {
+    padding: 16px 20px;
+    font-size: 0.75rem;
+  }
+  
+  .products-container {
+    padding: 40px 0;
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .product-body {
+    padding: 16px;
+  }
+  
+  .cta-section {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .cta-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .marketplace-hero h1 {
+    font-size: 1.75rem;
+  }
+  
+  .category-tab {
+    padding: 12px 16px;
+    font-size: 0.7rem;
+  }
+  
+  .product-body {
+    padding: 12px;
+  }
+}
+</style>
+
+<!-- Hero Section -->
+<section class="marketplace-hero">
+  <div class="container">
+    <h1>Marketplace</h1>
+    <p>Digital tools, creative assets, and physical products built by Dravtech</p>
   </div>
 </section>
 
-<!-- Grid -->
-<section>
+<!-- Category Tabs -->
+<div class="container-fluid p-0">
+  <div class="category-tabs">
+    <button class="category-tab active" data-category="all">All Products</button>
+    <button class="category-tab" data-category="digital">Digital Products</button>
+    <button class="category-tab" data-category="artwork">Artwork</button>
+    <button class="category-tab" data-category="merch">Merchandise</button>
+  </div>
+</div>
+
+<!-- Products Container -->
+<section class="products-container">
   <div class="container">
     <div class="products-grid">
+      
       {% for product in products %}
-      <article class="product-card">
-        <!-- Type badge -->
-        <span class="product-card__badge badge-{{ product.product_type }}">
-          {{ product.get_product_type_display }}
-        </span>
-
-        <!-- Image -->
-        <a href="{% url 'marketplace:product-detail' product.slug %}" class="card-img-wrap">
-          {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.title }}">
-          {% else %}
-            <div class="card-img-placeholder">
-              {% if product.product_type == 'digital' %}<i class="bi bi-cpu"></i>
-              {% elif product.product_type == 'merch' %}<i class="bi bi-bag"></i>
-              {% else %}<i class="bi bi-palette"></i>{% endif %}
-            </div>
-          {% endif %}
-        </a>
-
-        <!-- Body -->
-        <div class="card-body">
-          <span class="card-type-tag">{{ product.category.name }}</span>
-          <h2 class="card-title">
-            <a href="{% url 'marketplace:product-detail' product.slug %}"
-               style="text-decoration:none; color:inherit;">{{ product.title }}</a>
-          </h2>
-          {% if product.tagline %}
-            <p class="card-tagline">{{ product.tagline }}</p>
-          {% endif %}
-        </div>
-
-        <!-- Footer -->
-        <div class="card-footer-row">
-          <div class="card-price">
-            {% if product.product_type == 'digital' %}
-              <span class="from">from</span>
-              {% with plan=product.pricing_plans.first %}
-                {% if plan %}KES {{ plan.price|floatformat:0 }}{% else %}Custom{% endif %}
-              {% endwith %}
-            {% elif product.price %}
-              KES {{ product.price|floatformat:0 }}
+        <div class="product-card visible" 
+             data-category="{{ product.product_type }}">
+          
+          <!-- Product Image -->
+          <div class="product-image">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.title }}">
             {% else %}
-              <span class="free">Free</span>
+              <div class="product-image-placeholder">
+                {% if product.product_type == 'digital' %}
+                  <i class="bi bi-cpu"></i>
+                {% elif product.product_type == 'merch' %}
+                  <i class="bi bi-bag"></i>
+                {% else %}
+                  <i class="bi bi-palette"></i>
+                {% endif %}
+              </div>
+            {% endif %}
+            
+            <!-- Category Badge -->
+            <span class="category-badge">{{ product.get_product_type_display }}</span>
+          </div>
+          
+          <!-- Product Body -->
+          <div class="product-body">
+            
+            <!-- Product Name -->
+            <h3 class="product-name">
+              <a href="{% url 'marketplace:product-detail' product.slug %}">{{ product.title }}</a>
+            </h3>
+            
+            <!-- Description -->
+            <p class="product-description">
+              {{ product.description|default:product.tagline|default:"" }}
+            </p>
+            
+            <!-- Category-specific content -->
+            {% if product.product_type == 'digital' %}
+              <!-- Pricing Tiers -->
+              {% if product.pricing_plans.exists %}
+                <div class="pricing-tiers">
+                  {% for plan in product.pricing_plans.all|slice:":3" %}
+                    <span class="pricing-tier">{{ plan.name }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              
+            {% elif product.product_type == 'artwork' %}
+              <!-- Delivery Badge -->
+              <div class="delivery-badge">
+                <i class="bi bi-truck"></i>
+                Physical Delivery
+              </div>
+              
+            {% elif product.product_type == 'merch' %}
+              <!-- Delivery Badge -->
+              <div class="delivery-badge">
+                Ships Nationwide
+              </div>
+            {% endif %}
+            
+            <!-- Price -->
+            <div class="product-price">
+              {% if product.product_type == 'digital' %}
+                {% with plan=product.pricing_plans.first %}
+                  {% if plan %}
+                    <span class="price-from">from</span> KES {{ plan.price|floatformat:0 }}
+                  {% else %}
+                    Custom Pricing
+                  {% endif %}
+                {% endwith %}
+              {% elif product.price %}
+                KES {{ product.price|floatformat:0 }}
+              {% else %}
+                Free
+              {% endif %}
+            </div>
+          </div>
+          
+          <!-- CTA Section -->
+          <div class="cta-section">
+            {% if product.product_type == 'digital' %}
+              <!-- Digital Products CTA -->
+              <a href="{% url 'marketplace:request-demo' product.slug %}" class="cta-button cta-outline">
+                Request Demo
+              </a>
+              <a href="{% url 'marketplace:product-detail' product.slug %}" class="cta-button cta-ghost">
+                See More →
+              </a>
+              
+            {% elif product.product_type == 'artwork' %}
+              <!-- Artwork CTA -->
+              <button class="cta-button cta-primary" onclick="addToCart('{{ product.id }}')">
+                Add to Cart
+              </button>
+              <a href="{% url 'marketplace:product-detail' product.slug %}" class="cta-button cta-ghost">
+                See More →
+              </a>
+              
+            {% elif product.product_type == 'merch' %}
+              <!-- Merchandise CTA -->
+              <button class="cta-button cta-primary" onclick="addToCart('{{ product.id }}')">
+                Add to Cart
+              </button>
+              <a href="{% url 'marketplace:product-detail' product.slug %}" class="cta-button cta-ghost">
+                See More →
+              </a>
             {% endif %}
           </div>
-          <a href="{% url 'marketplace:product-detail' product.slug %}" class="btn-card btn-card-primary">
-            View <i class="bi bi-arrow-right"></i>
-          </a>
+          
         </div>
-      </article>
       {% empty %}
-      <div class="empty-state">
-        <i class="bi bi-search"></i>
-        <h3>No products found</h3>
-        <p>Try a different filter or check back soon.</p>
-      </div>
+        <div class="empty-state">
+          <i class="bi bi-search"></i>
+          <h3>No products found</h3>
+          <p>Try a different filter or check back soon.</p>
+        </div>
       {% endfor %}
+      
     </div>
-
-    <!-- Pagination -->
-    {% if has_pages %}
-    <div class="pagination-row">
-      {% if products.has_previous %}
-        <a href="?type={{ type_filter }}&page={{ products.previous_page_number }}" class="page-btn">
-          <i class="bi bi-chevron-left"></i>
-        </a>
-      {% endif %}
-      {% for num in products.paginator.page_range %}
-        <a href="?type={{ type_filter }}&page={{ num }}"
-           class="page-btn {% if num == products.number %}active{% endif %}">{{ num }}</a>
-      {% endfor %}
-      {% if products.has_next %}
-        <a href="?type={{ type_filter }}&page={{ products.next_page_number }}" class="page-btn">
-          <i class="bi bi-chevron-right"></i>
-        </a>
-      {% endif %}
-    </div>
-    {% endif %}
-
   </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const tabs = document.querySelectorAll('.category-tab');
+  const cards = document.querySelectorAll('.product-card');
+  
+  function filterProducts(categorySlug) {
+    cards.forEach(card => {
+      const cardCategory = card.getAttribute('data-category');
+      
+      if (categorySlug === 'all' || cardCategory === categorySlug) {
+        card.classList.add('visible');
+        card.classList.remove('hidden');
+      } else {
+        card.classList.remove('visible');
+        card.classList.add('hidden');
+      }
+    });
+  }
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      // Remove active class from all tabs
+      tabs.forEach(t => t.classList.remove('active'));
+      
+      // Add active class to clicked tab
+      this.classList.add('active');
+      
+      // Filter products
+      const category = this.getAttribute('data-category');
+      filterProducts(category);
+    });
+  });
+  
+  // Initialize with "all" selected
+  filterProducts('all');
+});
+
+// Cart functionality (placeholder - should be connected to existing cart system)
+function addToCart(productId) {
+  // This should integrate with existing cart system
+  console.log('Adding to cart:', productId);
+  // Call existing cart add function here
+}
+</script>
+
 {% endblock %}

@@ -1,1550 +1,1106 @@
+{% extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>About Us — DravTech</title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
-  <meta name="csrf-token" content="{{ csrf_token }}">
-  
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+{% block title %}About Us — DravTech{% endblock %}
 
-  <!-- Vendor CSS Files -->
-  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
-
-  <!-- Main CSS Files -->
-  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+{% block content %}
 
 <style>
-  /* ══════════════════════════════════════════════════
-     DESIGN SYSTEM
-  ══════════════════════════════════════════════════ */
-  :root {
-    --orange: #0a5be8;
-    --orange-light: #2b75ff;
-    --teal: #00C9A7;
-    --teal-dark: #00A887;
-    --ink: #236ede;
-    --ink-70: rgba(34, 78, 143, 0.7);
-    --ink-40: rgba(30, 82, 159, 0.4);
-    --ink-10: rgba(30, 82, 159, 0.08);
-    --surface: #FFFFFF;
-    --surface-soft: #F7F5F2;
-    --surface-card: #FFFFFF;
-    --border: rgba(30, 82, 159, 0.1);
-    --radius-sm: 10px;
-    --radius-md: 16px;
-    --radius-lg: 24px;
-    --radius-xl: 32px;
-    --font-display: 'Sora', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-    --shadow-card: 0 2px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
-    --shadow-elevated: 0 8px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
-    --shadow-hover: 0 20px 60px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.08);
-  }
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-  * { box-sizing: border-box; }
+/* ── Typography & Base ── */
+:root {
+  --brand-primary: #06b6d4;
+  --brand-primary-dark: #0891b2;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --border-color: #e5e7eb;
+  --bg-light: #f9fafb;
+  --bg-white: #ffffff;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
 
-  .about-page {
-    font-family: var(--font-body);
-    background: var(--surface-soft);
-    color: var(--ink);
-    overflow-x: hidden;
-  }
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg-white);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
 
-  /* ══════════════════════════════════════════════════
-     STICKY SIDE NAV (IBM SkillsBuild style)
-  ══════════════════════════════════════════════════ */
-  .about-layout {
-    display: flex;
-    min-height: 100vh;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 24px;
-    gap: 48px;
-  }
+/* ── Hero Section ── */
+.about-hero {
+  background-color: var(--bg-white);
+  padding: 80px 0 60px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
 
-  .about-sidenav {
-    width: 220px;
-    flex-shrink: 0;
-    padding-top: 80px;
-  }
+.about-hero h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  letter-spacing: -0.025em;
+}
 
-  .about-sidenav-inner {
-    position: sticky;
-    top: 80px;
-    padding: 24px 0;
-  }
+.about-hero p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 32px;
+  font-weight: 400;
+}
 
-  .sidenav-label {
-    font-family: var(--font-display);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-40);
-    margin-bottom: 16px;
-    padding-left: 16px;
-  }
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-top: 48px;
+}
 
-  .sidenav-link {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
-    border-radius: var(--radius-sm);
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--ink-70);
-    text-decoration: none;
-    transition: all 0.2s ease;
-    position: relative;
-    margin-bottom: 2px;
-  }
+.hero-stat {
+  text-align: center;
+}
 
-  .sidenav-link::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 0;
-    background: var(--orange);
-    border-radius: 0 2px 2px 0;
-    transition: height 0.2s ease;
-  }
+.hero-stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+  line-height: 1;
+  margin-bottom: 4px;
+}
 
-  .sidenav-link:hover,
-  .sidenav-link.active {
-    color: var(--ink);
-    background: var(--surface);
-    text-decoration: none;
-  }
+.hero-stat-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
 
-  .sidenav-link:hover::before,
-  .sidenav-link.active::before {
-    height: 24px;
-  }
+/* ── Section Headers ── */
+.section-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
 
-  .sidenav-link.active {
-    font-weight: 600;
-  }
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--brand-primary);
+  margin-bottom: 12px;
+}
 
-  /* ══════════════════════════════════════════════════
-     MAIN CONTENT
-  ══════════════════════════════════════════════════ */
-  .about-main {
-    flex: 1;
-    min-width: 0;
-    padding: 60px 0 120px;
-  }
+.section-eyebrow::before {
+  content: '';
+  width: 16px;
+  height: 2px;
+  background-color: var(--brand-primary);
+  border-radius: 1px;
+}
 
-  .about-section {
-    margin-bottom: 60px;
-    scroll-margin-top: 80px;
-  }
+.section-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  letter-spacing: -0.025em;
+}
 
-  /* ══════════════════════════════════════════════════
-     HERO
-  ══════════════════════════════════════════════════ */
-  .hero-block {
-    position: relative;
-    background: var(--ink);
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    padding: 72px 64px;
-    margin-bottom: 100px;
-  }
+.section-description {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
 
-  .hero-block::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("{% static 'assets/img/about/about-5.webp' %}");
-    background-size: cover;
-    background-position: center;
-    opacity: 0.25;
-  }
+/* ── Content Sections ── */
+.content-section {
+  padding: 80px 0;
+  background-color: var(--bg-white);
+}
 
-  .hero-block::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(13,17,23,0.85) 0%, rgba(13,17,23,0.5) 60%, transparent 100%);
-  }
+.content-section:nth-child(even) {
+  background-color: var(--bg-light);
+}
 
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    max-width: 640px;
-  }
+/* ── Mission & Vision ── */
+.mission-vision-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-top: 48px;
+}
 
-  .hero-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(232,80,10,0.2);
-    border: 1px solid rgba(232,80,10,0.4);
-    color: #FF8C5A;
-    font-family: var(--font-display);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 7px 14px;
-    border-radius: 50px;
-    margin-bottom: 24px;
-  }
+.mission-vision-card {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
 
-  .hero-block h1 {
-    font-family: var(--font-display);
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
-    font-weight: 800;
-    color: #fff;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    margin-bottom: 20px;
-  }
+.mission-vision-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
 
-  .hero-block h1 em {
-    font-style: normal;
-    color: var(--orange-light);
-  }
+.mission-vision-card.mission {
+  border-top: 3px solid var(--brand-primary);
+}
 
-  .hero-subtitle {
-    font-size: 1.05rem;
-    color: rgba(255,255,255,0.72);
-    line-height: 1.65;
-    margin-bottom: 36px;
-    font-weight: 300;
-  }
+.mission-vision-card.vision {
+  border-top: 3px solid #10b981;
+}
 
-  .hero-cta-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 1.25rem;
+  color: white;
+}
 
-  .btn-hero-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--teal);
-    color: #fff;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 0.9rem;
-    padding: 14px 28px;
-    border-radius: 50px;
-    text-decoration: none;
-    transition: all 0.25s ease;
-    box-shadow: 0 4px 20px rgba(0,201,167,0.35);
-  }
+.mission .card-icon {
+  background-color: var(--brand-primary);
+}
 
-  .btn-hero-primary:hover {
-    background: var(--teal-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0,201,167,0.45);
-    color: #fff;
-    text-decoration: none;
-  }
+.vision .card-icon {
+  background-color: #10b981;
+}
 
-  .btn-hero-ghost {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: rgba(255,255,255,0.8);
-    font-weight: 500;
-    font-size: 0.9rem;
-    padding: 14px 20px;
-    border-radius: 50px;
-    text-decoration: none;
-    border: 1px solid rgba(255,255,255,0.2);
-    transition: all 0.2s ease;
-  }
+.mission-vision-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
 
-  .btn-hero-ghost:hover {
-    color: #fff;
-    border-color: rgba(255,255,255,0.5);
-    background: rgba(255,255,255,0.08);
-    text-decoration: none;
-  }
+.mission-vision-card p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
 
-  .hero-stats {
-    position: absolute;
-    bottom: 36px;
-    right: 48px;
-    z-index: 2;
-    display: flex;
-    gap: 32px;
-  }
+/* ── Timeline ── */
+.timeline-container {
+  margin-top: 48px;
+  position: relative;
+}
 
-  .hero-stat {
-    text-align: right;
-  }
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--brand-primary) 0%, #10b981 100%);
+  transform: translateX(-50%);
+}
 
-  .hero-stat-num {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 800;
-    color: #fff;
-    line-height: 1;
-  }
+.timeline-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 48px;
+  position: relative;
+}
 
-  .hero-stat-num span {
-    color: var(--orange-light);
-  }
+.timeline-item:nth-child(odd) {
+  flex-direction: row;
+}
 
-  .hero-stat-label {
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.55);
-    margin-top: 4px;
-  }
+.timeline-item:nth-child(even) {
+  flex-direction: row-reverse;
+}
 
-  /* ══════════════════════════════════════════════════
-     SECTION HEADERS
-  ══════════════════════════════════════════════════ */
-  .section-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-display);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--orange);
-    margin-bottom: 14px;
-  }
+.timeline-content {
+  flex: 1;
+  max-width: 45%;
+}
 
-  .section-eyebrow::before {
-    content: '';
-    display: block;
-    width: 20px;
-    height: 2px;
-    background: var(--orange);
-    border-radius: 2px;
-  }
+.timeline-item:nth-child(odd) .timeline-content {
+  text-align: right;
+  padding-right: 32px;
+}
 
-  .section-title {
-    font-family: var(--font-display);
-    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-    font-weight: 800;
-    color: var(--ink);
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    margin-bottom: 16px;
-  }
+.timeline-item:nth-child(even) .timeline-content {
+  text-align: left;
+  padding-left: 32px;
+}
 
-  .section-desc {
-    font-size: 1rem;
-    color: var(--ink-70);
-    line-height: 1.65;
-    max-width: 680px;
-    margin-bottom: 48px;
-    font-weight: 300;
-  }
+.timeline-dot {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--bg-white);
+  border: 3px solid var(--brand-primary);
+  z-index: 2;
+}
 
-  /* ══════════════════════════════════════════════════
-     TIMELINE
-  ══════════════════════════════════════════════════ */
-  .timeline-wrap {
-    position: relative;
-    padding-left: 32px;
-  }
+.timeline-item:nth-child(even) .timeline-dot {
+  border-color: #10b981;
+}
 
-  .timeline-wrap::before {
-    content: '';
-    position: absolute;
-    left: 8px;
-    top: 8px;
-    bottom: 8px;
-    width: 2px;
-    background: linear-gradient(180deg, var(--orange) 0%, var(--teal) 100%);
-    border-radius: 2px;
-  }
+.timeline-card {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.2s ease;
+}
 
-  .t-step {
-    position: relative;
-    margin-bottom: 32px;
-  }
+.timeline-card:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-lg);
+}
 
-  .t-step::before {
-    content: '';
-    position: absolute;
-    left: -28px;
-    top: 20px;
-    width: 12px;
-    height: 12px;
-    background: var(--surface);
-    border: 3px solid var(--orange);
-    border-radius: 50%;
-    transition: border-color 0.2s;
-  }
+.timeline-year {
+  display: inline-block;
+  background-color: var(--bg-light);
+  color: var(--brand-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
 
-  .t-step:hover::before {
-    border-color: var(--teal);
-  }
+.timeline-item:nth-child(even) .timeline-year {
+  color: #10b981;
+}
 
-  .t-card {
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 24px 28px;
-    transition: all 0.25s ease;
-    box-shadow: var(--shadow-card);
-  }
+.timeline-card h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
 
-  .t-card:hover {
-    box-shadow: var(--shadow-elevated);
-    transform: translateX(4px);
-  }
+.timeline-card p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
 
-  .t-year {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--surface-soft);
-    border: 1px solid var(--border);
-    color: var(--orange);
-    font-family: var(--font-display);
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 5px 12px;
-    border-radius: 50px;
-    margin-bottom: 12px;
-  }
+/* ── Values Grid ── */
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
 
-  .t-card h3 {
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 8px;
-  }
+.value-card {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
 
-  .t-card p {
-    font-size: 0.88rem;
-    color: var(--ink-70);
-    line-height: 1.6;
-    margin: 0;
-  }
+.value-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand-primary), #10b981);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
 
-  /* ══════════════════════════════════════════════════
-     MISSION & VISION
-  ══════════════════════════════════════════════════ */
-  .mv-pair {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
+.value-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
 
-  .mv-card {
-    border-radius: var(--radius-lg);
-    padding: 40px 36px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-  }
+.value-card:hover::before {
+  transform: scaleX(1);
+}
 
-  .mv-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-hover);
-  }
+.value-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
 
-  .mv-card.mission-card {
-    background: var(--ink);
-    color: #fff;
-  }
+.value-card h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
 
-  .mv-card.vision-card {
-    background: var(--teal);
-    color: #fff;
-  }
+.value-card p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
 
-  .mv-card-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    color: #fff;
-    margin-bottom: 20px;
-  }
+/* ── Team Grid ── */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
 
-  .mv-card h2 {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 800;
-    margin-bottom: 12px;
-  }
+.team-card {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
 
-  .mv-card p {
-    font-size: 0.9rem;
-    line-height: 1.65;
-    opacity: 0.85;
-    margin: 0;
-  }
+.team-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
 
-  /* ══════════════════════════════════════════════════
-     VALUES
-  ══════════════════════════════════════════════════ */
-  .values-wrap {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 16px;
-  }
+.team-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  background-color: var(--bg-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--text-muted);
+  overflow: hidden;
+}
 
-  .value-card {
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 28px 24px;
-    transition: all 0.25s ease;
-    box-shadow: var(--shadow-card);
-    position: relative;
-    overflow: hidden;
-  }
+.team-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-  .value-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
-  }
+.team-role {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--brand-primary);
+  margin-bottom: 8px;
+}
 
-  .value-card:nth-child(1)::after { background: #E8500A; }
-  .value-card:nth-child(2)::after { background: #9333ea; }
-  .value-card:nth-child(3)::after { background: #16a34a; }
-  .value-card:nth-child(4)::after { background: #ea580c; }
-  .value-card:nth-child(5)::after { background: #0d9488; }
-  .value-card:nth-child(6)::after { background: #7c3aed; }
+.team-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
 
-  .value-card:hover {
-    box-shadow: var(--shadow-elevated);
-    transform: translateY(-3px);
-  }
+.team-bio {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
 
-  .value-card:hover::after {
-    transform: scaleX(1);
-  }
+.team-socials {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
 
-  .value-num {
-    font-family: var(--font-display);
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--ink-10);
-    line-height: 1;
-    margin-bottom: 12px;
-    letter-spacing: -0.03em;
-  }
+.team-socials a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--bg-light);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
 
-  .value-card h3 {
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 8px;
-  }
+.team-socials a:hover {
+  background-color: var(--brand-primary);
+  color: white;
+  border-color: var(--brand-primary);
+}
 
-  .value-card p {
-    font-size: 0.83rem;
-    color: var(--ink-70);
-    line-height: 1.55;
-    margin: 0;
-  }
+/* ── Projects Grid ── */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
 
-  /* ══════════════════════════════════════════════════
-     TEAM CARDS (Visionaries style)
-  ══════════════════════════════════════════════════ */
-  .team-wrap {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+.project-card {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.project-image {
+  height: 200px;
+  background-color: var(--bg-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover .project-image img {
+  transform: scale(1.05);
+}
+
+.project-content {
+  padding: 24px;
+}
+
+.project-content h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.project-content p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.project-tag {
+  background-color: var(--bg-light);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--brand-primary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: gap 0.2s ease;
+}
+
+.project-link:hover {
+  gap: 8px;
+  color: var(--brand-primary-dark);
+}
+
+/* ── Testimonials Grid ── */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.testimonial-card {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.quote-mark {
+  font-size: 3rem;
+  color: var(--brand-primary);
+  opacity: 0.2;
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  font-family: Georgia, serif;
+}
+
+.testimonial-content {
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-style: italic;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bg-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.author-info h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.author-info p {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Process Steps ── */
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.step-card {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.step-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.step-number {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--brand-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 auto 20px;
+}
+
+.step-card h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.step-card p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── CTA Section ── */
+.cta-section {
+  background-color: var(--text-primary);
+  color: white;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.cta-section p {
+  font-size: 1rem;
+  opacity: 0.8;
+  max-width: 500px;
+  margin: 0 auto 32px;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background-color: var(--brand-primary);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background-color: var(--brand-primary-dark);
+  color: white;
+  text-decoration: none;
+}
+
+.btn-outline {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-outline:hover {
+  border-color: white;
+  color: white;
+  text-decoration: none;
+}
+
+/* ── Responsive Design ── */
+@media (max-width: 1024px) {
+  .mission-vision-grid {
+    grid-template-columns: 1fr;
     gap: 24px;
   }
-
-  .team-card {
-    background: var(--surface-card);
-    border-radius: var(--radius-xl);
-    padding: 36px 24px 28px;
-    text-align: center;
-    box-shadow: var(--shadow-card);
-    border: 1px solid var(--border);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .team-card:hover {
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-6px);
-  }
-
-  /* Photo ring matching the Visionaries app */
-  .team-photo-wrap {
-    position: relative;
-    width: 116px;
-    height: 116px;
-    margin: 0 auto 20px;
-  }
-
-  .team-photo-ring {
-    position: absolute;
-    inset: -5px;
-    border-radius: 50%;
-    background: conic-gradient(var(--orange), #F7A35C, var(--orange-light), var(--orange));
-    animation: ringRotate 6s linear infinite;
-  }
-
-  @keyframes ringRotate { to { transform: rotate(360deg); } }
-
-  .team-photo-inner {
-    position: relative;
-    z-index: 1;
-    width: 116px;
-    height: 116px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 4px solid var(--surface-card);
-    background: var(--surface-soft);
-  }
-
-  .team-photo-inner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .placeholder-avatar {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.8rem;
-    color: var(--ink-40);
-  }
-
-  .online-dot {
-    position: absolute;
-    bottom: 6px;
-    right: 4px;
-    width: 16px;
-    height: 16px;
-    background: var(--teal);
-    border: 3px solid var(--surface-card);
-    border-radius: 50%;
-    z-index: 2;
-    animation: dotPulse 2.5s ease-in-out infinite;
-  }
-
-  @keyframes dotPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-  }
-
-  .team-role {
-    font-family: var(--font-display);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--orange);
-    margin-bottom: 6px;
-  }
-
-  .team-name {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--ink);
-    margin-bottom: 8px;
-    line-height: 1.25;
-  }
-
-  .team-divider {
-    width: 32px;
-    height: 2px;
-    background: linear-gradient(90deg, var(--orange), #F7A35C);
-    margin: 0 auto 10px;
-    border-radius: 2px;
-  }
-
-  .team-bio {
-    font-size: 0.82rem;
-    color: var(--ink-70);
-    line-height: 1.55;
-    margin-bottom: 18px;
-    font-weight: 300;
-  }
-
-  /* Expertise/Experience badges (Visionaries app style) */
-  .team-badges {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 18px;
-  }
-
-  .team-badge {
-    background: #FFF5F0;
-    border-radius: var(--radius-sm);
-    padding: 8px 10px;
-    text-align: left;
-  }
-
-  .team-badge-label {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--orange);
-    margin-bottom: 2px;
-  }
-
-  .team-badge-value {
-    font-family: var(--font-display);
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--ink);
-  }
-
-  .team-socials {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .team-socials a {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--surface-soft);
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--ink-70);
-    font-size: 0.85rem;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-
-  .team-socials a:hover {
-    background: var(--orange);
-    color: #fff;
-    border-color: var(--orange);
-    transform: translateY(-2px);
-  }
-
-  .btn-consultation {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    background: var(--teal);
-    color: #fff;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 0.82rem;
-    padding: 12px 20px;
-    border-radius: 50px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    text-decoration: none;
-    box-shadow: 0 4px 16px rgba(0,201,167,0.3);
-  }
-
-  .btn-consultation:hover {
-    background: var(--teal-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,201,167,0.4);
-    color: #fff;
-    text-decoration: none;
-  }
-
-  /* ══════════════════════════════════════════════════
-     HOW WE WORK
-  ══════════════════════════════════════════════════ */
-  .steps-wrap {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 16px;
-  }
-
-  .step-card {
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 28px 24px;
-    transition: all 0.25s ease;
-    box-shadow: var(--shadow-card);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .step-card:hover {
-    box-shadow: var(--shadow-elevated);
-    transform: translateY(-3px);
-  }
-
-  .step-num {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: #fff;
-    margin-bottom: 16px;
-  }
-
-  .step-card:nth-child(1) .step-num { background: var(--orange); }
-  .step-card:nth-child(2) .step-num { background: #9333ea; }
-  .step-card:nth-child(3) .step-num { background: var(--teal); }
-  .step-card:nth-child(4) .step-num { background: #f59e0b; }
-  .step-card:nth-child(5) .step-num { background: #3b82f6; }
-  .step-card:nth-child(6) .step-num { background: #ec4899; }
-
-  .step-card h3 {
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 8px;
-  }
-
-  .step-card p {
-    font-size: 0.83rem;
-    color: var(--ink-70);
-    line-height: 1.55;
-    margin: 0;
-  }
-
-  /* ══════════════════════════════════════════════════
-     PROJECTS
-  ══════════════════════════════════════════════════ */
-  .project-card {
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-card);
-    transition: all 0.25s ease;
-    height: 100%;
-    display: flex;
+  
+  .timeline-item:nth-child(odd),
+  .timeline-item:nth-child(even) {
     flex-direction: column;
   }
-
-  .project-card:hover {
-    box-shadow: var(--shadow-elevated);
-    transform: translateY(-4px);
+  
+  .timeline-content {
+    max-width: 100%;
+    text-align: left !important;
+    padding: 0 !important;
   }
-
-  .project-img-wrap {
-    height: 140px;
-    overflow: hidden;
-    position: relative;
-    background: var(--surface-soft);
-    flex-shrink: 0;
+  
+  .timeline-line {
+    left: 20px;
   }
-
-  .project-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.35s ease;
+  
+  .timeline-dot {
+    left: 20px;
   }
-
-  .project-card:hover .project-img-wrap img {
-    transform: scale(1.06);
+  
+  .timeline-item {
+    padding-left: 48px;
   }
+}
 
-  .project-body {
-    padding: 16px 18px;
-    flex: 1;
-    display: flex;
+@media (max-width: 768px) {
+  .about-hero {
+    padding: 60px 0 40px;
+  }
+  
+  .about-hero h1 {
+    font-size: 1.875rem;
+  }
+  
+  .hero-stats {
     flex-direction: column;
+    gap: 24px;
   }
-
-  .project-body h3 {
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 6px;
-    line-height: 1.3;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+  
+  .content-section {
+    padding: 60px 0;
   }
-
-  .project-body .summary {
-    font-size: 0.8rem;
-    color: var(--ink-70);
-    line-height: 1.5;
-    margin-bottom: 12px;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    flex: 1;
+  
+  .section-title {
+    font-size: 1.5rem;
   }
-
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-bottom: 12px;
+  
+  .values-grid,
+  .team-grid,
+  .projects-grid,
+  .testimonials-grid,
+  .process-steps {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
-
-  .project-tag {
-    background: var(--surface-soft);
-    border: 1px solid var(--border);
-    color: var(--ink-70);
-    border-radius: 50px;
-    padding: 2px 8px;
-    font-size: 0.68rem;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100px;
+  
+  .cta-section {
+    padding: 60px 0;
   }
-
-  .project-link {
-    font-family: var(--font-display);
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--orange);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    transition: gap 0.2s ease;
-  }
-
-  .project-link:hover {
-    gap: 8px;
-    color: var(--orange-light);
-    text-decoration: none;
-  }
-
-  /* ══════════════════════════════════════════════════
-     TESTIMONIALS
-  ══════════════════════════════════════════════════ */
-  .testimonial-card {
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 28px;
-    box-shadow: var(--shadow-card);
-    transition: all 0.25s ease;
-  }
-
-  .testimonial-card:hover {
-    box-shadow: var(--shadow-elevated);
-    transform: translateY(-3px);
-  }
-
-  .quote-mark {
-    font-size: 3rem;
-    line-height: 1;
-    color: var(--orange);
-    font-family: Georgia, serif;
-    margin-bottom: 12px;
-    opacity: 0.6;
-  }
-
-  .testimonial-card .quote {
-    font-size: 0.9rem;
-    color: var(--ink);
-    line-height: 1.65;
-    font-style: italic;
-    margin-bottom: 20px;
-    font-weight: 300;
-  }
-
-  .author-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-  }
-
-  .author-avatar-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--surface-soft);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    color: var(--ink-40);
-    flex-shrink: 0;
-  }
-
-  .author-name {
-    font-family: var(--font-display);
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--ink);
-    display: block;
-  }
-
-  .author-meta {
-    font-size: 0.75rem;
-    color: var(--ink-40);
-  }
-
-  /* ══════════════════════════════════════════════════
-     FINAL CTA
-  ══════════════════════════════════════════════════ */
-  .cta-block {
-    background: var(--ink);
-    border-radius: var(--radius-xl);
-    padding: 64px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cta-block::before {
-    content: '';
-    position: absolute;
-    top: -40%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(232,80,10,0.15) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .cta-block h2 {
-    font-family: var(--font-display);
-    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.02em;
-    margin-bottom: 14px;
-  }
-
-  .cta-block p {
-    font-size: 1rem;
-    color: rgba(255,255,255,0.65);
-    max-width: 480px;
-    margin: 0 auto 36px;
-    line-height: 1.6;
-    font-weight: 300;
-  }
-
+  
   .cta-buttons {
-    display: flex;
+    flex-direction: column;
     align-items: center;
+  }
+  
+  .btn-primary,
+  .btn-outline {
+    width: 100%;
     justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
   }
+}
 
-  .btn-cta-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--teal);
-    color: #fff;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 0.9rem;
-    padding: 14px 28px;
-    border-radius: 50px;
-    text-decoration: none;
-    transition: all 0.25s ease;
-    box-shadow: 0 4px 20px rgba(0,201,167,0.35);
+@media (max-width: 480px) {
+  .about-hero h1 {
+    font-size: 1.5rem;
   }
-
-  .btn-cta-primary:hover {
-    background: var(--teal-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0,201,167,0.45);
-    color: #fff;
-    text-decoration: none;
+  
+  .mission-vision-card,
+  .value-card,
+  .team-card,
+  .project-card,
+  .testimonial-card,
+  .step-card {
+    padding: 24px 20px;
   }
-
-  .btn-cta-ghost {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: rgba(255,255,255,0.75);
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: 0.9rem;
-    padding: 14px 24px;
-    border-radius: 50px;
-    text-decoration: none;
-    border: 1px solid rgba(255,255,255,0.2);
-    transition: all 0.2s ease;
+  
+  .content-section {
+    padding: 40px 0;
   }
-
-  .btn-cta-ghost:hover {
-    color: #fff;
-    border-color: rgba(255,255,255,0.5);
-    background: rgba(255,255,255,0.08);
-    text-decoration: none;
-  }
-
-  /* ══════════════════════════════════════════════════
-     BIO MODAL
-  ══════════════════════════════════════════════════ */
-  .bio-modal .modal-content {
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-hover);
-  }
-
-  .bio-modal .modal-header {
-    border-bottom: 1px solid var(--border);
-    padding: 20px 24px;
-  }
-
-  .bio-modal .modal-title {
-    font-family: var(--font-display);
-    font-weight: 700;
-    color: var(--ink);
-  }
-
-  .bio-modal .modal-body {
-    padding: 24px;
-    color: var(--ink-70);
-  }
-
-  /* ══════════════════════════════════════════════════
-     RESPONSIVE
-  ══════════════════════════════════════════════════ */
-  @media (max-width: 1024px) {
-    .about-sidenav { display: none; }
-    .about-layout { padding: 0 20px; }
-    .hero-stats { display: none; }
-  }
-
-  @media (max-width: 768px) {
-    .hero-block { padding: 48px 32px; border-radius: var(--radius-lg); }
-    .hero-block h1 { font-size: 2rem; }
-    .mv-pair { grid-template-columns: 1fr; }
-    .cta-block { padding: 44px 28px; border-radius: var(--radius-lg); }
-    .about-main { padding: 40px 0 80px; }
-  }
-
-  @media (max-width: 480px) {
-    .about-layout { padding: 0 16px; }
-    .hero-block { padding: 36px 22px; }
-    .team-wrap { grid-template-columns: 1fr; }
-  }
-
-  /* Scroll animation */
-  .fade-up {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .fade-up.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+}
 </style>
-</head>
-<body class="starter-page-page">
 
-<!-- Include Header -->
-{% include 'marketplace/partials/header.html' %}
-
-<!-- Main Content -->
-<main class="main-content">
-
-<div class="about-page">
-  <div class="about-layout">
-
-    <!-- ══════════════════════════
-         STICKY SIDE NAV
-    ══════════════════════════ -->
-    <nav class="about-sidenav">
-      <div class="about-sidenav-inner">
-        <div class="sidenav-label">On this page</div>
-        {% if about_page %}<a href="#about-hero" class="sidenav-link active"><i class="bi bi-house"></i> Overview</a>{% endif %}
-        {% if timeline_entries %}<a href="#about-timeline" class="sidenav-link"><i class="bi bi-clock-history"></i> Our Journey</a>{% endif %}
-        {% if about_page.mission_body %}<a href="#about-mission-vision" class="sidenav-link"><i class="bi bi-bullseye"></i> Mission & Vision</a>{% endif %}
-        {% if values %}<a href="#about-values" class="sidenav-link"><i class="bi bi-gem"></i> Our Values</a>{% endif %}
-        {% if team_members %}<a href="#about-team" class="sidenav-link"><i class="bi bi-people"></i> Our Team</a>{% endif %}
-        {% if projects %}<a href="#about-projects" class="sidenav-link"><i class="bi bi-folder-open"></i> Projects</a>{% endif %}
-        {% if testimonials %}<a href="#about-testimonials" class="sidenav-link"><i class="bi bi-chat-quote"></i> Testimonials</a>{% endif %}
-        {% if how_we_work_steps %}<a href="#about-how-we-work" class="sidenav-link"><i class="bi bi-diagram-3"></i> How We Work</a>{% endif %}
+<!-- Hero Section -->
+<section class="about-hero">
+  <div class="container">
+    <h1>About DravTech</h1>
+    <p>{{ about_page.hero_subtitle|default:"Building innovative technology solutions that drive meaningful impact across Kenya and beyond." }}</p>
+    
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-number">5+</div>
+        <div class="hero-stat-label">Years Active</div>
       </div>
-    </nav>
-
-    <!-- ══════════════════════════
-         MAIN CONTENT
-    ══════════════════════════ -->
-    <main class="about-main">
-
-      <!-- ── HERO ── -->
-      {% if about_page %}
-      <section id="about-hero" class="about-section">
-        <div class="hero-block">
-          <div class="hero-content">
-            <div class="hero-eyebrow">
-              <i class="bi bi-rocket-takeoff-fill"></i> About DravTech
-            </div>
-            <h1>{{ about_page.hero_headline }}</h1>
-            {% if about_page.hero_subtitle %}
-              <p class="hero-subtitle">{{ about_page.hero_subtitle }}</p>
-            {% endif %}
-            <div class="hero-cta-row">
-              {% if about_page.hero_cta_label %}
-                <a href="{{ about_page.hero_cta_url|default:'/request-demo/' }}" class="btn-hero-primary">
-                  <i class="bi bi-calendar-check-fill"></i> {{ about_page.hero_cta_label }}
-                </a>
-              {% endif %}
-              <a href="#about-team" class="btn-hero-ghost">
-                Meet the team <i class="bi bi-arrow-down"></i>
-              </a>
-            </div>
-          </div>
-          <div class="hero-stats">
-            <div class="hero-stat">
-              <div class="hero-stat-num">5<span>+</span></div>
-              <div class="hero-stat-label">Years Active</div>
-            </div>
-            <div class="hero-stat">
-              <div class="hero-stat-num">50<span>+</span></div>
-              <div class="hero-stat-label">Projects Delivered</div>
-            </div>
-            <div class="hero-stat">
-              <div class="hero-stat-num">30<span>+</span></div>
-              <div class="hero-stat-label">Happy Clients</div>
-            </div>
-          </div>
-        </div>
-      </section>
-      {% endif %}
-
-      <!-- ── TIMELINE ── -->
-      {% if timeline_entries %}
-      <section id="about-timeline" class="about-section fade-up">
-        <div class="section-eyebrow"><span>Our Story</span></div>
-        <h2 class="section-title">Our Journey</h2>
-        <p class="section-desc">How DravTech grew from a grassroots idea into a multidisciplinary company building impactful solutions across Kenya and beyond.</p>
-        <div class="timeline-wrap">
-          {% for item in timeline_entries %}
-          <div class="t-step">
-            <div class="t-card">
-              <div class="t-year">
-                <i class="bi bi-calendar-check"></i> {{ item.year_label }}
-              </div>
-              <h3>{{ item.title }}</h3>
-              <p>{{ item.description }}</p>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </section>
-      {% endif %}
-
-      <!-- ── MISSION & VISION ── -->
-      {% if about_page and about_page.mission_body %}
-      <section id="about-mission-vision" class="about-section fade-up">
-        <div class="section-eyebrow"><span>Purpose</span></div>
-        <h2 class="section-title">What Drives Us</h2>
-        <div class="mv-pair">
-          {% if about_page.mission_body %}
-          <div class="mv-card mission-card">
-            <div class="mv-card-icon"><i class="bi bi-bullseye"></i></div>
-            <h2>{{ about_page.mission_title|default:"Our Mission" }}</h2>
-            <p>{{ about_page.mission_body }}</p>
-          </div>
-          {% endif %}
-          {% if about_page.vision_body %}
-          <div class="mv-card vision-card">
-            <div class="mv-card-icon"><i class="bi bi-lightbulb-fill"></i></div>
-            <h2>{{ about_page.vision_title|default:"Our Vision" }}</h2>
-            <p>{{ about_page.vision_body }}</p>
-          </div>
-          {% endif %}
-        </div>
-      </section>
-      {% endif %}
-
-      <!-- ── VALUES ── -->
-      {% if values %}
-      <section id="about-values" class="about-section fade-up">
-        <div class="section-eyebrow"><span>Principles</span></div>
-        <h2 class="section-title">Our Values</h2>
-        <p class="section-desc">Principles that guide how we make decisions and build solutions that matter.</p>
-        <div class="values-wrap">
-          {% for value in values %}
-          <div class="value-card">
-            <div class="value-num">0{{ forloop.counter }}</div>
-            <h3>{{ value.title }}</h3>
-            <p>{{ value.description }}</p>
-          </div>
-          {% endfor %}
-        </div>
-      </section>
-      {% endif %}
-
-      <!-- ── TEAM ── -->
-      {% if team_members %}
-      <section id="about-team" class="about-section fade-up">
-        <div class="section-eyebrow"><span>The People</span></div>
-        <h2 class="section-title">Meet Our Team</h2>
-        <p class="section-desc">DravTech is powered by a passionate team of technology innovators, creative designers, strategic thinkers, and problem solvers across Kenya and beyond.</p>
-        <div class="team-wrap">
-          {% for member in team_members %}
-          <div class="team-card">
-            <div class="team-photo-wrap">
-              <div class="team-photo-ring"></div>
-              <div class="team-photo-inner">
-                {% if member.photo %}
-                  <img src="{{ member.photo.url }}" alt="{{ member.name }}">
-                {% else %}
-                  <div class="placeholder-avatar"><i class="bi bi-person-circle"></i></div>
-                {% endif %}
-              </div>
-              <div class="online-dot"></div>
-            </div>
-
-            <div class="team-role">{{ member.role }}</div>
-            <div class="team-name">{{ member.name }}</div>
-            <div class="team-divider"></div>
-
-            {% if member.bio %}
-              <p class="team-bio">{{ member.bio|truncatewords:16 }}</p>
-            {% endif %}
-
-            <div class="team-badges">
-              {% if member.specialty %}
-              <div class="team-badge">
-                <div class="team-badge-label">Expertise</div>
-                <div class="team-badge-value">{{ member.specialty|default:"Technology" }}</div>
-              </div>
-              {% endif %}
-              {% if member.experience %}
-              <div class="team-badge">
-                <div class="team-badge-label">Experience</div>
-                <div class="team-badge-value">{{ member.experience|default:"5+" }} Yrs</div>
-              </div>
-              {% endif %}
-            </div>
-
-            <div class="team-socials">
-              {% if member.linkedin %}<a href="{{ member.linkedin }}" target="_blank"><i class="bi bi-linkedin"></i></a>{% endif %}
-              {% if member.twitter %}<a href="{{ member.twitter }}" target="_blank"><i class="bi bi-twitter-x"></i></a>{% endif %}
-              {% if member.github %}<a href="{{ member.github }}" target="_blank"><i class="bi bi-github"></i></a>{% endif %}
-              {% if member.email %}<a href="mailto:{{ member.email }}"><i class="bi bi-envelope"></i></a>{% endif %}
-            </div>
-
-            <button class="btn-consultation" data-bs-toggle="modal" data-bs-target="#bioModal-{{ forloop.counter }}">
-              <i class="bi bi-person-lines-fill"></i> View Full Bio
-            </button>
-          </div>
-
-          <!-- Bio Modal -->
-          <div class="modal fade bio-modal" id="bioModal-{{ forloop.counter }}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">{{ member.name }}</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                  <p class="fw-bold mb-3" style="color:var(--orange);">{{ member.role }}</p>
-                  {% if member.bio %}
-                    <p>{{ member.bio }}</p>
-                  {% else %}
-                    <p style="color:var(--ink-40);">No bio available.</p>
-                  {% endif %}
-                  <div class="d-flex gap-2 mt-3">
-                    {% if member.linkedin %}<a href="{{ member.linkedin }}" class="btn btn-sm btn-outline-secondary" target="_blank"><i class="bi bi-linkedin me-1"></i>LinkedIn</a>{% endif %}
-                    {% if member.email %}<a href="mailto:{{ member.email }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-envelope me-1"></i>Email</a>{% endif %}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </section>
-      {% endif %}
-
-      <!-- ── PROJECTS ── -->
-      {% if projects %}
-      <section id="about-projects" class="about-section fade-up">
-        <div class="section-eyebrow"><span>Our Work</span></div>
-        <h2 class="section-title">Selected Projects</h2>
-        <p class="section-desc">A sample of work delivered across technology, media, design, and research.</p>
-        <div class="row g-4">
-          {% for project in projects %}
-          <div class="col-md-6 col-lg-4">
-            <div class="project-card">
-              {% if project.image %}
-              <div class="project-img-wrap">
-                <img src="{{ project.image.url }}" alt="{{ project.title }}">
-              </div>
-              {% endif %}
-              <div class="project-body">
-                <h3>{{ project.title }}</h3>
-                <p class="summary">{{ project.summary }}</p>
-                {% if project.related_services.all %}
-                <div class="project-tags">
-                  {% for service in project.related_services.all %}
-                    <span class="project-tag">{{ service.title }}</span>
-                  {% endfor %}
-                </div>
-                {% endif %}
-                {% if project.link %}
-                  <a href="{{ project.link }}" class="project-link">View Project <i class="bi bi-arrow-right"></i></a>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </section>
-      {% endif %}
-
-      <!-- ── TESTIMONIALS ── -->
-      {% if testimonials %}
-      <section id="about-testimonials" class="about-section fade-up">
-        <div class="section-eyebrow"><span>Social Proof</span></div>
-        <h2 class="section-title">What Our Partners Say</h2>
-        <p class="section-desc">Reflections from organizations who trusted DravTech to help design, build, and scale solutions.</p>
-        <div class="row g-4">
-          {% for t in testimonials %}
-          <div class="col-md-6 col-lg-4">
-            <div class="testimonial-card">
-              <div class="quote-mark">"</div>
-              <p class="quote">{{ t.quote }}</p>
-              <div class="author-row">
-                <div class="author-avatar-icon"><i class="bi bi-person-circle"></i></div>
-                <div>
-                  <span class="author-name">{% if t.is_anonymous or not t.author_name %}Anonymous{% else %}{{ t.author_name }}{% endif %}</span>
-                  <span class="author-meta">
-                    {% if t.role %}{{ t.role }}{% endif %}
-                    {% if t.organization %}{% if t.role %} · {% endif %}{{ t.organization }}{% endif %}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </section>
-      {% endif %}
-
-      <!-- ── HOW WE WORK ── -->
-      {% if how_we_work_steps %}
-      <section id="about-how-we-work" class="about-section fade-up">
-        <div class="section-eyebrow"><span>Process</span></div>
-        <h2 class="section-title">{{ about_page.how_we_work_title|default:"How We Work" }}</h2>
-        {% if about_page and about_page.how_we_work_intro %}
-          <p class="section-desc">{{ about_page.how_we_work_intro }}</p>
-        {% endif %}
-        <div class="steps-wrap">
-          {% for step in how_we_work_steps %}
-          <div class="step-card">
-            <div class="step-num">{{ step.step_number }}</div>
-            <h3>{{ step.title }}</h3>
-            <p>{{ step.description }}</p>
-          </div>
-          {% endfor %}
-        </div>
-      </section>
-      {% endif %}
-
-      <!-- ── FINAL CTA ── -->
-      {% if about_page %}
-      <section id="about-cta" class="about-section fade-up">
-        <div class="cta-block">
-          <h2>{{ about_page.final_cta_headline|default:"Ready to Work Together?" }}</h2>
-          <p>{{ about_page.final_cta_subtext|default:"Let's discuss how we can help you build innovative solutions for your organization." }}</p>
-          <div class="cta-buttons">
-            <a href="{{ about_page.final_cta_url|default:'/contact/' }}" class="btn-cta-primary">
-              <i class="bi bi-chat-dots-fill"></i> {{ about_page.final_cta_label|default:"Get in Touch" }}
-            </a>
-            <a href="{% url 'services_list' %}" class="btn-cta-ghost">
-              <i class="bi bi-grid"></i> Explore Services
-            </a>
-          </div>
-        </div>
-      </section>
-      {% endif %}
-
-    </main>
+      <div class="hero-stat">
+        <div class="hero-stat-number">50+</div>
+        <div class="hero-stat-label">Projects Delivered</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-number">30+</div>
+        <div class="hero-stat-label">Happy Clients</div>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
-<script>
-// Sticky sidenav active state
-const sections = document.querySelectorAll('.about-section[id]');
-const navLinks = document.querySelectorAll('.sidenav-link');
+<!-- Mission & Vision Section -->
+{% if about_page and about_page.mission_body %}
+<section class="content-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Purpose</div>
+      <h2 class="section-title">What Drives Us</h2>
+      <p class="section-description">Our core purpose and vision for the future of technology in Africa.</p>
+    </div>
+    
+    <div class="mission-vision-grid">
+      {% if about_page.mission_body %}
+      <div class="mission-vision-card mission">
+        <div class="card-icon">
+          <i class="bi bi-bullseye"></i>
+        </div>
+        <h3>{{ about_page.mission_title|default:"Our Mission" }}</h3>
+        <p>{{ about_page.mission_body }}</p>
+      </div>
+      {% endif %}
+      
+      {% if about_page.vision_body %}
+      <div class="mission-vision-card vision">
+        <div class="card-icon">
+          <i class="bi bi-lightbulb-fill"></i>
+        </div>
+        <h3>{{ about_page.vision_title|default:"Our Vision" }}</h3>
+        <p>{{ about_page.vision_body }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      navLinks.forEach(l => l.classList.remove('active'));
-      const active = document.querySelector(`.sidenav-link[href="#${entry.target.id}"]`);
-      if (active) active.classList.add('active');
-    }
-  });
-}, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+<!-- Timeline Section -->
+{% if timeline_entries %}
+<section class="content-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Our Story</div>
+      <h2 class="section-title">Our Journey</h2>
+      <p class="section-description">How DravTech grew from a grassroots idea into a multidisciplinary technology company.</p>
+    </div>
+    
+    <div class="timeline-container">
+      <div class="timeline-line"></div>
+      {% for item in timeline_entries %}
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <div class="timeline-card">
+            <div class="timeline-year">{{ item.year_label }}</div>
+            <h4>{{ item.title }}</h4>
+            <p>{{ item.description }}</p>
+          </div>
+        </div>
+        <div class="timeline-dot"></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
-sections.forEach(s => observer.observe(s));
+<!-- Values Section -->
+{% if values %}
+<section class="content-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Principles</div>
+      <h2 class="section-title">Our Values</h2>
+      <p class="section-description">The core principles that guide how we build solutions and serve our clients.</p>
+    </div>
+    
+    <div class="values-grid">
+      {% for value in values %}
+      <div class="value-card">
+        <div class="value-number">0{{ forloop.counter }}</div>
+        <h3>{{ value.title }}</h3>
+        <p>{{ value.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
-// Scroll fade-up
-const fadeEls = document.querySelectorAll('.fade-up');
-const fadeObs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      fadeObs.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.1 });
-fadeEls.forEach(el => fadeObs.observe(el));
-</script>
+<!-- Team Section -->
+{% if team_members %}
+<section class="content-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">The People</div>
+      <h2 class="section-title">Meet Our Team</h2>
+      <p class="section-description">Passionate technology innovators, creative designers, and strategic problem solvers.</p>
+    </div>
+    
+    <div class="team-grid">
+      {% for member in team_members %}
+      <div class="team-card">
+        <div class="team-photo">
+          {% if member.photo %}
+            <img src="{{ member.photo.url }}" alt="{{ member.name }}">
+          {% else %}
+            <i class="bi bi-person-circle"></i>
+          {% endif %}
+        </div>
+        
+        <div class="team-role">{{ member.role }}</div>
+        <div class="team-name">{{ member.name }}</div>
+        
+        {% if member.bio %}
+          <p class="team-bio">{{ member.bio|truncatewords:16 }}</p>
+        {% endif %}
+        
+        <div class="team-socials">
+          {% if member.linkedin %}<a href="{{ member.linkedin }}" target="_blank"><i class="bi bi-linkedin"></i></a>{% endif %}
+          {% if member.twitter %}<a href="{{ member.twitter }}" target="_blank"><i class="bi bi-twitter-x"></i></a>{% endif %}
+          {% if member.github %}<a href="{{ member.github }}" target="_blank"><i class="bi bi-github"></i></a>{% endif %}
+          {% if member.email %}<a href="mailto:{{ member.email }}"><i class="bi bi-envelope"></i></a>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
-</div>
-</div>
+<!-- Projects Section -->
+{% if projects %}
+<section class="content-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Our Work</div>
+      <h2 class="section-title">Selected Projects</h2>
+      <p class="section-description">A sample of innovative solutions delivered across technology, media, and design.</p>
+    </div>
+    
+    <div class="projects-grid">
+      {% for project in projects %}
+      <div class="project-card">
+        {% if project.image %}
+        <div class="project-image">
+          <img src="{{ project.image.url }}" alt="{{ project.title }}">
+        </div>
+        {% endif %}
+        
+        <div class="project-content">
+          <h3>{{ project.title }}</h3>
+          <p>{{ project.summary }}</p>
+          
+          {% if project.related_services.all %}
+          <div class="project-tags">
+            {% for service in project.related_services.all %}
+              <span class="project-tag">{{ service.title }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          
+          {% if project.link %}
+            <a href="{{ project.link }}" class="project-link">
+              View Project <i class="bi bi-arrow-right"></i>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
-<!-- Include Footer -->
-{% include 'marketplace/partials/footer.html' %}
+<!-- Testimonials Section -->
+{% if testimonials %}
+<section class="content-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Social Proof</div>
+      <h2 class="section-title">What Our Partners Say</h2>
+      <p class="section-description">Reflections from organizations who trusted DravTech with their technology needs.</p>
+    </div>
+    
+    <div class="testimonials-grid">
+      {% for t in testimonials %}
+      <div class="testimonial-card">
+        <div class="quote-mark">"</div>
+        <p class="testimonial-content">{{ t.quote }}</p>
+        
+        <div class="testimonial-author">
+          <div class="author-avatar">
+            <i class="bi bi-person-circle"></i>
+          </div>
+          <div class="author-info">
+            <h4>{% if t.is_anonymous or not t.author_name %}Anonymous{% else %}{{ t.author_name }}{% endif %}</h4>
+            <p>
+              {% if t.role %}{{ t.role }}{% endif %}
+              {% if t.organization %}{% if t.role %} · {% endif %}{{ t.organization }}{% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
-</main>
-</body>
-</html>
+<!-- Process Section -->
+{% if how_we_work_steps %}
+<section class="content-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Process</div>
+      <h2 class="section-title">{{ about_page.how_we_work_title|default:"How We Work" }}</h2>
+      {% if about_page and about_page.how_we_work_intro %}
+        <p class="section-description">{{ about_page.how_we_work_intro }}</p>
+      {% endif %}
+    </div>
+    
+    <div class="process-steps">
+      {% for step in how_we_work_steps %}
+      <div class="step-card">
+        <div class="step-number">{{ step.step_number }}</div>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+{% if about_page %}
+<section class="cta-section">
+  <div class="container">
+    <h2>{{ about_page.final_cta_headline|default:"Ready to Work Together?" }}</h2>
+    <p>{{ about_page.final_cta_subtext|default:"Let's discuss how we can help you build innovative solutions for your organization." }}</p>
+    
+    <div class="cta-buttons">
+      <a href="{{ about_page.final_cta_url|default:'/contact/' }}" class="btn-primary">
+        <i class="bi bi-chat-dots-fill"></i> {{ about_page.final_cta_label|default:"Get in Touch" }}
+      </a>
+      <a href="{% url 'services_list' %}" class="btn-outline">
+        <i class="bi bi-grid"></i> Explore Services
+      </a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

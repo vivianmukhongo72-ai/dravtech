@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-0q5nbyy#p^a!kyc!o!aum-6eda0@a@cex1(7xj+hxh=(0k(a&t"
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-0q5nbyy#p^a!kyc!o!aum-6eda0@a@cex1(7xj+hxh=(0k(a&t')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
 
 
 # Application definition
@@ -130,14 +131,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Email Configuration
 # https://docs.djangoproject.com/en/4.2/topics/email/
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # Change to your SMTP server
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'vivmukhongo@gmail.com'  # Change to your email
-EMAIL_HOST_PASSWORD = 'radf twsa vxly cjvq'  # Change to your app password
-DEFAULT_FROM_EMAIL = 'vivmukhongo@gmail.com'
-DEFAULT_CONTACT_EMAIL = 'vivmukhongo@gmail.com'
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='vivmukhongo@gmail.com')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='vivmukhongo@gmail.com')
+DEFAULT_CONTACT_EMAIL = config('DEFAULT_CONTACT_EMAIL', default='vivmukhongo@gmail.com')
+ADMIN_EMAIL = config('ADMIN_EMAIL', default='admin@dravtech.com')
 
 # Email Templates
-EMAIL_SUBJECT_PREFIX = '[DRAVTECH] '
+EMAIL_SUBJECT_PREFIX = config('EMAIL_SUBJECT_PREFIX', default='[DRAVTECH] ')

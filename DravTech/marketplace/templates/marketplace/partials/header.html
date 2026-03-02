@@ -7,59 +7,46 @@
   <meta name="csrf-token" content="{{ csrf_token }}">
 {% load static %}
   
-  <!-- Global Blue Gradient Background -->
+  <!-- Clean Light Theme Styling -->
   <style>
     :root {
-      --dravtech-primary: #2563eb;
-      --dravtech-primary-dark: #1d4ed8;
+      --dravtech-primary: #06b6d4;
+      --dravtech-primary-dark: #0891b2;
       --dravtech-secondary: #f59e0b;
-      --dravtech-blue-light: #dbeafe;
-      --dravtech-blue-medium: #93c5fd;
-      --dravtech-blue-dark: #1e40af;
-      --dravtech-blue-darker: #1e3a8a;
+      --dravtech-blue-light: #f0f9ff;
+      --dravtech-blue-medium: #e0f2fe;
+      --dravtech-blue-dark: #0284c7;
+      --dravtech-blue-darker: #0369a1;
     }
     
     body {
-      background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 25%, #e0f2fe 50%, #f0f9ff 75%, #f8fafc 100%) !important;
+      background-color: #f9fafb !important;
       min-height: 100vh;
       position: relative;
     }
     
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(37, 99, 235, 0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
-      pointer-events: none;
-      z-index: -1;
-    }
-    
     /* Navigation styling */
     .navbar {
-      background: linear-gradient(135deg, rgba(30, 58, 138, 0.95) 0%, rgba(30, 64, 175, 0.95) 50%, rgba(37, 99, 235, 0.95) 100%) !important;
-      backdrop-filter: blur(10px) !important;
-      box-shadow: 0 4px 20px rgba(30, 58, 138, 0.2) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      background-color: #ffffff !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+      border-bottom: 1px solid #e5e7eb !important;
     }
     
     .navbar-brand {
-      color: white !important;
+      color: #111827 !important;
       font-weight: 700;
       font-size: 1.5rem;
     }
     
     .navbar-nav .nav-link {
-      color: rgba(255, 255, 255, 0.9) !important;
+      color: #6b7280 !important;
       font-weight: 500;
       transition: color 0.3s ease;
       position: relative;
     }
     
     .navbar-nav .nav-link:hover {
-      color: white !important;
+      color: var(--dravtech-primary) !important;
     }
     
     .navbar-nav .nav-link::after {
@@ -70,7 +57,7 @@
       transform: translateX(-50%);
       width: 0;
       height: 2px;
-      background: white;
+      background: var(--dravtech-primary);
       transition: width 0.3s ease;
     }
     
@@ -79,7 +66,7 @@
     }
     
     .navbar-nav .nav-link.active {
-      color: white !important;
+      color: var(--dravtech-primary) !important;
     }
     
     .navbar-nav .nav-link.active::after {
@@ -88,34 +75,33 @@
     
     /* Dropdown menu styling */
     .dropdown-menu {
-      background: linear-gradient(135deg, rgba(30, 58, 138, 0.98) 0%, rgba(37, 99, 235, 0.98) 100%) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
-      box-shadow: 0 8px 32px rgba(30, 58, 138, 0.3) !important;
-      backdrop-filter: blur(10px) !important;
+      background-color: #ffffff !important;
+      border: 1px solid #e5e7eb !important;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
     }
     
     .dropdown-item {
-      color: rgba(255, 255, 255, 0.9) !important;
+      color: #374151 !important;
       transition: all 0.3s ease;
     }
     
     .dropdown-item:hover {
-      background: rgba(255, 255, 255, 0.1) !important;
-      color: white !important;
+      background-color: #f9fafb !important;
+      color: var(--dravtech-primary) !important;
     }
     
     /* Mobile menu styling */
     .navbar-toggler {
-      border: 1px solid rgba(255, 255, 255, 0.3) !important;
-      color: white !important;
+      border: 1px solid #d1d5db !important;
+      color: #6b7280 !important;
     }
     
     .navbar-toggler:focus {
-      box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25) !important;
+      box-shadow: 0 0 0 0.25rem rgba(6, 182, 212, 0.25) !important;
     }
     
     .navbar-toggler-icon {
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28107, 114, 128, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
     }
     
     /* Content area styling */
@@ -127,33 +113,38 @@
     
     /* Card styling for consistency */
     .card {
-      background: rgba(255, 255, 255, 0.95) !important;
-      backdrop-filter: blur(10px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.3) !important;
-      box-shadow: 0 4px 20px rgba(30, 58, 138, 0.1) !important;
+      background: #ffffff !important;
+      border: 1px solid #e5e7eb !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
     }
     
     /* Button styling */
     .btn-primary {
-      background: linear-gradient(135deg, var(--dravtech-primary), var(--dravtech-primary-dark)) !important;
+      background-color: var(--dravtech-primary) !important;
       border: none !important;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+      box-shadow: 0 1px 3px rgba(6, 182, 212, 0.3) !important;
     }
     
     .btn-primary:hover {
-      background: linear-gradient(135deg, var(--dravtech-primary-dark), var(--dravtech-primary)) !important;
-      transform: translateY(-2px) !important;
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4) !important;
+      background-color: var(--dravtech-primary-dark) !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 4px 6px rgba(6, 182, 212, 0.4) !important;
+    }
+    
+    /* Cart count badge */
+    .cart-count {
+      background-color: var(--dravtech-primary) !important;
+      color: white !important;
     }
     
     /* Responsive adjustments */
     @media (max-width: 768px) {
       body {
-        background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 30%, #e0f2fe 70%, #f8fafc 100%) !important;
+        background-color: #f9fafb !important;
       }
       
       .navbar {
-        background: linear-gradient(135deg, rgba(30, 58, 138, 0.98) 0%, rgba(37, 99, 235, 0.98) 100%) !important;
+        background-color: #ffffff !important;
       }
     }
   </style>

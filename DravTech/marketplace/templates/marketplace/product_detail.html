@@ -1,581 +1,40 @@
+{% extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ product.title }} — DravTech</title>
-  <meta name="description" content="{{ product.description|truncatechars:160 }}">
-  <meta name="csrf-token" content="{{ csrf_token }}">
-  
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
-
-  <!-- Main CSS Files -->
-  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
-  
-  <style>
-    /* ── Product Detail Page Styling ── */
-    body {
-      background: #f8fafc;
-      font-family: 'DM Sans', sans-serif;
-      color: #1e293b;
-    }
-
-    .product-detail-page {
-      min-height: 100vh;
-      background: #f8fafc;
-    }
-
-    /* Breadcrumb */
-    .breadcrumb {
-      background: white;
-      padding: 20px 0;
-      border-bottom: 1px solid #e2e8f0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-
-    .breadcrumb-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      color: #64748b;
-    }
-
-    .breadcrumb-inner a {
-      color: #2563eb;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .breadcrumb-inner a:hover {
-      color: #1d4ed8;
-    }
-
-    .breadcrumb-inner .separator {
-      color: #cbd5e1;
-    }
-
-    /* Product Hero Section */
-    .product-hero {
-      background: white;
-      padding: 60px 0;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .hero-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-    }
-
-    @media (max-width: 768px) {
-      .hero-inner {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-    }
-
-    .hero-content h1 {
-      font-family: 'Sora', sans-serif;
-      font-size: 3rem;
-      font-weight: 800;
-      color: #1e293b;
-      margin-bottom: 20px;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
-
-    @media (max-width: 768px) {
-      .hero-content h1 {
-        font-size: 2.2rem;
-      }
-    }
-
-    .hero-content .product-type {
-      display: inline-block;
-      background: #2563eb;
-      color: white;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 20px;
-    }
-
-    .hero-content .description {
-      font-size: 1.1rem;
-      color: #64748b;
-      line-height: 1.6;
-      margin-bottom: 32px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 28px;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: white;
-      text-decoration: none;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 1rem;
-      font-family: 'Sora', sans-serif;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
-      color: white;
-    }
-
-    .btn-outline {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      background: transparent;
-      color: #64748b;
-      text-decoration: none;
-      border: 2px solid #e2e8f0;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
-    }
-
-    .btn-outline:hover {
-      background: white;
-      border-color: #2563eb;
-      color: #2563eb;
-    }
-
-    .hero-image {
-      position: relative;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-      background: #f8fafc;
-      min-height: 400px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .hero-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .hero-image-placeholder {
-      font-size: 6rem;
-      color: #cbd5e1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Content Sections */
-    .content-section {
-      padding: 80px 0;
-    }
-
-    .content-section:nth-child(even) {
-      background: white;
-    }
-
-    .section-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    .section-title {
-      font-family: 'Sora', sans-serif;
-      font-size: 2rem;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-
-    .section-subtitle {
-      font-size: 1.1rem;
-      color: #64748b;
-      text-align: center;
-      margin-bottom: 48px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* Features Grid */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 32px;
-      margin-bottom: 48px;
-    }
-
-    .feature-card {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 32px;
-      text-align: center;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-    }
-
-    .feature-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      border-color: #2563eb;
-    }
-
-    .feature-icon {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1.5rem;
-      margin: 0 auto 20px;
-    }
-
-    .feature-title {
-      font-family: 'Sora', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 12px;
-    }
-
-    .feature-description {
-      color: #64748b;
-      line-height: 1.6;
-    }
-
-    /* Pricing Section */
-    .pricing-section {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      color: white;
-      padding: 80px 0;
-    }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 32px;
-      margin: 0 auto;
-      max-width: 1200px;
-      padding: 0 20px;
-    }
-
-    .pricing-card {
-      background: white;
-      border: 2px solid #e2e8f0;
-      border-radius: 20px;
-      padding: 40px 32px;
-      text-align: center;
-      position: relative;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-
-    .pricing-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-      border-color: #2563eb;
-    }
-
-    .pricing-card.popular {
-      border-color: #2563eb;
-      box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
-      transform: scale(1.05);
-    }
-
-    .pricing-card.popular:hover {
-      transform: scale(1.05) translateY(-8px);
-      box-shadow: 0 16px 48px rgba(37, 99, 235, 0.4);
-    }
-
-    .popular-badge {
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: white;
-      padding: 6px 20px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .plan-name {
-      font-family: 'Sora', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 16px;
-    }
-
-    .plan-price {
-      margin-bottom: 8px;
-    }
-
-    .price-amount {
-      font-family: 'Sora', sans-serif;
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: #2563eb;
-    }
-
-    .price-period {
-      color: #64748b;
-      font-size: 1rem;
-    }
-
-    .plan-description {
-      color: #64748b;
-      margin-bottom: 24px;
-      font-size: 0.95rem;
-    }
-
-    .plan-features {
-      text-align: left;
-      margin-bottom: 32px;
-    }
-
-    .feature-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-      color: #374151;
-    }
-
-    .feature-item i {
-      color: #10b981;
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-
-    .plan-action .btn {
-      width: 100%;
-      padding: 16px 24px;
-      font-size: 1rem;
-      font-weight: 700;
-      border-radius: 12px;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .plan-action .btn-primary {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: white;
-      border: none;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-    }
-
-    .plan-action .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
-    }
-
-    /* Related Products */
-    .related-products {
-      background: white;
-      padding: 80px 0;
-    }
-
-    .related-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 32px;
-      margin-top: 48px;
-    }
-
-    .related-card {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-    }
-
-    .related-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      border-color: #2563eb;
-    }
-
-    .related-image {
-      height: 200px;
-      background: #f1f5f9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      color: #cbd5e1;
-    }
-
-    .related-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .related-content {
-      padding: 24px;
-    }
-
-    .related-title {
-      font-family: 'Sora', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 8px;
-    }
-
-    .related-type {
-      color: #64748b;
-      font-size: 0.85rem;
-      margin-bottom: 16px;
-    }
-
-    .related-price {
-      font-family: 'Sora', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #2563eb;
-      margin-bottom: 16px;
-    }
-
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-      .hero-content h1 {
-        font-size: 2rem;
-      }
-      
-      .hero-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      
-      .btn-primary,
-      .btn-outline {
-        width: 100%;
-        justify-content: center;
-      }
-      
-      .pricing-grid {
-        grid-template-columns: 1fr;
-        gap: 24px;
-      }
-      
-      .pricing-card {
-        padding: 32px 24px;
-      }
-      
-      .pricing-card.popular {
-        transform: none;
-      }
-      
-      .pricing-card.popular:hover {
-        transform: translateY(-4px);
-      }
-      
-      .features-grid {
-        grid-template-columns: 1fr;
-        gap: 24px;
-      }
-      
-      .related-grid {
-        grid-template-columns: 1fr;
-        gap: 24px;
-      }
-    }
-  </style>
-</head>
-<body class="starter-page-page">
-
-<!-- Include Header -->
-{% include 'marketplace/partials/header.html' %}
-
-<!-- Main Content -->
-<main class="main-content">
-  --dravtech-success: #10b981;
-  --dravtech-danger: #ef4444;
-  --dravtech-dark: #1f2937;
-  --dravtech-darker: #111827;
-  --dravtech-light: #f8fafc;
-  --dravtech-lighter: #f1f5f9;
-  --dravtech-border: #e2e8f0;
-  --dravtech-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --dravtech-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+{% block title %}{{ product.title }} — DravTech{% endblock %}
+
+{% block content %}
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* ── Typography & Base ── */
+:root {
+  --brand-primary: #06b6d4;
+  --brand-primary-dark: #0891b2;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --border-color: #e5e7eb;
+  --bg-light: #f9fafb;
+  --bg-white: #ffffff;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 body {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, var(--dravtech-light) 0%, var(--dravtech-lighter) 100%);
-  color: var(--dravtech-dark);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg-white);
+  color: var(--text-primary);
   line-height: 1.6;
 }
 
-/* Breadcrumb */
+/* ── Breadcrumb ── */
 .breadcrumb-bar {
-  background: white;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--dravtech-border);
+  background-color: var(--bg-white);
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .breadcrumb-bar .container {
@@ -585,61 +44,49 @@ body {
 }
 
 .breadcrumb-bar a {
-  color: #64748b;
+  color: var(--text-secondary);
   text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.3s ease;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
 }
 
 .breadcrumb-bar a:hover {
-  color: var(--dravtech-primary);
+  color: var(--brand-primary);
 }
 
 .breadcrumb-bar .sep {
   margin: 0 8px;
-  color: #cbd5e1;
+  color: var(--text-muted);
 }
 
 .breadcrumb-bar .cur {
-  color: var(--dravtech-dark);
-  font-weight: 600;
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
-/* Hero Section */
-.product-hero {
+/* ── Product Detail Section ── */
+.product-detail-section {
   padding: 60px 0;
-  background: white;
+  background-color: var(--bg-light);
 }
 
-.product-hero .container {
+.product-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-}
-
-@media (max-width: 768px) {
-  .hero-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-}
-
-/* Product Image Card */
+/* ── Product Image Card ── */
 .product-image-card {
-  background: white;
-  border-radius: 16px;
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: var(--dravtech-shadow-lg);
   position: relative;
   aspect-ratio: 4/3;
-  border: 1px solid var(--dravtech-border);
 }
 
 .product-image-card img {
@@ -648,237 +95,148 @@ body {
   object-fit: cover;
 }
 
-.product-image-card .no-image {
+.product-image-placeholder {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--dravtech-light), var(--dravtech-lighter));
-  font-size: 4rem;
-  color: #94a3b8;
+  background-color: #f3f4f6;
+  color: var(--text-muted);
+  font-size: 3rem;
 }
 
-.product-badge {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  padding: 8px 16px;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+/* ── Product Info Card ── */
+.product-info-card {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-meta {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
-.badge-digital {
-  background: rgba(37, 99, 235, 0.1);
-  color: var(--dravtech-primary);
-  border: 1px solid rgba(37, 99, 235, 0.2);
-}
-
-.badge-merch {
-  background: rgba(245, 158, 11, 0.1);
-  color: var(--dravtech-secondary);
-  border: 1px solid rgba(245, 158, 11, 0.2);
-}
-
-.badge-artwork {
-  background: rgba(16, 185, 129, 0.1);
-  color: var(--dravtech-success);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-}
-
-/* Product Info Card */
-.product-info-card {
-  background: white;
-  border-radius: 16px;
-  padding: 40px;
-  box-shadow: var(--dravtech-shadow);
-  border: 1px solid var(--dravtech-border);
-}
-
-.product-type {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.product-type-badge {
+  background-color: #f3f4f6;
+  color: var(--brand-primary);
   padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-bottom: 16px;
+  border-radius: 20px;
+  font-size: 0.625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.featured-badge {
+  background-color: #fef3c7;
+  color: #f59e0b;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.625rem;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .product-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  color: var(--dravtech-dark);
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
   margin-bottom: 16px;
-  line-height: 1.1;
-}
-
-@media (max-width: 768px) {
-  .product-title {
-    font-size: 2.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .product-title {
-    font-size: 2rem;
-  }
+  line-height: 1.2;
 }
 
 .product-tagline {
-  font-size: 1.3rem;
-  color: #64748b;
-  margin-bottom: 28px;
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
   line-height: 1.6;
 }
 
-@media (max-width: 768px) {
-  .product-tagline {
-    font-size: 1.1rem;
-  }
-}
-
-/* Price Section */
-.price-card {
-  background: linear-gradient(135deg, var(--dravtech-light), var(--dravtech-lighter));
-  border: 2px solid var(--dravtech-border);
-  border-radius: 12px;
-  padding: 24px;
+.product-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--brand-primary);
   margin-bottom: 24px;
 }
 
-.price-main {
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: var(--dravtech-primary);
-  margin-bottom: 6px;
-}
-
-@media (max-width: 768px) {
-  .price-main {
-    font-size: 2.2rem;
-  }
-}
-
 .price-note {
-  color: #64748b;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-left: 8px;
 }
 
-/* Action Buttons */
+/* ── Action Buttons ── */
 .action-buttons {
   display: flex;
   gap: 12px;
   margin-bottom: 24px;
-  flex-wrap: wrap;
 }
 
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 24px;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
   text-decoration: none;
-  border: none;
+  transition: all 0.2s ease;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.btn:hover::before {
-  width: 300px;
-  height: 300px;
+  border: none;
+  justify-content: center;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--dravtech-primary), var(--dravtech-primary-dark));
+  background-color: var(--brand-primary);
   color: white;
-  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
-}
-
-.btn-secondary {
-  background: white;
-  color: var(--dravtech-dark);
-  border: 2px solid var(--dravtech-border);
-}
-
-.btn-secondary:hover {
-  background: var(--dravtech-light);
-  border-color: var(--dravtech-primary);
-  color: var(--dravtech-primary);
-  transform: translateY(-2px);
-}
-
-.btn-success {
-  background: linear-gradient(135deg, var(--dravtech-success), #059669);
+  background-color: var(--brand-primary-dark);
   color: white;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  text-decoration: none;
 }
 
-.btn-success:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+.btn-outline {
+  background-color: transparent;
+  border: 1.5px solid var(--brand-primary);
+  color: var(--brand-primary);
 }
 
-/* Notice Cards */
-.notice-card {
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  border: 1px solid var(--dravtech-secondary);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
+.btn-outline:hover {
+  background-color: rgba(6, 182, 212, 0.1);
+  color: var(--brand-primary);
+  text-decoration: none;
 }
 
-.notice-card i {
-  color: var(--dravtech-secondary);
-  font-size: 1.2rem;
-  margin-top: 2px;
+.btn-ghost {
+  background-color: transparent;
+  border: none;
+  color: var(--text-secondary);
 }
 
-.notice-card.download {
-  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-  border-color: var(--dravtech-success);
+.btn-ghost:hover {
+  color: var(--text-primary);
+  text-decoration: none;
 }
 
-.notice-card.download i {
-  color: var(--dravtech-success);
+/* ── Sticky Sidebar (for mobile) ── */
+.sticky-sidebar {
+  position: sticky;
+  top: 20px;
 }
 
-/* Content Sections */
+/* ── Content Sections ── */
 .content-section {
   padding: 60px 0;
 }
@@ -895,34 +253,35 @@ body {
 }
 
 .section-title {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--dravtech-dark);
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--text-primary);
   margin-bottom: 12px;
 }
 
 .section-subtitle {
-  font-size: 1.1rem;
-  color: #64748b;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-/* Description Card */
+/* ── Description Card ── */
 .description-card {
-  background: white;
-  border-radius: 16px;
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
   padding: 40px;
-  box-shadow: var(--dravtech-shadow);
   margin-bottom: 48px;
-  border: 1px solid var(--dravtech-border);
 }
 
 .description-text {
-  font-size: 1.05rem;
-  line-height: 1.8;
-  color: #475569;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
 }
 
-/* Features Grid */
+/* ── Features Grid ── */
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -931,556 +290,79 @@ body {
 }
 
 .feature-card {
-  background: white;
-  border-radius: 16px;
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
   padding: 24px;
-  box-shadow: var(--dravtech-shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid var(--dravtech-border);
+  transition: transform 0.2s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--dravtech-shadow-lg);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .feature-icon {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, var(--dravtech-primary), var(--dravtech-primary-dark));
+  background-color: var(--brand-primary);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   margin-bottom: 16px;
 }
 
 .feature-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--dravtech-dark);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .feature-description {
-  color: #64748b;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
-/* Pricing Section */
+/* ── Pricing Section (Digital Products) ── */
 .pricing-section {
-  background: linear-gradient(135deg, var(--dravtech-dark), var(--dravtech-darker));
-  border-radius: 24px;
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
   padding: 60px 40px;
   margin-bottom: 48px;
 }
 
-.pricing-header {
-  text-align: center;
-  margin-bottom: 48px;
-}
-
-.pricing-title {
-  font-size: 2rem;
-  font-weight: 800;
-  color: white;
-  margin-bottom: 12px;
-}
-
-.pricing-subtitle {
-  font-size: 1.1rem;
-  color: #94a3b8;
-}
-
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .pricing-card {
-  background: #334155;
-  border: 2px solid #475569;
-  border-radius: 16px;
-  padding: 32px;
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
   position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.2s ease;
 }
 
 .pricing-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .pricing-card.featured {
-  border-color: var(--dravtech-secondary);
-  background: linear-gradient(135deg, #334155, #1e293b);
-}
-
-.pricing-badge {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--dravtech-secondary);
-  color: var(--dravtech-dark);
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.plan-name {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 8px;
-}
-
-.plan-price {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--dravtech-secondary);
-  margin-bottom: 4px;
-}
-
-.plan-price .period {
-  font-size: 1rem;
-  color: #94a3b8;
-  font-weight: 400;
-}
-
-.plan-description {
-  color: #94a3b8;
-  margin-bottom: 24px;
-}
-
-.plan-features {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 32px;
-}
-
-.plan-features li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #cbd5e1;
-  margin-bottom: 12px;
-  font-size: 0.95rem;
-}
-
-.plan-features i {
-  color: var(--dravtech-success);
-  font-size: 0.8rem;
-}
-
-/* Related Products */
-.related-section {
-  margin-bottom: 48px;
-}
-
-.related-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-.related-card {
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: var(--dravtech-shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  border: 1px solid var(--dravtech-border);
-}
-
-.related-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--dravtech-shadow-lg);
-}
-
-.related-card-image {
-  aspect-ratio: 4/3;
-  overflow: hidden;
-  position: relative;
-}
-
-.related-card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.related-card:hover .related-card-image img {
-  transform: scale(1.05);
-}
-
-.related-card-body {
-  padding: 20px;
-}
-
-.related-card-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--dravtech-dark);
-  margin-bottom: 8px;
-}
-
-.related-card-price {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--dravtech-primary);
-}
-
-.related-card-type {
-  font-size: 0.85rem;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .product-info-card,
-  .description-card,
-  .pricing-section {
-    padding: 24px;
-  }
-  
-  .pricing-section {
-    padding: 32px 20px;
-  }
-  
-  .action-buttons {
-    flex-direction: column;
-  }
-  
-  .btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* Related Products Section */
-.related-products-section {
-  padding: 80px 0;
-  background: #f8fafc;
-}
-
-.section-header {
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.section-header h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--dravtech-dark);
-  margin-bottom: 15px;
-}
-
-.section-header p {
-  font-size: 1.1rem;
-  color: #64748b;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.related-products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px;
-  margin-bottom: 40px;
-}
-
-.related-product-card {
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-}
-
-.related-product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-}
-
-.related-product-image {
-  position: relative;
-  height: 200px;
-  overflow: hidden;
-  background: #f1f5f9;
-}
-
-.related-product-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.related-product-card:hover .related-product-image img {
-  transform: scale(1.05);
-}
-
-.image-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-  color: #94a3b8;
-  font-size: 3rem;
-}
-
-.product-type-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.type-digital {
-  background: rgba(37, 99, 235, 0.1);
-  color: #2563eb;
-  border: 1px solid rgba(37, 99, 235, 0.2);
-}
-
-.type-artwork {
-  background: rgba(167, 139, 250, 0.1);
-  color: #8b5cf6;
-  border: 1px solid rgba(167, 139, 250, 0.2);
-}
-
-.type-merch {
-  background: rgba(245, 158, 11, 0.1);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.2);
-}
-
-.type-service {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.2);
-}
-
-.related-product-content {
-  padding: 25px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.related-product-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--dravtech-dark);
-  margin-bottom: 12px;
-  line-height: 1.3;
-}
-
-.related-product-description {
-  color: #64748b;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin-bottom: 20px;
-  flex: 1;
-}
-
-.related-product-price {
-  margin-bottom: 20px;
-}
-
-.related-product-price .price {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--dravtech-primary);
-}
-
-.related-product-price small {
-  color: #94a3b8;
-  font-size: 0.85rem;
-  margin-left: 5px;
-}
-
-.related-product-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: auto;
-}
-
-.btn-sm {
-  padding: 10px 16px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border-radius: 8px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
-  cursor: pointer;
-}
-
-.btn-outline-primary {
-  background: transparent;
-  color: var(--dravtech-primary);
-  border-color: var(--dravtech-primary);
-}
-
-.btn-outline-primary:hover {
-  background: var(--dravtech-primary);
-  color: white;
-}
-
-.btn-primary {
-  background: var(--dravtech-primary);
-  color: white;
-  border-color: var(--dravtech-primary);
-}
-
-.btn-primary:hover {
-  background: var(--dravtech-primary-dark);
-  border-color: var(--dravtech-primary-dark);
-  transform: translateY(-1px);
-}
-
-.no-related-products {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px 20px;
-  color: #64748b;
-}
-
-.no-related-products i {
-  font-size: 4rem;
-  margin-bottom: 20px;
-  color: #cbd5e1;
-}
-
-.no-related-products h3 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  color: var(--dravtech-dark);
-}
-
-.no-related-products p {
-  margin-bottom: 25px;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .related-products-section {
-    padding: 60px 0;
-  }
-  
-  .section-header h2 {
-    font-size: 2rem;
-  }
-  
-  .related-products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-  }
-  
-  .related-product-actions {
-    flex-direction: column;
-  }
-  
-  .btn-sm {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .related-products-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ─── Pricing Section ─────────────────────────────── */
-.pricing-section {
-  padding: 80px 0;
-  background: #f8fafc;
-}
-
-.pricing-section .section-header {
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-.pricing-section .section-header h3 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--dravtech-dark);
-  margin-bottom: 15px;
-}
-
-.pricing-section .section-header p {
-  font-size: 1.1rem;
-  color: #64748b;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 32px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.pricing-card {
-  background: white;
-  border-radius: 20px;
-  padding: 40px 32px;
-  text-align: center;
-  position: relative;
-  border: 2px solid #e2e8f0;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-}
-
-.pricing-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-  border-color: var(--dravtech-primary);
-}
-
-.pricing-card.popular {
-  border-color: var(--dravtech-primary);
-  box-shadow: 0 10px 40px rgba(37, 99, 235, 0.2);
-  transform: scale(1.05);
-}
-
-.pricing-card.popular:hover {
-  transform: scale(1.05) translateY(-8px);
-  box-shadow: 0 25px 80px rgba(37, 99, 235, 0.3);
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-md);
 }
 
 .popular-badge {
@@ -1488,25 +370,20 @@ body {
   top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--dravtech-primary), var(--dravtech-primary-dark));
+  background-color: var(--brand-primary);
   color: white;
-  padding: 8px 24px;
+  padding: 4px 16px;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
-}
-
-.pricing-header {
-  margin-bottom: 32px;
+  letter-spacing: 0.05em;
 }
 
 .plan-name {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--dravtech-dark);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
   margin-bottom: 16px;
 }
 
@@ -1515,145 +392,187 @@ body {
 }
 
 .price-amount {
-  font-size: 3rem;
-  font-weight: 800;
-  color: var(--dravtech-primary);
-  display: block;
-  line-height: 1;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--brand-primary);
 }
 
 .price-period {
-  font-size: 1rem;
-  color: #64748b;
-  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 400;
 }
 
 .plan-description {
-  color: #64748b;
-  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  font-size: 0.875rem;
   line-height: 1.6;
-  margin: 0;
 }
 
-.pricing-features {
-  flex: 1;
-  margin-bottom: 32px;
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  text-align: left;
 }
 
 .feature-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
-  text-align: left;
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
 }
 
 .feature-item i {
-  color: #10b981;
-  font-size: 1.1rem;
+  color: var(--brand-primary);
+  font-size: 1rem;
   flex-shrink: 0;
 }
 
-.feature-item span {
-  color: #374151;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.pricing-action {
-  margin-top: auto;
-}
-
-.pricing-action .btn {
-  width: 100%;
-  padding: 16px 24px;
-  font-size: 1rem;
-  font-weight: 600;
+/* ── Download Section (Artwork) ── */
+.download-section {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-decoration: none;
-  transition: all 0.3s ease;
+  padding: 40px;
+  margin-bottom: 48px;
+  text-align: center;
 }
 
-.pricing-action .btn-primary {
-  background: linear-gradient(135deg, var(--dravtech-primary), var(--dravtech-primary-dark));
-  color: white;
-  border: none;
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+.download-locked {
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  padding: 40px;
 }
 
-.pricing-action .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.4);
-  background: linear-gradient(135deg, var(--dravtech-primary-dark), var(--dravtech-primary));
+.download-unlocked {
+  border: 2px solid #10b981;
+  border-radius: 8px;
+  padding: 40px;
 }
 
-/* Responsive Pricing */
+.download-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.download-locked .download-icon {
+  color: var(--text-muted);
+}
+
+.download-unlocked .download-icon {
+  color: #10b981;
+}
+
+.download-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.download-description {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+/* ── Shipping Section (Merchandise) ── */
+.shipping-section {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 48px;
+}
+
+.shipping-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.shipping-info {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.shipping-info p {
+  margin-bottom: 12px;
+}
+
+/* ── Responsive Design ── */
 @media (max-width: 1024px) {
+  .product-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
   .pricing-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-  }
-  
-  .pricing-card {
-    padding: 32px 24px;
-  }
-  
-  .pricing-card.popular {
-    transform: scale(1.02);
-  }
-  
-  .pricing-card.popular:hover {
-    transform: scale(1.02) translateY(-4px);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
   }
 }
 
 @media (max-width: 768px) {
-  .pricing-section {
-    padding: 60px 0;
+  .product-detail-section {
+    padding: 40px 0;
   }
   
-  .pricing-section .section-header h3 {
-    font-size: 2rem;
+  .product-detail-grid {
+    gap: 24px;
+  }
+  
+  .product-info-card {
+    padding: 24px;
+  }
+  
+  .product-title {
+    font-size: 1.875rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .pricing-section {
+    padding: 40px 20px;
   }
   
   .pricing-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-title {
+    font-size: 1.5rem;
+  }
+  
+  .product-info-card {
+    padding: 20px;
   }
   
   .pricing-card {
-    padding: 24px 20px;
-  }
-  
-  .pricing-card.popular {
-    transform: none;
-  }
-  
-  .pricing-card.popular:hover {
-    transform: translateY(-4px);
-  }
-  
-  .price-amount {
-    font-size: 2.5rem;
-  }
-  
-  .plan-name {
-    font-size: 1.3rem;
+    padding: 24px 16px;
   }
 }
 </style>
-</head>
-<body class="starter-page-page">
-
-<!-- Include Header -->
-{% include 'marketplace/partials/header.html' %}
-
-<!-- Main Content -->
-<main class="main-content">
 
 <!-- Breadcrumb -->
 <div class="breadcrumb-bar">
@@ -1673,21 +592,26 @@ body {
       <!-- Product Image -->
       <div class="product-image-card">
         {% if product.image %}
-          <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-main-image">
+          <img src="{{ product.image.url }}" alt="{{ product.title }}">
         {% else %}
           <div class="product-image-placeholder">
-            <i class="bi bi-image"></i>
-            <span>No Image Available</span>
+            {% if product.product_type == 'digital' %}
+              <i class="bi bi-cpu"></i>
+            {% elif product.product_type == 'merch' %}
+              <i class="bi bi-bag"></i>
+            {% else %}
+              <i class="bi bi-palette"></i>
+            {% endif %}
           </div>
         {% endif %}
       </div>
 
       <!-- Product Info -->
-      <div class="product-info-card">
+      <div class="product-info-card {% if product.product_type == 'digital' %}sticky-sidebar{% endif %}">
+        
+        <!-- Product Meta -->
         <div class="product-meta">
-          <span class="product-type-badge type-{{ product.product_type }}">
-            {{ product.get_product_type_display }}
-          </span>
+          <span class="product-type-badge">{{ product.get_product_type_display }}</span>
           {% if product.is_featured %}
             <span class="featured-badge">
               <i class="bi bi-star-fill"></i> Featured
@@ -1695,215 +619,211 @@ body {
           {% endif %}
         </div>
 
+        <!-- Product Title -->
         <h1 class="product-title">{{ product.title }}</h1>
         
+        <!-- Product Tagline -->
+        {% if product.tagline %}
+          <p class="product-tagline">{{ product.tagline }}</p>
+        {% endif %}
+        
+        <!-- Price -->
         <div class="product-price">
-          <span class="price-amount">KES {{ product.price|floatformat:0 }}</span>
-          {% if product.product_type != 'digital' %}
-            <span class="price-note">+ shipping</span>
+          {% if product.product_type == 'digital' %}
+            {% with plan=product.pricing_plans.first %}
+              {% if plan %}
+                <span class="price-from">from</span> KES {{ plan.price|floatformat:0 }}
+              {% else %}
+                Custom Pricing
+              {% endif %}
+            {% endwith %}
+          {% elif product.price %}
+            KES {{ product.price|floatformat:0 }}
+            {% if product.product_type != 'digital' %}
+              <span class="price-note">+ shipping</span>
+            {% endif %}
+          {% else %}
+            Free
           {% endif %}
         </div>
-
-        <div class="product-description">
-          <p>{{ product.description|linebreaksbr }}</p>
-        </div>
-
-        {% if product.category %}
-          <div class="product-category">
-            <strong>Category:</strong> {{ product.category.name }}
-          </div>
-        {% endif %}
 
         <!-- Action Buttons -->
         <div class="action-buttons">
           {% if product.product_type == 'digital' %}
-            <a href="/marketplace/products/{{ product.slug }}/demo/" class="btn btn-primary">
+            <a href="{% url 'marketplace:request-demo' product.slug %}" class="btn btn-primary">
               <i class="bi bi-play-circle"></i> Request Demo
             </a>
-            <button class="btn btn-secondary" onclick="window.history.back()">
-              <i class="bi bi-arrow-left"></i> Back
-            </button>
+            <a href="{% url 'marketplace:product-detail' product.slug %}" class="btn btn-outline">
+              <i class="bi bi-eye"></i> See More
+            </a>
           {% else %}
             <button class="btn btn-primary" onclick="addToCart('{{ product.id }}')">
               <i class="bi bi-cart-plus"></i> Add to Cart
             </button>
-            <a href="/marketplace/cart/" class="btn btn-secondary">
+            <a href="{% url 'marketplace:cart' %}" class="btn btn-outline">
               <i class="bi bi-cart"></i> View Cart
             </a>
           {% endif %}
         </div>
-      </div>
-    </div>
 
-    <!-- Additional Information -->
-    <div class="additional-info">
-      <div class="description-card">
-        <h3>Product Details</h3>
-        <div class="description-content">
-          {% if product.full_description %}
-            {{ product.full_description|linebreaksbr }}
-          {% else %}
-            <p>{{ product.description|linebreaksbr }}</p>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-
-    <!-- Pricing Section for Digital Products -->
-    {% if product.product_type == 'digital' and pricing_plans %}
-    <section class="pricing-section">
-      <div class="container">
-        <div class="section-header">
-          <h3>Choose Your Plan</h3>
-          <p>Select the perfect pricing plan for your needs</p>
-        </div>
-        
-        <div class="pricing-grid">
-          {% for plan in pricing_plans %}
-          <div class="pricing-card {% if plan.is_popular %}popular{% endif %}">
-            {% if plan.is_popular %}
-              <div class="popular-badge">
-                <span>Most Popular</span>
-              </div>
-            {% endif %}
-            
-            <div class="pricing-header">
-              <h4 class="plan-name">{{ plan.name }}</h4>
-              <div class="plan-price">
-                <span class="price-amount">KES {{ plan.price|floatformat:0 }}</span>
-                {% if plan.billing_period %}
-                  <span class="price-period">/{{ plan.billing_period }}</span>
-                {% endif %}
-              </div>
-              {% if plan.description %}
-                <p class="plan-description">{{ plan.description }}</p>
-              {% endif %}
+        <!-- Digital Products: Pricing Plans -->
+        {% if product.product_type == 'digital' and product.pricing_plans.exists %}
+          <div class="pricing-section">
+            <div class="section-header">
+              <h2 class="section-title">Pricing Plans</h2>
+              <p class="section-subtitle">Choose the perfect plan for your needs</p>
             </div>
             
-            <div class="pricing-features">
-              {% if plan.features %}
-                {% for feature in plan.features %}
-                <div class="feature-item">
-                  <i class="bi bi-check-circle"></i>
-                  <span>{{ feature }}</span>
+            <div class="pricing-grid">
+              {% for plan in product.pricing_plans.all %}
+                <div class="pricing-card {% if plan.is_popular %}featured{% endif %}">
+                  {% if plan.is_popular %}
+                    <div class="popular-badge">Most Popular</div>
+                  {% endif %}
+                  
+                  <div class="plan-name">{{ plan.name }}</div>
+                  
+                  <div class="plan-price">
+                    <span class="price-amount">KES {{ plan.price|floatformat:0 }}</span>
+                    {% if plan.billing_period %}
+                      <span class="price-period">/{{ plan.billing_period }}</span>
+                    {% endif %}
+                  </div>
+                  
+                  {% if plan.description %}
+                    <p class="plan-description">{{ plan.description }}</p>
+                  {% endif %}
+                  
+                  <div class="plan-features">
+                    {% if plan.features %}
+                      {% for feature in plan.features %}
+                        <div class="feature-item">
+                          <i class="bi bi-check-circle"></i>
+                          <span>{{ feature }}</span>
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  </div>
+                  
+                  <div class="pricing-action">
+                    {% if plan.is_subscription %}
+                      <a href="{% url 'marketplace:checkout' %}?plan={{ plan.id }}" class="btn btn-primary">
+                        <i class="bi bi-credit-card"></i> Subscribe
+                      </a>
+                    {% else %}
+                      <a href="{% url 'marketplace:checkout' %}?plan={{ plan.id }}" class="btn btn-primary">
+                        <i class="bi bi-cart-plus"></i> Get Access
+                      </a>
+                    {% endif %}
+                  </div>
                 </div>
-                {% endfor %}
-              {% endif %}
-            </div>
-            
-            <div class="pricing-action">
-              {% if plan.is_subscription %}
-                <a href="/marketplace/checkout/?plan={{ plan.id }}" class="btn btn-primary">
-                  <i class="bi bi-credit-card"></i> Subscribe Now
-                </a>
-              {% else %}
-                <a href="/marketplace/checkout/?plan={{ plan.id }}" class="btn btn-primary">
-                  <i class="bi bi-cart-plus"></i> Buy Now
-                </a>
-              {% endif %}
+              {% endfor %}
             </div>
           </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
-    {% endif %}
-  </div>
-</section>
+        {% endif %}
 
-<!-- Related Products Section -->
-<section class="related-products-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Related Products</h2>
-      <p>Discover more products similar to {{ product.title }}</p>
-    </div>
-    
-    <div class="related-products-grid">
-      {% for related_product in related_products %}
-        <div class="related-product-card">
-          <div class="related-product-image">
-            {% if related_product.image %}
-              <img src="{{ related_product.image.url }}" alt="{{ related_product.title }}" loading="lazy">
-            {% else %}
-              <div class="image-placeholder">
-                <i class="bi bi-image"></i>
+        <!-- Artwork: Download Section -->
+        {% if product.product_type == 'artwork' %}
+          <div class="download-section {% if user_has_purchased %}download-unlocked{% else %}download-locked{% endif %}">
+            {% if user_has_purchased %}
+              <div class="download-icon">
+                <i class="bi bi-download"></i>
               </div>
+              <h3 class="download-title">Download Your File</h3>
+              <p class="download-description">Your artwork is ready for download</p>
+              <a href="#" class="btn btn-primary">
+                <i class="bi bi-download"></i> Download Now
+              </a>
+            {% else %}
+              <div class="download-icon">
+                <i class="bi bi-lock"></i>
+              </div>
+              <h3 class="download-title">Purchase to Download</h3>
+              <p class="download-description">Buy this artwork to unlock your download</p>
+              <button class="btn btn-primary" onclick="addToCart('{{ product.id }}')">
+                <i class="bi bi-cart-plus"></i> Buy Now
+              </button>
             {% endif %}
-            <span class="product-type-badge type-{{ related_product.product_type }}">
-              {{ related_product.get_product_type_display }}
-            </span>
           </div>
-          
-          <div class="related-product-content">
-            <h3 class="related-product-title">{{ related_product.title }}</h3>
-            <p class="related-product-description">
-              {{ related_product.description|truncatewords:15 }}
-            </p>
-            
-            <div class="related-product-price">
-              <span class="price">KES {{ related_product.price|floatformat:0 }}</span>
-              {% if related_product.product_type != 'digital' %}
-                <small>+ shipping</small>
-              {% endif %}
-            </div>
-            
-            <div class="related-product-actions">
-              {% if related_product.product_type == 'digital' %}
-                <a href="/marketplace/products/{{ related_product.slug }}/" class="btn btn-outline-primary btn-sm">
-                  <i class="bi bi-eye"></i> View Details
-                </a>
-                <a href="/marketplace/products/{{ related_product.slug }}/demo/" class="btn btn-primary btn-sm">
-                  <i class="bi bi-play-circle"></i> Request Demo
-                </a>
-              {% else %}
-                <a href="/marketplace/products/{{ related_product.slug }}/" class="btn btn-outline-primary btn-sm">
-                  <i class="bi bi-eye"></i> View Details
-                </a>
-                <button class="btn btn-primary btn-sm" onclick="addToCart('{{ related_product.id }}')">
-                  <i class="bi bi-cart-plus"></i> Add to Cart
-                </button>
-              {% endif %}
+        {% endif %}
+
+        <!-- Merchandise: Shipping Section -->
+        {% if product.product_type == 'merch' %}
+          <div class="shipping-section">
+            <h3 class="shipping-title">Shipping & Delivery</h3>
+            <div class="shipping-info">
+              <p><strong>Shipping Fee:</strong> KES {{ product.shipping_fee|default:"500" }}</p>
+              <p><strong>Estimated Delivery:</strong> 3-5 business days</p>
+              <p><strong>Ships Nationwide</strong> across Kenya</p>
+              <p><strong>Returns:</strong> 30-day return policy</p>
             </div>
           </div>
-        </div>
-      {% empty %}
-        <div class="no-related-products">
-          <i class="bi bi-inbox"></i>
-          <h3>No Related Products</h3>
-          <p>Check out our other products in the marketplace</p>
-          <a href="/marketplace/" class="btn btn-primary">
-            <i class="bi bi-grid"></i> Browse All Products
-          </a>
-        </div>
-      {% endfor %}
+        {% endif %}
+
+      </div>
     </div>
   </div>
 </section>
 
-  </main>
+<!-- Additional Content Sections -->
+<div class="content-section">
+  <div class="container">
+    
+    <!-- Full Description -->
+    <div class="description-card">
+      <h2 class="section-title">Product Details</h2>
+      <div class="description-text">
+        {% if product.full_description %}
+          {{ product.full_description|linebreaksbr }}
+        {% else %}
+          <p>{{ product.description|linebreaksbr }}</p>
+        {% endif %}
+      </div>
+    </div>
 
-<!-- Include Footer -->
-{% include 'marketplace/partials/footer.html' %}
+    <!-- Features/Highlights -->
+    {% if product.features %}
+      <div class="section-header">
+        <h2 class="section-title">Key Features</h2>
+      </div>
+      
+      <div class="features-grid">
+        {% for feature in product.features %}
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="bi bi-{{ feature.icon|default:"star" }}"></i>
+            </div>
+            <h3 class="feature-title">{{ feature.title }}</h3>
+            <p class="feature-description">{{ feature.description }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
 
 <script>
-  function addToCart(productId) {
-    fetch('/marketplace/cart/add/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': getCookie('csrftoken')
-      },
-      body: 'product_id=' + productId
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        alert('Product added to cart!');
+function addToCart(productId) {
+  fetch('/marketplace/cart/add/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: 'product_id=' + productId
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Show success message
+      console.log('Added to cart:', data);
+      // Update cart count if needed
+      if (typeof updateCartCount === 'function') {
         updateCartCount();
-      } else {
-        alert('Error adding product to cart');
       }
+    } else {
+      console.error('Error adding to cart:', data);
     })
     .catch(error => {
       console.error('Error:', error);

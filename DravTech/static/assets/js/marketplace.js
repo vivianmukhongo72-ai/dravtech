@@ -218,7 +218,7 @@ class MarketplaceCart {
 
   async updateCartCount() {
     try {
-      const response = await fetch('/marketplace/api/cart-count/');
+      const response = await fetch('/marketplace/cart/count/');
       const data = await response.json();
       this.cartCount = data.count;
       this.updateCartUI();

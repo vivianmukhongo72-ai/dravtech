@@ -10,6 +10,43 @@ class ContactForm(forms.ModelForm):
     class Meta:
         model  = ContactMessage
         fields = ['name', 'email', 'phone', 'company', 'contact_type', 'priority', 'subject', 'message']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your full name',
+                'required': True,
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your email address',
+                'required': True,
+            }),
+            'phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your phone number (optional)',
+            }),
+            'company': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your company name (optional)',
+            }),
+            'contact_type': forms.Select(attrs={
+                'class': 'form-select',
+            }),
+            'priority': forms.Select(attrs={
+                'class': 'form-select',
+            }),
+            'subject': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the subject of your message',
+                'required': True,
+            }),
+            'message': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'Enter your detailed message (at least 20 characters)',
+                'required': True,
+            }),
+        }
 
     # ── Validation ────────────────────────────────────────────────────────────
 

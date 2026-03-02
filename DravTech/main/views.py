@@ -1,5 +1,7 @@
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
@@ -175,7 +177,7 @@ def send_admin_notification(contact):
         subject=subject,
         body=text_body,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[settings.CONTACT_ADMIN_EMAIL],   # set this in settings.py
+        to=[settings.DEFAULT_CONTACT_EMAIL],   # Use the contact email from settings
     )
     email.attach_alternative(html_body, "text/html")
     email.send(fail_silently=True)

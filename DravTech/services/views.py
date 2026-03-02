@@ -84,10 +84,24 @@ def service_detail(request, slug):
         slug=slug,
     )
 
+    # Fetch up to 3 related services from the same category, excluding the current service
+    related_services = []
+    if service.category:
+        related_services = (
+            Service.objects
+            .filter(is_active=True, category=service.category)
+            .exclude(id=service.id)
+            .select_related("category")
+            .order_by("display_order", "title")[:3]
+        )
+
     return render(
         request,
         "services/service_detail.html",
-        {"service": service},
+        {
+            "service": service,
+            "related_services": related_services,
+        },
     )
 def homepage(request):
     featured_services = (

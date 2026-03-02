@@ -1,176 +1,146 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block title %}Our Services — DravTech{% endblock %}
+
 {% block content %}
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ── Typography & Base ── */
+:root {
+  --brand-primary: #2563eb;
+  --brand-primary-dark: #1d4ed8;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --border-color: #e5e7eb;
+  --bg-light: #f9fafb;
+  --bg-white: #ffffff;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg-white);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* ── Hero Section ── */
 .services-hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 120px 0 80px;
+  background-color: var(--bg-white);
+  padding: 80px 0 60px;
   text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.services-hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.3);
-  z-index: 1;
-}
-
-.services-hero .container {
-  position: relative;
-  z-index: 2;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .services-hero h1 {
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 20px;
-  animation: fadeInUp 1s ease-out;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  letter-spacing: -0.025em;
 }
 
 .services-hero p {
-  font-size: 1.3rem;
+  font-size: 1.125rem;
+  color: var(--text-secondary);
   max-width: 600px;
-  margin: 0 auto 40px;
-  opacity: 0.9;
-  animation: fadeInUp 1s ease-out 0.2s both;
+  margin: 0 auto;
+  font-weight: 400;
 }
 
-.services-listing {
-  padding: 80px 0;
-  background: #f8f9fa;
-}
-
-.service-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 40px;
-  margin-top: 60px;
-}
-
-.service-item {
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-  transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.service-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.service-item:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-}
-
-.service-icon {
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 30px;
-  transition: all 0.3s ease;
-}
-
-.service-icon i {
-  font-size: 36px;
-  color: white;
-}
-
-.service-item:hover .service-icon {
-  transform: scale(1.1) rotate(5deg);
-}
-
-.service-item h3 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-bottom: 20px;
-  line-height: 1.3;
-}
-
-.service-item p {
-  font-size: 1.1rem;
-  color: #6c757d;
-  line-height: 1.7;
-  margin-bottom: 30px;
-  min-height: 80px;
-}
-
-.service-features {
-  list-style: none;
+/* ── Category Tabs ── */
+.category-tabs {
+  background-color: var(--bg-white);
+  border-bottom: 1px solid var(--border-color);
   padding: 0;
-  margin-bottom: 30px;
+  margin: 0;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.service-features li {
-  padding: 8px 0;
-  color: #495057;
-  font-size: 1rem;
+.category-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.category-tab {
+  padding: 20px 24px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
   position: relative;
-  padding-left: 25px;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
 }
 
-.service-features li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: #667eea;
-  font-weight: bold;
+.category-tab:hover {
+  color: var(--text-primary);
 }
 
-.service-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 15px 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  text-decoration: none;
-  border-radius: 50px;
-  font-weight: 600;
-  transition: all 0.3s ease;
+.category-tab.active {
+  color: var(--brand-primary);
+  border-bottom-color: var(--brand-primary);
 }
 
-.service-action:hover {
+/* ── Services Container ── */
+.services-container {
+  padding: 60px 0;
+  background-color: var(--bg-light);
+  min-height: 400px;
+}
+
+/* ── Service Grid ── */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 0;
+}
+
+/* ── Service Card ── */
+.service-card {
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-  color: white;
+  box-shadow: var(--shadow-lg);
+  border-color: #d1d5db;
 }
 
-.service-action i {
-  font-size: 18px;
-  transition: transform 0.3s ease;
+.service-card[data-category]:not(.visible) {
+  display: none;
 }
 
-.service-action:hover i {
-  transform: translateX(3px);
+.service-card.visible {
+  display: flex;
+  animation: fadeInUp 0.3s ease-out;
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -178,157 +148,297 @@
   }
 }
 
+/* ── Service Card Content ── */
+.service-icon {
+  width: 48px;
+  height: 48px;
+  background-color: var(--brand-primary);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.service-category {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.service-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.service-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+/* ── Service Highlights ── */
+.service-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+}
+
+.service-highlights li {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  padding: 4px 0 4px 20px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.service-highlights li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--brand-primary);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* ── Service CTA ── */
+.service-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 20px;
+  background-color: transparent;
+  border: 2px solid var(--brand-primary);
+  color: var(--brand-primary);
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  margin-top: auto;
+}
+
+.service-cta:hover {
+  background-color: var(--brand-primary);
+  color: white;
+  text-decoration: none;
+}
+
+/* ── Empty State ── */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-secondary);
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ── Responsive Design ── */
+@media (max-width: 1024px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
 @media (max-width: 768px) {
+  .services-hero {
+    padding: 60px 0 40px;
+  }
+  
   .services-hero h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
   
   .services-hero p {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   
-  .service-grid {
+  .category-tabs {
+    padding: 0 16px;
+  }
+  
+  .category-tab {
+    padding: 16px 20px;
+    font-size: 0.75rem;
+  }
+  
+  .services-container {
+    padding: 40px 0;
+  }
+  
+  .services-grid {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 20px;
   }
   
-  .service-item {
-    padding: 30px;
+  .service-card {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-hero h1 {
+    font-size: 1.75rem;
   }
   
-  .service-item h3 {
-    font-size: 1.5rem;
+  .category-tab {
+    padding: 12px 16px;
+    font-size: 0.7rem;
+  }
+  
+  .service-card {
+    padding: 20px;
   }
 }
 </style>
 
-<main class="main">
-  <!-- Services Hero Section -->
-  <section class="services-hero">
-    <div class="container">
-      <h1>Our Services</h1>
-      <p>Transform your business with our comprehensive suite of professional services designed to drive growth and innovation.</p>
-    </div>
-  </section>
-
-<!-- Services Listing Section -->
-  <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-        <div class="isotope-layout" data-default-filter="*" data-layout="fitRows" data-sort="original-order">
-
-          <div class="filters-wrapper" data-aos="fade-up" data-aos-delay="100">
-            <ul class="portfolio-filters isotope-filters">
-              <li data-filter="*" class="filter-active">All Services</li>
-              {% if categories %}
-                {% for cat in categories %}
-                  <li data-filter=".filter-{{ cat.slug|escape }}">{{ cat.title }}</li>
-                {% endfor %}
-              {% endif %}
-            </ul>
-          </div>
-
-<section class="services-listing">
+<!-- Hero Section -->
+<section class="services-hero">
   <div class="container">
-    <div class="service-grid">
+    <h1>Our Services</h1>
+    <p>Professional consulting and technology solutions to drive your business forward</p>
+  </div>
+</section>
 
+<!-- Category Tabs -->
+<div class="container-fluid p-0">
+  <div class="category-tabs">
+    <button class="category-tab active" data-category="all">All Services</button>
+    {% if categories %}
+      {% for cat in categories %}
+        <button class="category-tab" data-category="{{ cat.slug }}">{{ cat.name }}</button>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+<!-- Services Container -->
+<section class="services-container">
+  <div class="container">
+    <div class="services-grid">
+      
       {% if services %}
         {% for service in services %}
-          <div class="service-item isotope-item filter-{{ service.category.slug|escape }}"
-               data-aos="fade-up"
-               data-aos-delay="{{ forloop.counter0|add:1 }}00">
-
-            <!-- Service Media -->
+          <div class="service-card visible" 
+               data-category="{{ service.category.slug|default:'uncategorized' }}">
+            
+            <!-- Icon -->
             <div class="service-icon">
-              {% if service.image %}
-                <img src="{{ service.image.url }}"
-                     alt="{{ service.title }}"
-                     loading="lazy"
-                     style="width: 60px; height: 60px; border-radius: 12px; object-fit: cover;">
+              {% if service.category.icon %}
+                <i class="bi bi-{{ service.category.icon }}"></i>
               {% else %}
-                <div class="service-placeholder">
-                  <span>{{ service.tagline|default:"Service" }}</span>
-                </div>
+                {{ service.title|slice:":2"|upper }}
               {% endif %}
             </div>
-
-            <!-- Title -->
-            <h3>{{ service.title }}</h3>
-
-            <!-- Overview -->
-            <p>
-              {{ service.overview|truncatewords:25 }}
+            
+            <!-- Category Label -->
+            <div class="service-category">
+              {{ service.category.name|default:"Consulting" }}
+            </div>
+            
+            <!-- Service Title -->
+            <h3 class="service-title">{{ service.title }}</h3>
+            
+            <!-- Description -->
+            <p class="service-description">
+              {{ service.overview|truncatewords:20 }}
             </p>
-
-            <!-- Highlights Preview (Replaces old features list) -->
+            
+            <!-- Highlights -->
             {% if service.highlights.all %}
-              <ul class="service-features">
+              <ul class="service-highlights">
                 {% for highlight in service.highlights.all|slice:":3" %}
                   <li>{{ highlight.title }}</li>
                 {% endfor %}
               </ul>
             {% endif %}
-
-            <!-- Optional Case Study Indicator -->
-            {% if service.case_studies.exists %}
-              <div class="service-meta">
-                <small>
-                  <i class="bi bi-briefcase"></i>
-                  {{ service.case_studies.count }} Case Stud{{ service.case_studies.count|pluralize:"y,ies" }}
-                </small>
-              </div>
-            {% endif %}
-
-            <!-- CTA -->
-            <a href="{% url 'service_detail' slug=service.slug %}"
-               class="service-action">
-              <span>Explore Service</span>
-              <i class="bi bi-arrow-right"></i>
+            
+            <!-- CTA Button -->
+            <a href="{% url 'service_detail' slug=service.slug %}" 
+               class="service-cta">
+              Explore Service →
             </a>
-
+            
           </div>
         {% endfor %}
-
+        
       {% else %}
-        <div class="col-12 text-center">
-          <div class="empty-state">
-            <i class="bi bi-inbox"></i>
-            <h3>No Services Available</h3>
-            <p>We're currently refining our offerings. Please check back soon.</p>
-          </div>
+        <div class="empty-state col-12">
+          <i class="bi bi-inbox"></i>
+          <h3>No Services Available</h3>
+          <p>We're currently updating our service offerings. Please check back soon.</p>
         </div>
       {% endif %}
-
+      
     </div>
   </div>
 </section>
 
-</main>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const filterButtons = document.querySelectorAll('.portfolio-filters li');
-    const serviceItems = document.querySelectorAll('.service-item');
-    
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Remove active class from all buttons
-            filterButtons.forEach(btn => btn.classList.remove('filter-active'));
-            // Add active class to clicked button
-            this.classList.add('filter-active');
-            
-            const filterValue = this.getAttribute('data-filter');
-            
-            serviceItems.forEach(item => {
-                if (filterValue === '*' || item.classList.contains(filterValue.substring(1))) {
-                    item.style.display = 'block';
-                    // Add animation
-                    item.style.animation = 'fadeInUp 0.5s ease-out';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
+  const tabs = document.querySelectorAll('.category-tab');
+  const cards = document.querySelectorAll('.service-card');
+  
+  function filterServices(categorySlug) {
+    cards.forEach(card => {
+      const cardCategory = card.getAttribute('data-category');
+      
+      if (categorySlug === 'all' || cardCategory === categorySlug) {
+        card.classList.add('visible');
+        card.classList.remove('hidden');
+      } else {
+        card.classList.remove('visible');
+        card.classList.add('hidden');
+      }
     });
+  }
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      // Remove active class from all tabs
+      tabs.forEach(t => t.classList.remove('active'));
+      
+      // Add active class to clicked tab
+      this.classList.add('active');
+      
+      // Filter services
+      const category = this.getAttribute('data-category');
+      filterServices(category);
+    });
+  });
+  
+  // Initialize with "all" selected
+  filterServices('all');
 });
 </script>
 

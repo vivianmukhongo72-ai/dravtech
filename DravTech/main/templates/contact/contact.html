@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load form_filters %}
 
 {% block title %}Contact Us - DravTech{% endblock %}
 
@@ -93,9 +94,9 @@
                   <label for="{{ form.name.id_for_label }}" class="form-label">
                     <i class="bi bi-person"></i> Your Name *
                   </label>
-                  {{ form.name }}
+                  {{ form.name|add_class:"form-control" }}
                   {% if form.name.errors %}
-                    <div class="error-message">
+                    <div class="invalid-feedback d-block">
                       {{ form.name.errors.0 }}
                     </div>
                   {% endif %}
@@ -107,9 +108,9 @@
                   <label for="{{ form.email.id_for_label }}" class="form-label">
                     <i class="bi bi-envelope"></i> Email Address *
                   </label>
-                  {{ form.email }}
+                  {{ form.email|add_class:"form-control" }}
                   {% if form.email.errors %}
-                    <div class="error-message">
+                    <div class="invalid-feedback d-block">
                       {{ form.email.errors.0 }}
                     </div>
                   {% endif %}
@@ -121,9 +122,9 @@
                   <label for="{{ form.phone.id_for_label }}" class="form-label">
                     <i class="bi bi-telephone"></i> Phone Number
                   </label>
-                  {{ form.phone }}
+                  {{ form.phone|add_class:"form-control" }}
                   {% if form.phone.errors %}
-                    <div class="error-message">
+                    <div class="invalid-feedback d-block">
                       {{ form.phone.errors.0 }}
                     </div>
                   {% endif %}
@@ -135,9 +136,9 @@
                   <label for="{{ form.company.id_for_label }}" class="form-label">
                     <i class="bi bi-building"></i> Company
                   </label>
-                  {{ form.company }}
+                  {{ form.company|add_class:"form-control" }}
                   {% if form.company.errors %}
-                    <div class="error-message">
+                    <div class="invalid-feedback d-block">
                       {{ form.company.errors.0 }}
                     </div>
                   {% endif %}
@@ -149,9 +150,9 @@
                   <label for="{{ form.contact_type.id_for_label }}" class="form-label">
                     <i class="bi bi-tag"></i> Inquiry Type
                   </label>
-                  {{ form.contact_type }}
+                  {{ form.contact_type|add_class:"form-select" }}
                   {% if form.contact_type.errors %}
-                    <div class="error-message">
+                    <div class="invalid-feedback d-block">
                       {{ form.contact_type.errors.0 }}
                     </div>
                   {% endif %}
@@ -163,9 +164,9 @@
                   <label for="{{ form.priority.id_for_label }}" class="form-label">
                     <i class="bi bi-flag"></i> Priority
                   </label>
-                  {{ form.priority }}
+                  {{ form.priority|add_class:"form-select" }}
                   {% if form.priority.errors %}
-                    <div class="error-message">
+                    <div class="invalid-feedback d-block">
                       {{ form.priority.errors.0 }}
                     </div>
                   {% endif %}
@@ -177,9 +178,9 @@
                   <label for="{{ form.subject.id_for_label }}" class="form-label">
                     <i class="bi bi-chat-left-text"></i> Subject *
                   </label>
-                  {{ form.subject }}
+                  {{ form.subject|add_class:"form-control" }}
                   {% if form.subject.errors %}
-                    <div class="error-message">
+                    <div class="invalid-feedback d-block">
                       {{ form.subject.errors.0 }}
                     </div>
                   {% endif %}
@@ -191,9 +192,9 @@
                   <label for="{{ form.message.id_for_label }}" class="form-label">
                     <i class="bi bi-chat-text"></i> Your Message *
                   </label>
-                  {{ form.message }}
+                  {{ form.message|add_class:"form-control" }}
                   {% if form.message.errors %}
-                    <div class="error-message">
+                    <div class="invalid-feedback d-block">
                       {{ form.message.errors.0 }}
                     </div>
                   {% endif %}
@@ -353,11 +354,9 @@
 }
 
 /* Style Django form fields */
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: 12px 15px;
+.form-group input.form-control,
+.form-group select.form-select,
+.form-group textarea.form-control {
   border: 2px solid #e2e8f0;
   border-radius: 10px;
   font-size: 0.95rem;
@@ -365,21 +364,21 @@
   background: #f8fafc;
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.form-group input.form-control:focus,
+.form-group select.form-select:focus,
+.form-group textarea.form-control:focus {
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
   background: white;
   outline: none;
 }
 
-.form-group textarea {
+.form-group textarea.form-control {
   min-height: 120px;
   resize: vertical;
 }
 
-.error-message {
+.invalid-feedback.d-block {
   color: #dc3545;
   font-size: 0.85rem;
   margin-top: 5px;
@@ -387,6 +386,7 @@
   background: #f8d7da;
   border-radius: 5px;
   border-left: 3px solid #dc3545;
+  display: block !important;
 }
 
 .alert {
